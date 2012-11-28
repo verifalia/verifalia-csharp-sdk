@@ -98,15 +98,6 @@ namespace Verifalia.Api.Models
 
         #endregion
 
-        #region Well known disposable email address failures
-
-        /// <summary>
-        /// The email address is provided by a well known disposable e-mail address provider (DEA).
-        /// </summary>
-        DomainIsWellKnownDea,
-
-        #endregion
-
         #region SMTP failures
 
         /// <summary>

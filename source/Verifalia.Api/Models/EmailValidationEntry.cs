@@ -142,12 +142,6 @@ namespace Verifalia.Api.Models
         public bool? IsDnsFailure { get; set; }
 
         /// <summary>
-        /// Gets a value indicating whether the email address has been provided by a well known
-        /// disposable e-mail address (DEA) provider.
-        /// </summary>
-        public bool? IsDisposableEmailAddressFailure { get; set; }
-
-        /// <summary>
         /// Gets a value indicating whether a problem with the SMTP validation of the email address occurred, including:
         /// <list type="bullet">
         ///     <item><see cref="EmailValidationEntryStatus.SmtpConnectionFailure">SmtpConnectionFailure</see></item>
