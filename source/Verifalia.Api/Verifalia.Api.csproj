@@ -40,21 +40,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EmailAddresses\Models\Validation.cs" />
+    <Compile Include="EmailAddresses\Models\ValidationEntry.cs" />
+    <Compile Include="EmailAddresses\Models\ValidationEntryStatus.cs" />
+    <Compile Include="EmailAddresses\Models\ValidationStatus.cs" />
+    <Compile Include="EmailAddresses\ValidationRestClient.cs" />
     <Compile Include="Exceptions\AuthorizationException.cs" />
     <Compile Include="Exceptions\InsufficientCreditException.cs" />
     <Compile Include="Exceptions\VerifaliaException.cs" />
-    <Compile Include="Models\EmailValidationEntry.cs" />
-    <Compile Include="Models\EmailValidation.cs" />
-    <Compile Include="Models\EmailValidationStatus.cs" />
-    <Compile Include="Models\EmailValidationEntryStatus.cs" />
-    <Compile Include="VerifaliaRestClient.EmailValidations.cs" />
     <Compile Include="VerifaliaRestClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WaitForCompletionOptions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

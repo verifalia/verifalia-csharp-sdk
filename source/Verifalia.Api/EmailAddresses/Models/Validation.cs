@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace Verifalia.Api.Models
+namespace Verifalia.Api.EmailAddresses.Models
 {
     /// <summary>
     /// Represents a snapshot of an email validation batch.
     /// </summary>
-    public class EmailValidation
+    public class Validation
     {
         /// <summary>
         /// The unique identifier of the email validation batch.
@@ -18,7 +16,7 @@ namespace Verifalia.Api.Models
         /// <summary>
         /// The status of this batch.
         /// </summary>
-        public EmailValidationStatus Status { get; set; }
+        public ValidationStatus Status { get; set; }
         
         /// <summary>
         /// The internal version of the Verifalia engine which provided this snapshot.
@@ -38,6 +36,6 @@ namespace Verifalia.Api.Models
         /// <summary>
         /// A list of results for the email validation batch.
         /// </summary>
-        public List<EmailValidationEntry> Entries { get; set; }
+        public List<ValidationEntry> Entries { get; set; }
     }
 }

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using RestSharp;
 
 namespace Verifalia.Api.Exceptions
@@ -11,6 +8,9 @@ namespace Verifalia.Api.Exceptions
     /// </summary>
     public class VerifaliaException : ApplicationException
     {
+        /// <summary>
+        /// Original response sent by Verifalia servers.
+        /// </summary>
         public IRestResponse Response { get; set; }
 
         public VerifaliaException(string message)

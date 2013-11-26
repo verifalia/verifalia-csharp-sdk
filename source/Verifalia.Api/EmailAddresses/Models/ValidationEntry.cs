@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace Verifalia.Api.Models
+namespace Verifalia.Api.EmailAddresses.Models
 {
     /// <summary>
     /// Represents a single validated entry within an email validation batch.
     /// </summary>
-    public class EmailValidationEntry
+    public class ValidationEntry
     {
         /// <summary>
         /// The input string to validate.
@@ -60,7 +57,7 @@ namespace Verifalia.Api.Models
         /// <summary>
         /// Gets detailed status information for the validation result.
         /// </summary>
-        public EmailValidationEntryStatus Status { get; set; }
+        public ValidationEntryStatus Status { get; set; }
 
         /// <summary>
         /// Gets the position of the character in the email address that eventually caused the syntax validation to fail.
@@ -74,9 +71,9 @@ namespace Verifalia.Api.Models
         /// <summary>
         /// Gets a value indicating whether a problem with the fake address rejection validation occurred, including:
         /// <list type="bullet">
-        ///     <item><see cref="EmailValidationEntryStatus.CatchAllConnectionFailure">CatchAllConnectionFailure</see></item>
-        ///     <item><see cref="EmailValidationEntryStatus.CatchAllValidationTimeout">CatchAllValidationTimeout</see></item>
-        ///     <item><see cref="EmailValidationEntryStatus.ServerIsCatchAll">ServerIsCatchAll</see></item>
+        ///     <item><see cref="ValidationEntryStatus.CatchAllConnectionFailure">CatchAllConnectionFailure</see></item>
+        ///     <item><see cref="ValidationEntryStatus.CatchAllValidationTimeout">CatchAllValidationTimeout</see></item>
+        ///     <item><see cref="ValidationEntryStatus.ServerIsCatchAll">ServerIsCatchAll</see></item>
         /// </list>
         /// </summary>
         public bool? IsCatchAllFailure { get; set; }
@@ -90,12 +87,11 @@ namespace Verifalia.Api.Models
         /// <summary>
         /// Gets a value indicating whether a timeout occured while verifying the email address, including:
         /// <list type="bullet">
-        ///     <item><see cref="EmailValidationEntryStatus.CatchAllValidationTimeout">CatchAllValidationTimeout</see></item>
-        ///     <item><see cref="EmailValidationEntryStatus.DnsQueryTimeout">DnsQueryTimeout</see></item>
-        ///     <item><see cref="EmailValidationEntryStatus.HttpConnectionTimeout">HttpConnectionTimeout</see></item>
-        ///     <item><see cref="EmailValidationEntryStatus.MailboxValidationTimeout">MailboxValidationTimeout</see></item>
-        ///     <item><see cref="EmailValidationEntryStatus.ProxyConnectionTimeout">ProxyConnectionTimeout</see></item>
-        ///     <item><see cref="EmailValidationEntryStatus.SmtpConnectionTimeout">SmtpConnectionTimeout</see></item>
+        ///     <item><see cref="ValidationEntryStatus.CatchAllValidationTimeout">CatchAllValidationTimeout</see></item>
+        ///     <item><see cref="ValidationEntryStatus.DnsQueryTimeout">DnsQueryTimeout</see></item>
+        ///     <item><see cref="ValidationEntryStatus.HttpConnectionTimeout">HttpConnectionTimeout</see></item>
+        ///     <item><see cref="ValidationEntryStatus.MailboxValidationTimeout">MailboxValidationTimeout</see></item>
+        ///     <item><see cref="ValidationEntryStatus.SmtpConnectionTimeout">SmtpConnectionTimeout</see></item>
         /// </list>
         /// </summary>
         public bool? IsTimeoutFailure { get; set; }
@@ -103,11 +99,11 @@ namespace Verifalia.Api.Models
         /// <summary>
         /// Gets a value indicating whether a failure in the network connection occured while verifying the email address, including:
         /// <list type="bullet">
-        ///     <item><see cref="EmailValidationEntryStatus.SmtpConnectionFailure">SmtpConnectionFailure</see></item>
-        ///     <item><see cref="EmailValidationEntryStatus.MailboxConnectionFailure">MailboxConnectionFailure</see></item>
-        ///     <item><see cref="EmailValidationEntryStatus.DnsConnectionFailure">DnsConnectionFailure</see></item>
-        ///     <item><see cref="EmailValidationEntryStatus.CatchAllConnectionFailure">CatchAllConnectionFailure</see></item>
-        ///     <item><see cref="EmailValidationEntryStatus.HttpConnectionFailure">HttpConnectionFailure</see></item>
+        ///     <item><see cref="ValidationEntryStatus.SmtpConnectionFailure">SmtpConnectionFailure</see></item>
+        ///     <item><see cref="ValidationEntryStatus.MailboxConnectionFailure">MailboxConnectionFailure</see></item>
+        ///     <item><see cref="ValidationEntryStatus.DnsConnectionFailure">DnsConnectionFailure</see></item>
+        ///     <item><see cref="ValidationEntryStatus.CatchAllConnectionFailure">CatchAllConnectionFailure</see></item>
+        ///     <item><see cref="ValidationEntryStatus.HttpConnectionFailure">HttpConnectionFailure</see></item>
         /// </list>
         /// </summary>
         public bool? IsNetworkFailure { get; set; }
@@ -115,18 +111,18 @@ namespace Verifalia.Api.Models
         /// <summary>
         /// Gets a value indicating whether a syntax error in the email address has been found, including:
         /// <list type="bullet">
-        ///     <item><see cref="EmailValidationEntryStatus.AtSignNotFound">AtSignNotFound</see></item>
-        ///     <item><see cref="EmailValidationEntryStatus.DomainPartCompliancyFailure">DomainPartCompliancyFailure</see></item>
-        ///     <item><see cref="EmailValidationEntryStatus.DoubleDotSequence">DoubleDotSequence</see></item>
-        ///     <item><see cref="EmailValidationEntryStatus.InvalidAddressLength">InvalidAddressLength</see></item>
-        ///     <item><see cref="EmailValidationEntryStatus.InvalidCharacterInSequence">InvalidCharacterInSequence</see></item>
-        ///     <item><see cref="EmailValidationEntryStatus.InvalidEmptyQuotedWord">InvalidEmptyQuotedWord</see></item>
-        ///     <item><see cref="EmailValidationEntryStatus.InvalidFoldingWhiteSpaceSequence">InvalidFoldingWhiteSpaceSequence</see></item>
-        ///     <item><see cref="EmailValidationEntryStatus.InvalidLocalPartLength">InvalidLocalPartLength</see></item>
-        ///     <item><see cref="EmailValidationEntryStatus.InvalidWordBoundaryStart">InvalidWordBoundaryStart</see></item>
-        ///     <item><see cref="EmailValidationEntryStatus.UnbalancedCommentParenthesis">UnbalancedCommentParenthesis</see></item>
-        ///     <item><see cref="EmailValidationEntryStatus.UnexpectedQuotedPairSequence">UnexpectedQuotedPairSequence</see></item>
-        ///     <item><see cref="EmailValidationEntryStatus.UnmatchedQuotedPair">UnmatchedQuotedPair</see></item>
+        ///     <item><see cref="ValidationEntryStatus.AtSignNotFound">AtSignNotFound</see></item>
+        ///     <item><see cref="ValidationEntryStatus.DomainPartCompliancyFailure">DomainPartCompliancyFailure</see></item>
+        ///     <item><see cref="ValidationEntryStatus.DoubleDotSequence">DoubleDotSequence</see></item>
+        ///     <item><see cref="ValidationEntryStatus.InvalidAddressLength">InvalidAddressLength</see></item>
+        ///     <item><see cref="ValidationEntryStatus.InvalidCharacterInSequence">InvalidCharacterInSequence</see></item>
+        ///     <item><see cref="ValidationEntryStatus.InvalidEmptyQuotedWord">InvalidEmptyQuotedWord</see></item>
+        ///     <item><see cref="ValidationEntryStatus.InvalidFoldingWhiteSpaceSequence">InvalidFoldingWhiteSpaceSequence</see></item>
+        ///     <item><see cref="ValidationEntryStatus.InvalidLocalPartLength">InvalidLocalPartLength</see></item>
+        ///     <item><see cref="ValidationEntryStatus.InvalidWordBoundaryStart">InvalidWordBoundaryStart</see></item>
+        ///     <item><see cref="ValidationEntryStatus.UnbalancedCommentParenthesis">UnbalancedCommentParenthesis</see></item>
+        ///     <item><see cref="ValidationEntryStatus.UnexpectedQuotedPairSequence">UnexpectedQuotedPairSequence</see></item>
+        ///     <item><see cref="ValidationEntryStatus.UnmatchedQuotedPair">UnmatchedQuotedPair</see></item>
         /// </list>
         /// </summary>
         public bool? IsSyntaxFailure { get; set; }
@@ -134,9 +130,9 @@ namespace Verifalia.Api.Models
         /// <summary>
         /// Gets a value indicating whether a DNS-related issue occurred, including:
         /// <list type="bullet">
-        ///     <item><see cref="EmailValidationEntryStatus.DnsQueryTimeout">DnsQueryTimeout</see></item>
-        ///     <item><see cref="EmailValidationEntryStatus.DomainDoesNotExist">DomainDoesNotExist</see></item>
-        ///     <item><see cref="EmailValidationEntryStatus.DnsConnectionFailure">DnsConnectionFailure</see></item>
+        ///     <item><see cref="ValidationEntryStatus.DnsQueryTimeout">DnsQueryTimeout</see></item>
+        ///     <item><see cref="ValidationEntryStatus.DomainDoesNotExist">DomainDoesNotExist</see></item>
+        ///     <item><see cref="ValidationEntryStatus.DnsConnectionFailure">DnsConnectionFailure</see></item>
         /// </list>
         /// </summary>
         public bool? IsDnsFailure { get; set; }
@@ -144,8 +140,8 @@ namespace Verifalia.Api.Models
         /// <summary>
         /// Gets a value indicating whether a problem with the SMTP validation of the email address occurred, including:
         /// <list type="bullet">
-        ///     <item><see cref="EmailValidationEntryStatus.SmtpConnectionFailure">SmtpConnectionFailure</see></item>
-        ///     <item><see cref="EmailValidationEntryStatus.SmtpConnectionTimeout">SmtpConnectionTimeout</see></item>
+        ///     <item><see cref="ValidationEntryStatus.SmtpConnectionFailure">SmtpConnectionFailure</see></item>
+        ///     <item><see cref="ValidationEntryStatus.SmtpConnectionTimeout">SmtpConnectionTimeout</see></item>
         /// </list>
         /// </summary>
         public bool? IsSmtpFailure { get; set; }
@@ -153,11 +149,11 @@ namespace Verifalia.Api.Models
         /// <summary>
         /// Gets a value indicating whether a problem with the mailbox validation of the email address occurred, including:
         /// <list type="bullet">
-        ///     <item><see cref="EmailValidationEntryStatus.MailboxConnectionFailure">MailboxConnectionFailure</see></item>
-        ///     <item><see cref="EmailValidationEntryStatus.MailboxDoesNotExist">MailboxDoesNotExist</see></item>
-        ///     <item><see cref="EmailValidationEntryStatus.MailboxTemporarilyUnavailable">MailboxTemporarilyUnavailable</see></item>
-        ///     <item><see cref="EmailValidationEntryStatus.MailboxValidationTimeout">MailboxValidationTimeout</see></item>
-        ///     <item><see cref="EmailValidationEntryStatus.ServerDoesNotSupportInternationalMailboxes">ServerDoesNotSupportInternationalMailboxes</see></item>
+        ///     <item><see cref="ValidationEntryStatus.MailboxConnectionFailure">MailboxConnectionFailure</see></item>
+        ///     <item><see cref="ValidationEntryStatus.MailboxDoesNotExist">MailboxDoesNotExist</see></item>
+        ///     <item><see cref="ValidationEntryStatus.MailboxTemporarilyUnavailable">MailboxTemporarilyUnavailable</see></item>
+        ///     <item><see cref="ValidationEntryStatus.MailboxValidationTimeout">MailboxValidationTimeout</see></item>
+        ///     <item><see cref="ValidationEntryStatus.ServerDoesNotSupportInternationalMailboxes">ServerDoesNotSupportInternationalMailboxes</see></item>
         /// </list>
         /// </summary>
         public bool? IsMailboxFailure { get; set; }

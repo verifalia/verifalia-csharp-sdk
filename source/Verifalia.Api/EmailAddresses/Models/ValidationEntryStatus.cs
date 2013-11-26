@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Verifalia.Api.Models
+﻿namespace Verifalia.Api.EmailAddresses.Models
 {
     /// <summary>
     /// Provides enumerated values that specify the supported statuses of a single email address validation entry.
     /// </summary>
-    public enum EmailValidationEntryStatus
+    public enum ValidationEntryStatus
     {
+        /// <summary>
+        /// Unknown validation status, due to a value reported by the API which is missing in this SDK.
+        /// </summary>
+        Unknown,
+
         /// <summary>
         /// The email address has been successfully validated.
         /// </summary>
@@ -77,6 +77,11 @@ namespace Verifalia.Api.Models
         /// </summary>
         DomainPartCompliancyFailure,
 
+        /// <summary>
+        /// The email address is not compliant with the additional syntax rules of the ISP which should eventually manage it.
+        /// </summary>
+        IspSpecificSyntaxFailure,
+
         #endregion
 
         #region DNS failures
@@ -95,6 +100,12 @@ namespace Verifalia.Api.Models
         /// The domain of the email address does not exist.
         /// </summary>
         DomainDoesNotExist,
+
+        /// <summary>
+        /// The domain of the email address does not have any valid DNS record and couldn't accept messages from another
+        /// host on the Internet.
+        /// </summary>
+        DomainIsMisconfigured,
 
         #endregion
 
@@ -180,6 +191,21 @@ namespace Verifalia.Api.Models
         HttpConnectionFailure,
 
         #endregion
+
+        /// <summary>
+        /// The mail exchanger is temporarily unavailable.
+        /// </summary>
+        ServerTemporaryUnavailable,
+
+        /// <summary>
+        /// The external mail exchanger replied one or more non-standard SMTP lines and caused the SMTP session to be aborted.
+        /// </summary>
+        SmtpDialogError,
+
+        /// <summary>
+        /// The external mail exchanger rejected the local endpoint, probably because of its own policy rules.
+        /// </summary>
+        LocalEndPointRejected,
 
         /// <summary>
         /// One or more unhandled exceptions have been thrown during the verification process and something went wrong

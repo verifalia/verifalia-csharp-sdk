@@ -1,14 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Verifalia.Api.Models
+namespace Verifalia.Api.EmailAddresses.Models
 {
     /// <summary>
     /// The possible statuses for an email validation batch.
     /// </summary>
-    public enum EmailValidationStatus
+    public enum ValidationStatus
     {
         /// <summary>
         /// The email validation batch is being processed by Verifalia.

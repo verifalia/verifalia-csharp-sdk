@@ -1,22 +1,23 @@
 ﻿using System;
 using System.Reflection;
 using RestSharp;
+using Verifalia.Api.EmailAddresses;
 
 namespace Verifalia.Api
 {
     /// <summary>
     /// REST client for Verifalia API.
     /// </summary>
-    public partial class VerifaliaRestClient
+    public class VerifaliaRestClient
     {
-        const string DEFAULT_API_VERSION = "v1";
-        const string DEFAULT_BASE_URL = "https://api.verifalia.com/";
+        const string DefaultApiVersion = "v1";
+        const string DefaultBaseUrl = "https://api.verifalia.com/";
 
-        readonly string _AccountSid;
-        readonly RestClient _RestClient;
+        readonly RestClient _restClient;
+        string _apiVersion;
+        Uri _baseUri;
 
-        string _ApiVersion;
-        Uri _BaseUri;
+        ValidationRestClient _emailValidations;
 
         /// <summary>
         /// Verifalia API version to use when making requests.
@@ -25,12 +26,15 @@ namespace Verifalia.Api
         {
             get
             {
-                return _ApiVersion;
+                return _apiVersion;
             }
             set
             {
-                _ApiVersion = value;
-                UpdateBaseUri();
+                if (value == null)
+                    throw new ArgumentNullException("value");
+
+                _apiVersion = value;
+                UpdateRestClientBaseUrl();
             }
         }
 
@@ -41,12 +45,26 @@ namespace Verifalia.Api
         {
             get
             {
-                return _BaseUri;
+                return _baseUri;
             }
             set
             {
-                _BaseUri = value;
-                UpdateBaseUri();
+                if (value == null)
+                    throw new ArgumentNullException("value");
+
+                _baseUri = value;
+                UpdateRestClientBaseUrl();
+            }
+        }
+
+        /// <summary>
+        /// Allows to submit and manage email validations using the Verifalia service.
+        /// </summary>
+        public ValidationRestClient EmailValidations
+        {
+            get
+            {
+                return _emailValidations ?? (_emailValidations = new ValidationRestClient(_restClient));
             }
         }
 
@@ -62,36 +80,34 @@ namespace Verifalia.Api
             if (String.IsNullOrEmpty(authToken))
                 throw new ArgumentException("authToken is null or empty.", "authToken");
 
-            _AccountSid = accountSid;
-
             // Default values used to build the base URL needed to access the service
 
-            _ApiVersion = DEFAULT_API_VERSION;
-            _BaseUri = new Uri(DEFAULT_BASE_URL);
-
-            // Setup the rest client
-
-            _RestClient = new RestClient();
-            _RestClient.Authenticator = new HttpBasicAuthenticator(_AccountSid, authToken);
-
-            UpdateBaseUri();
+            _apiVersion = DefaultApiVersion;
+            _baseUri = new Uri(DefaultBaseUrl);
 
             // The user agent string brings the type of the client and its version (for statistical purposes
             // at the server side):
 
-            var executingAssemblyVersion = Assembly.GetExecutingAssembly()
-                .GetName()
-                .Version;
+            var userAgent = String.Concat("verifalia-rest-client/netfx/",
+                Assembly.GetExecutingAssembly().GetName().Version);
 
-            _RestClient.UserAgent = String.Concat("verifalia-rest-client/netfx/", executingAssemblyVersion);
+            // Setup the rest client
+
+            _restClient = new RestClient
+            {
+                Authenticator = new HttpBasicAuthenticator(accountSid, authToken),
+                UserAgent = userAgent
+            };
+
+            UpdateRestClientBaseUrl();
         }
 
         /// <summary>
         /// Updates the base URL for the underlying REST client.
         /// </summary>
-        void UpdateBaseUri()
+        void UpdateRestClientBaseUrl()
         {
-            _RestClient.BaseUrl = new Uri(BaseUri, ApiVersion).AbsoluteUri;
+            _restClient.BaseUrl = new Uri(BaseUri, ApiVersion).AbsoluteUri;
         }
     }
 }
