@@ -14,6 +14,7 @@ Learn more at [http://verifalia.com][0].
 
 The example below shows how to have your application initiate and validate a couple of email addresses using the Verifalia .NET helper library:
 
+```c#
 	using Verifalia.Api;
 	
 	var restClient = new VerifaliaRestClient("YOUR-ACCOUNT-SID", "YOUR-AUTH-TOKEN");
@@ -35,10 +36,12 @@ The example below shows how to have your application initiate and validate a cou
 				entry.Status);
 		}
 	}
+```
 
 Internally, the `Submit()` method sends the email addresses to the Verifalia servers and then polls them until the validations complete.
 Instead of relying on this automatic polling behavior, you may even manually query the Verifalia servers by way of the `Query()` method, as shown below:
 
+```c#
 	var result = restClient.EmailValidations.Submit(new[]
 		{
 			"alice@example.com",
@@ -54,6 +57,7 @@ Instead of relying on this automatic polling behavior, you may even manually que
 	}
 
 	// TODO: Display the validation results
+```
 
 [0]: http://verifalia.com
 [1]: https://github.com/verifalia/verifalia-csharp-sdk/archive/master.zip
