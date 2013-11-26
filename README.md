@@ -15,48 +15,48 @@ Learn more at [http://verifalia.com][0].
 The example below shows how to have your application initiate and validate a couple of email addresses using the Verifalia .NET helper library:
 
 ```c#
-	using Verifalia.Api;
-	
-	var restClient = new VerifaliaRestClient("YOUR-ACCOUNT-SID", "YOUR-AUTH-TOKEN");
+using Verifalia.Api;
 
-	var result = restClient.EmailValidations.Submit(new[]
-		{
-			"alice@example.com",
-			"bob@example.net",
-			"carol@example.org"
-		},
-		new WaitForCompletionOptions(TimeSpan.FromMinutes(1)));
+var restClient = new VerifaliaRestClient("YOUR-ACCOUNT-SID", "YOUR-AUTH-TOKEN");
 
-	if (result != null) // Result is null if timeout expires
+var result = restClient.EmailValidations.Submit(new[]
 	{
-		foreach (var entry in result.Entries)
-		{
-			Console.WriteLine("Address: {0} => Result: {1}",
-				entry.InputData,
-				entry.Status);
-		}
+		"alice@example.com",
+		"bob@example.net",
+		"carol@example.org"
+	},
+	new WaitForCompletionOptions(TimeSpan.FromMinutes(1)));
+
+if (result != null) // Result is null if timeout expires
+{
+	foreach (var entry in result.Entries)
+	{
+		Console.WriteLine("Address: {0} => Result: {1}",
+			entry.InputData,
+			entry.Status);
 	}
+}
 ```
 
 Internally, the `Submit()` method sends the email addresses to the Verifalia servers and then polls them until the validations complete.
 Instead of relying on this automatic polling behavior, you may even manually query the Verifalia servers by way of the `Query()` method, as shown below:
 
 ```c#
-	var result = restClient.EmailValidations.Submit(new[]
-		{
-			"alice@example.com",
-			"bob@example.net",
-			"carol@example.org"
-		},
-		WaitForCompletionOptions.DontWait));
-
-	while (result.Status != ValidationStatus.Completed)
+var result = restClient.EmailValidations.Submit(new[]
 	{
-		result = restClient.EmailValidations.Query(result.UniqueID, WaitForCompletionOptions.DontWait);
-		Thread.Sleep(5000);
-	}
+		"alice@example.com",
+		"bob@example.net",
+		"carol@example.org"
+	},
+	WaitForCompletionOptions.DontWait));
 
-	// TODO: Display the validation results
+while (result.Status != ValidationStatus.Completed)
+{
+	result = restClient.EmailValidations.Query(result.UniqueID, WaitForCompletionOptions.DontWait);
+	Thread.Sleep(5000);
+}
+
+// TODO: Display the validation results
 ```
 
 [0]: http://verifalia.com
