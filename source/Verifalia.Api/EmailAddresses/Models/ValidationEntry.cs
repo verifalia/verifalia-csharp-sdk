@@ -55,6 +55,11 @@ namespace Verifalia.Api.EmailAddresses.Models
         public bool? IsDisposableEmailAddress { get; set; }
 
         /// <summary>
+        /// Returns a value indicating whether the local part of the email address is a well-known role account or not.
+        /// </summary>
+        public bool? IsRoleAccount { get; set; }
+
+        /// <summary>
         /// Gets detailed status information for the validation result.
         /// </summary>
         public ValidationEntryStatus Status { get; set; }

@@ -84,6 +84,11 @@
 
         #endregion
 
+        /// <summary>
+        /// The local part of the email address is a well-known role account.
+        /// </summary>
+        LocalPartIsWellKnownRoleAccount,
+
         #region DNS failures
 
         /// <summary>
