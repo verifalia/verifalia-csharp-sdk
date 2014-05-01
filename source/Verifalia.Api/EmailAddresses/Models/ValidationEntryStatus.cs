@@ -114,6 +114,26 @@
 
         #endregion
 
+        #region Well-known disposable email address failures
+
+        /// <summary>
+        /// The email address is provided by a well-known disposable email address provider (DEA).
+        /// </summary>
+        DomainIsWellKnownDea,
+
+        /// <summary>
+        /// The mail exchanger being tested is a well-known disposable email address provider (DEA).
+        /// </summary>
+        MailExchangerIsWellKnownDea,
+
+        /// <summary>
+        /// While both the domain and the mail exchanger for the email address being tested are not from a well-known
+        /// disposable email address provider (DEA), the mailbox is actually disposable.
+        /// </summary>
+        MailboxIsDea,
+
+        #endregion
+
         #region SMTP failures
 
         /// <summary>
