@@ -184,6 +184,15 @@ namespace Verifalia.Api.EmailAddresses
                 {
                     var result = QueryOnce(uniqueId);
 
+                    // A null result means the validation has not been found
+
+                    if (result == null)
+                    {
+                        return null;
+                    }
+
+                    // Returns immediately if the validation has been completed
+
                     if (result.Status == ValidationStatus.Completed)
                     {
                         return result;
@@ -241,18 +250,59 @@ namespace Verifalia.Api.EmailAddresses
 
             var response = _restClient.Execute<Validation>(request);
 
+            switch (response.StatusCode)
+            {
+                case HttpStatusCode.OK:
+                    {
+                        response.Data.Status = ValidationStatus.Completed;
+                        return response.Data;
+                    }
+
+                case HttpStatusCode.Accepted:
+                {
+                    response.Data.Status = ValidationStatus.Pending;
+                    return response.Data;
+                }
+
+                case HttpStatusCode.Gone:
+                case HttpStatusCode.NotFound:
+                {
+                    return null;
+                }
+            }
+            
+            throw new VerifaliaException(response.ErrorMessage)
+            {
+                Response = response
+            };
+        }
+
+        /// <summary>
+        /// Deletes an email validation batch, identified by the specified unique identifier.
+        /// Makes a DELETE request to the /email-validations/{uniqueId} resource.
+        /// </summary>
+        /// <param name="uniqueId">The unique identifier for an email validation batch to be deleted.</param>
+        public void Delete(Guid uniqueId)
+        {
+            var request = new RestRequest
+            {
+                Resource = "email-validations/{uniqueId}"
+            };
+
+            request.AddUrlSegment("uniqueId", uniqueId.ToString());
+            request.Method = Method.DELETE;
+
+            // Sends the request to the Verifalia servers
+
+            var response = _restClient.Execute(request);
+
             if (response.StatusCode == HttpStatusCode.OK)
             {
-                response.Data.Status = ValidationStatus.Completed;
-                return response.Data;
+                // The batch has been correctly deleted
+
+                return;
             }
-            
-            if (response.StatusCode == HttpStatusCode.Accepted)
-            {
-                response.Data.Status = ValidationStatus.Pending;
-                return response.Data;
-            }
-            
+
             throw new VerifaliaException(response.ErrorMessage)
             {
                 Response = response

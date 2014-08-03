@@ -37,5 +37,10 @@ namespace Verifalia.Api.EmailAddresses.Models
         /// A list of results for the email validation batch.
         /// </summary>
         public List<ValidationEntry> Entries { get; set; }
+
+        /// <summary>
+        /// The completion progress for the batch.
+        /// </summary>
+        public ValidationProgress Progress { get; set; }
     }
 }

@@ -45,6 +45,7 @@
     <Compile Include="EmailAddresses\Models\Validation.cs" />
     <Compile Include="EmailAddresses\Models\ValidationEntry.cs" />
     <Compile Include="EmailAddresses\Models\ValidationEntryStatus.cs" />
+    <Compile Include="EmailAddresses\Models\ValidationProgress.cs" />
     <Compile Include="EmailAddresses\Models\ValidationStatus.cs" />
     <Compile Include="EmailAddresses\ValidationRestClient.cs" />
     <Compile Include="Exceptions\AuthorizationException.cs" />

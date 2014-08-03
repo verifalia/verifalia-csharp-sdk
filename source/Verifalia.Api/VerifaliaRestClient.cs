@@ -10,7 +10,7 @@ namespace Verifalia.Api
     /// </summary>
     public class VerifaliaRestClient
     {
-        const string DefaultApiVersion = "v1";
+        const string DefaultApiVersion = "v1.1";
         const string DefaultBaseUrl = "https://api.verifalia.com/";
 
         readonly RestClient _restClient;
