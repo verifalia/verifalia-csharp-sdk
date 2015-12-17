@@ -236,6 +236,11 @@
         /// One or more unhandled exceptions have been thrown during the verification process and something went wrong
         /// on the Verifalia side.
         /// </summary>
-        UnhandledException
+        UnhandledException,
+
+        /// <summary>
+        /// The mail exchanger under test hides a honeypot / spam trap.
+        /// </summary>
+        MailExchangerIsHoneypot
     }
 }

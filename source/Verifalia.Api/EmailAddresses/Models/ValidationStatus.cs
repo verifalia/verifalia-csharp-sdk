@@ -6,6 +6,11 @@ namespace Verifalia.Api.EmailAddresses.Models
     public enum ValidationStatus
     {
         /// <summary>
+        /// Unknown status, due to a value reported by the API which is missing in this SDK.
+        /// </summary>
+        Unknown,
+
+        /// <summary>
         /// The email validation batch is being processed by Verifalia.
         /// </summary>
         Pending,

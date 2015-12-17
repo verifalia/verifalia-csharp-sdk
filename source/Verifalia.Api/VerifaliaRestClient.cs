@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Linq;
 using System.Reflection;
 using RestSharp;
+using RestSharp.Authenticators;
 using Verifalia.Api.EmailAddresses;
 
 namespace Verifalia.Api
@@ -8,14 +10,16 @@ namespace Verifalia.Api
     /// <summary>
     /// REST client for Verifalia API.
     /// </summary>
-    public class VerifaliaRestClient
+    public class VerifaliaRestClient : IRestClientFactory
     {
-        const string DefaultApiVersion = "v1.1";
-        const string DefaultBaseUrl = "https://api.verifalia.com/";
+        const string DefaultApiVersion = "v1.2";
 
-        readonly RestClient _restClient;
+        readonly Random _uriShuffler;
+        readonly string _accountSid;
+        readonly string _authToken;
+
+        Uri[] _baseUris;
         string _apiVersion;
-        Uri _baseUri;
 
         ValidationRestClient _emailValidations;
 
@@ -34,26 +38,42 @@ namespace Verifalia.Api
                     throw new ArgumentNullException("value");
 
                 _apiVersion = value;
-                UpdateRestClientBaseUrl();
             }
         }
 
         /// <summary>
-        /// Base URL of Verifalia API (defaults to https://api.verifalia.com/)
+        /// Base URIs of Verifalia API (defaults to https://api-1.verifalia.com/ and https://api-2.verifalia.com). Do not use this property
+        /// unless instructed to so by the Verifalia support team.
         /// </summary>
-        public Uri BaseUri
+        public Uri[] BaseUris
         {
             get
             {
-                return _baseUri;
+                return _baseUris;
             }
             set
             {
                 if (value == null)
-                    throw new ArgumentNullException("value");
+                {
+                    // Default base URIs
 
-                _baseUri = value;
-                UpdateRestClientBaseUrl();
+                    _baseUris = new[]
+                    {
+                        new Uri("https://api-1.verifalia.com"),
+                        new Uri("https://api-2.verifalia.com")
+                    };
+                }
+                else
+                {
+                    // Custom base URIs
+
+                    if (value.Length == 0)
+                    {
+                        throw new ArgumentException("Value must contain at least one base URI.", "value");
+                    }
+
+                    _baseUris = value;
+                }
             }
         }
 
@@ -64,15 +84,15 @@ namespace Verifalia.Api
         {
             get
             {
-                return _emailValidations ?? (_emailValidations = new ValidationRestClient(_restClient));
+                return _emailValidations ?? (_emailValidations = new ValidationRestClient(this));
             }
         }
 
         /// <summary>
-        /// Initializes a new Verifalia REST client with the specified credentials.
+        /// Initializes a new Verifalia REST client with the specified sub-account credentials. Sub-accounts
+        /// for API usage, along with their Account SID and Auth Token, can be set up from within the Verifalia dashboard, at 
+        /// <seealso cref="https://verifalia.com/client-area">https://verifalia.com/client-area</seealso>.
         /// </summary>
-        /// <remarks>Your Account SID and Auth token values can be retrieved in your client area,
-        /// upon clicking on your subscription details, on Verifalia website at: https://verifalia.com/client-area/subscriptions </remarks>
         public VerifaliaRestClient(string accountSid, string authToken)
         {
             if (String.IsNullOrEmpty(accountSid))
@@ -80,34 +100,41 @@ namespace Verifalia.Api
             if (String.IsNullOrEmpty(authToken))
                 throw new ArgumentException("authToken is null or empty.", "authToken");
 
+            _accountSid = accountSid;
+            _authToken = authToken;
+
+            _uriShuffler = new Random();
+
             // Default values used to build the base URL needed to access the service
 
             _apiVersion = DefaultApiVersion;
-            _baseUri = new Uri(DefaultBaseUrl);
+        }
 
+        RestClient IRestClientFactory.Build()
+        {
             // The user agent string brings the type of the client and its version (for statistical purposes
             // at the server side):
 
             var userAgent = String.Concat("verifalia-rest-client/netfx/",
                 Assembly.GetExecutingAssembly().GetName().Version);
 
-            // Setup the rest client
+            // Setup the REST client
 
-            _restClient = new RestClient
+            var shuffledFinalUris = _baseUris
+                .Select(uri => new Uri(uri, ApiVersion))
+                .OrderBy(uri => _uriShuffler.Next());
+
+            var restClient = new MultiplexedRestClient(shuffledFinalUris)
             {
-                Authenticator = new HttpBasicAuthenticator(accountSid, authToken),
+                Authenticator = new HttpBasicAuthenticator(_accountSid, _authToken),
                 UserAgent = userAgent
             };
 
-            UpdateRestClientBaseUrl();
-        }
+            restClient.ClearHandlers();
+            restClient.AddHandler("application/json", new ProgressiveJsonSerializer());
+            restClient.FollowRedirects = false;
 
-        /// <summary>
-        /// Updates the base URL for the underlying REST client.
-        /// </summary>
-        void UpdateRestClientBaseUrl()
-        {
-            _restClient.BaseUrl = new Uri(BaseUri, ApiVersion).AbsoluteUri;
+            return restClient;
         }
     }
 }

@@ -7,7 +7,7 @@ Verifalia provides a simple HTTPS-based API for validating email addresses and c
 
 The easiest way to add support for the Verifalia REST API to your .NET solution is to [download the SDK source project from github][1], eventually extract
 it to a folder of your choice and add a reference from your own solution to the SDK project. The SDK project is a C# project with support for Visual Studio
-2010, 2012 and 2013, which can be referenced and used with any other .NET language too, including Visual Basic (VB.NET), C++/CLI, J#, IronPython, IronRuby, F# and PowerShell.
+2010, 2012, 2013 and 2015, which can be referenced and used with any other .NET language too, including Visual Basic (VB.NET), C++/CLI, J#, IronPython, IronRuby, F# and PowerShell.
 Learn more at [http://verifalia.com][0].
 
 ### Sample usage ###

@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Xml.Serialization;
+using RestSharp;
+using RestSharp.Deserializers;
+using RestSharp.Serializers;
 
 namespace Verifalia.Api.EmailAddresses.Models
 {
@@ -11,6 +15,11 @@ namespace Verifalia.Api.EmailAddresses.Models
         /// The input string to validate.
         /// </summary>
         public string InputData { get; set; }
+
+        /// <summary>
+        /// A custom, optional string which is passed back upon completing the validation.
+        /// </summary>
+        public string Custom { get; set; }
 
         /// <summary>
         /// The date this entry has been completed.
