@@ -55,13 +55,7 @@ namespace Verifalia.Api
             {
                 if (value == null)
                 {
-                    // Default base URIs
-
-                    _baseUris = new[]
-                    {
-                        new Uri("https://api-1.verifalia.com"),
-                        new Uri("https://api-2.verifalia.com")
-                    };
+                    SetDefaultBaseUris();
                 }
                 else
                 {
@@ -107,9 +101,24 @@ namespace Verifalia.Api
 
             // Default values used to build the base URL needed to access the service
 
+            SetDefaultBaseUris();
             _apiVersion = DefaultApiVersion;
         }
 
+        void SetDefaultBaseUris()
+        {
+            // Default base URIs
+
+            _baseUris = new[]
+            {
+                new Uri("https://api-1.verifalia.com"),
+                new Uri("https://api-2.verifalia.com")
+            };
+        }
+
+        /// <summary>
+        /// Builds a custom REST client which peek a random API endpoint and automatically retries on the others, in the event of a network failure.
+        /// </summary>
         RestClient IRestClientFactory.Build()
         {
             // The user agent string brings the type of the client and its version (for statistical purposes
