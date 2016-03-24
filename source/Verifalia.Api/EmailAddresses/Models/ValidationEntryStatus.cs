@@ -241,6 +241,11 @@
         /// <summary>
         /// The mail exchanger under test hides a honeypot / spam trap.
         /// </summary>
-        MailExchangerIsHoneypot
+        MailExchangerIsHoneypot,
+		
+        /// <summary>
+        /// The domain literal of the email address couldn't accept messages from the Internet.
+        /// </summary>
+        UnacceptableDomainLiteral
     }
 }
