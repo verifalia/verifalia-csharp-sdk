@@ -3,13 +3,13 @@ using Newtonsoft.Json;
 using RestSharp;
 using RestSharp.Deserializers;
 using RestSharp.Serializers;
-using Verifalia.Api.EmailAddresses.Converters;
+using Verifalia.Api.EmailAddresses.Models;
 
 namespace Verifalia.Api
 {
     /// <summary>
     /// Progressive json serializer / deserializer using Newtonsoft Json.
-    /// Code adapted from: http://bytefish.de/blog/restsharp_custom_json_serializer/
+    /// Code partially adapted from: http://bytefish.de/blog/restsharp_custom_json_serializer/
     /// </summary>
     internal class ProgressiveJsonSerializer : ISerializer, IDeserializer
     {
@@ -24,8 +24,10 @@ namespace Verifalia.Api
                 MissingMemberHandling = MissingMemberHandling.Ignore
             };
 
-            _serializer.Converters.Add(new ValidationStatusConverter());
-            _serializer.Converters.Add(new ValidationEntryStatusConverter());
+            // TODO: Move the following to a reflection-based initialization in order to decouple the serializer from the data-specific converters
+
+            _serializer.Converters.Add(new ProgressiveStructJsonConverter<ValidationStatus>(ValidationStatus.Unknown));
+            _serializer.Converters.Add(new ProgressiveStructJsonConverter<ValidationEntryStatus>(ValidationEntryStatus.Unknown));
         }
 
         public string ContentType
@@ -33,7 +35,6 @@ namespace Verifalia.Api
             get { return "application/json"; } // Probably used for Serialization?
             set { }
         }
-
 
         public string DateFormat { get; set; }
 

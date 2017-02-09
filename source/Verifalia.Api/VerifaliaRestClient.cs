@@ -3,6 +3,7 @@ using System.Linq;
 using System.Reflection;
 using RestSharp;
 using RestSharp.Authenticators;
+using Verifalia.Api.AccountBalance;
 using Verifalia.Api.EmailAddresses;
 
 namespace Verifalia.Api
@@ -10,18 +11,22 @@ namespace Verifalia.Api
     /// <summary>
     /// REST client for Verifalia API.
     /// </summary>
-    public class VerifaliaRestClient : IRestClientFactory
+    public class VerifaliaRestClient : IRestClientFactory, IVerifaliaRestClient
     {
-        const string DefaultApiVersion = "v1.2";
+        const string DefaultApiVersion = "v1.3";
 
         readonly Random _uriShuffler;
         readonly string _accountSid;
         readonly string _authToken;
 
+        public static Uri[] DefaultBaseUris { get; private set; }
+
         Uri[] _baseUris;
         string _apiVersion;
+        RestClient _cachedRestClient;
 
-        ValidationRestClient _emailValidations;
+        IValidationRestClient _emailValidations;
+        IAccountBalanceRestClient _accountBalance;
 
         /// <summary>
         /// Verifalia API version to use when making requests.
@@ -55,7 +60,7 @@ namespace Verifalia.Api
             {
                 if (value == null)
                 {
-                    SetDefaultBaseUris();
+                    _baseUris = DefaultBaseUris;
                 }
                 else
                 {
@@ -68,18 +73,44 @@ namespace Verifalia.Api
 
                     _baseUris = value;
                 }
+
+                // Invalidate the cached rest client
+
+                _cachedRestClient = null;
             }
         }
 
         /// <summary>
         /// Allows to submit and manage email validations using the Verifalia service.
         /// </summary>
-        public ValidationRestClient EmailValidations
+        public IValidationRestClient EmailValidations
         {
             get
             {
                 return _emailValidations ?? (_emailValidations = new ValidationRestClient(this));
             }
+        }
+
+        /// <summary>
+        /// Allows to manage the credits for the Verifalia account.
+        /// </summary>
+        public IAccountBalanceRestClient AccountBalance
+        {
+            get
+            {
+                return _accountBalance ?? (_accountBalance = new AccountBalanceRestClient(this));
+            }
+        }
+
+        static VerifaliaRestClient()
+        {
+            // Default base URIs
+
+            DefaultBaseUris = new[]
+            {
+                new Uri("https://api-1.verifalia.com"),
+                new Uri("https://api-2.verifalia.com")
+            };
         }
 
         /// <summary>
@@ -97,30 +128,25 @@ namespace Verifalia.Api
             _accountSid = accountSid;
             _authToken = authToken;
 
+            // Initialize the shuffle mechanism which randomizes the API endpoints usage
+
             _uriShuffler = new Random();
 
             // Default values used to build the base URL needed to access the service
 
-            SetDefaultBaseUris();
+            _baseUris = DefaultBaseUris;
             _apiVersion = DefaultApiVersion;
         }
 
-        void SetDefaultBaseUris()
-        {
-            // Default base URIs
-
-            _baseUris = new[]
-            {
-                new Uri("https://api-1.verifalia.com"),
-                new Uri("https://api-2.verifalia.com")
-            };
-        }
-
         /// <summary>
-        /// Builds a custom REST client which peek a random API endpoint and automatically retries on the others, in the event of a network failure.
+        /// Builds a custom REST client which peeks a random API endpoint and automatically retries on the others, in the event
+        /// of a network failure.
         /// </summary>
         RestClient IRestClientFactory.Build()
         {
+            if (_cachedRestClient != null)
+                return _cachedRestClient;
+            
             // The user agent string brings the type of the client and its version (for statistical purposes
             // at the server side):
 
@@ -143,7 +169,9 @@ namespace Verifalia.Api
             restClient.AddHandler("application/json", new ProgressiveJsonSerializer());
             restClient.FollowRedirects = false;
 
-            return restClient;
+            _cachedRestClient = restClient;
+
+            return _cachedRestClient;
         }
     }
 }

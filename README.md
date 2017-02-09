@@ -12,48 +12,58 @@ Learn more at [http://verifalia.com][0].
 
 ### Sample usage ###
 
-The example below shows how to have your application initiate and validate a couple of email addresses using the Verifalia .NET helper library:
+The C# example below shows how to have your .NET application validate a couple of email addresses using the Verifalia .NET helper library. While the example uses the Task-based
+Asynchronous Pattern (TAP), the SDK also exposes synchronous, not async/await alternatives for backward compatibility.
 
 ```c#
 using Verifalia.Api;
 
 var restClient = new VerifaliaRestClient("YOUR-ACCOUNT-SID", "YOUR-AUTH-TOKEN");
 
-var result = restClient.EmailValidations.Submit(new[]
-	{
-		"alice@example.com",
-		"bob@example.net",
-		"carol@example.org"
-	},
-	new WaitForCompletionOptions(TimeSpan.FromMinutes(1)));
+var result = await restClient
+	.EmailValidations
+	.SubmitAsync(new[]
+		{
+			"alice@example.com",
+			"bob@example.net",
+			"carol@example.org"
+		},
+		ResultPollingOptions.WaitUntilCompleted);
+	
+// At this point the addresses have been validated and we can show the results
 
-if (result != null) // Result is null if timeout expires
+foreach (var entry in result.Entries)
 {
-	foreach (var entry in result.Entries)
-	{
-		Console.WriteLine("Address: {0} => Result: {1}",
-			entry.InputData,
-			entry.Status);
-	}
+	Console.WriteLine("Address: {0} => Result: {1}",
+		entry.InputData,
+		entry.Status);
 }
 ```
 
-Internally, the `Submit()` method sends the email addresses to the Verifalia servers and then polls them until the validations complete.
-Instead of relying on this automatic polling behavior, you may even manually query the Verifalia servers by way of the `Query()` method, as shown below:
+Internally, the `SubmitAsync()` method sends the email addresses to the Verifalia servers and then polls them until the validations complete.
+Instead of relying on this automatic polling behavior, you may even manually submit your addresses and query the Verifalia servers by way of
+the `ResultPollingOptions.NoPolling` option and the `QueryAsync()` method, as shown below:
 
 ```c#
-var result = restClient.EmailValidations.Submit(new[]
-	{
-		"alice@example.com",
-		"bob@example.net",
-		"carol@example.org"
-	},
-	WaitForCompletionOptions.DontWait));
+var result = await restClient
+	.EmailValidations
+	.SubmitAsync(new[]
+		{
+			"alice@example.com",
+			"bob@example.net",
+			"carol@example.org"
+		},
+		ResultPollingOptions.NoPolling));
 
+// Manual polling of the results
+		
 while (result.Status != ValidationStatus.Completed)
 {
-	result = restClient.EmailValidations.Query(result.UniqueID, WaitForCompletionOptions.DontWait);
-	Thread.Sleep(5000);
+	result = await restClient
+		.EmailValidations
+		.QueryAsync(result.UniqueID, ResultPollingOptions.NoPolling);
+
+	await Task.Delay(TimeSpan.FromSeconds(5));
 }
 
 // TODO: Display the validation results

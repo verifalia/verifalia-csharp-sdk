@@ -17,5 +17,10 @@ namespace Verifalia.Api.Exceptions
             : base(message)
         {
         }
+
+        public VerifaliaException(string message, Exception innerException)
+            : base(message, innerException)
+        {
+        }
     }
 }

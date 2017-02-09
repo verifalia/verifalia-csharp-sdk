@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Xml.Serialization;
-using RestSharp;
-using RestSharp.Deserializers;
-using RestSharp.Serializers;
 
 namespace Verifalia.Api.EmailAddresses.Models
 {
@@ -62,6 +58,11 @@ namespace Verifalia.Api.EmailAddresses.Models
         /// Returns a value indicating whether the email address comes from a disposable email address provider or not.
         /// </summary>
         public bool? IsDisposableEmailAddress { get; set; }
+
+        /// <summary>
+        /// Returns a value indicating whether the email address comes from a free email address provider (e.g. gmail, yahoo, outlook / hotmail, ...) or not.
+        /// </summary>
+        public bool? IsFreeEmailAddress { get; set; }
 
         /// <summary>
         /// Returns a value indicating whether the local part of the email address is a well-known role account or not.
