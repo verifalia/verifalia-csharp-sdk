@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using RestSharp;
 using RestSharp.Deserializers;
 using RestSharp.Serializers;
+using Verifalia.Api.EmailAddresses.Converters;
 using Verifalia.Api.EmailAddresses.Models;
 
 namespace Verifalia.Api
@@ -28,6 +29,10 @@ namespace Verifalia.Api
 
             _serializer.Converters.Add(new ProgressiveStructJsonConverter<ValidationStatus>(ValidationStatus.Unknown));
             _serializer.Converters.Add(new ProgressiveStructJsonConverter<ValidationEntryStatus>(ValidationEntryStatus.Unknown));
+
+            // Email-addresses specific
+
+            _serializer.Converters.Add(new ValidationPriorityConverter());
         }
 
         public string ContentType

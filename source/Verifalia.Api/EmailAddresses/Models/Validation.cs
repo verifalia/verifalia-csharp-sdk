@@ -17,7 +17,9 @@ namespace Verifalia.Api.EmailAddresses.Models
         /// The status of this batch.
         /// </summary>
         public ValidationStatus Status { get; set; }
-        
+
+        public ValidationPriority Priority { get; set; }
+
         /// <summary>
         /// The internal version of the Verifalia engine which provided this snapshot.
         /// </summary>

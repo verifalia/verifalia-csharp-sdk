@@ -13,7 +13,7 @@ namespace Verifalia.Api
     /// </summary>
     public class VerifaliaRestClient : IRestClientFactory, IVerifaliaRestClient
     {
-        const string DefaultApiVersion = "v1.3";
+        const string DefaultApiVersion = "v1.4";
 
         readonly Random _uriShuffler;
         readonly string _accountSid;
@@ -48,7 +48,7 @@ namespace Verifalia.Api
 
         /// <summary>
         /// Base URIs of Verifalia API (defaults to https://api-1.verifalia.com/ and https://api-2.verifalia.com). Do not use this property
-        /// unless instructed to so by the Verifalia support team.
+        /// unless instructed to do so by the Verifalia support team.
         /// </summary>
         public Uri[] BaseUris
         {
@@ -116,7 +116,8 @@ namespace Verifalia.Api
         /// <summary>
         /// Initializes a new Verifalia REST client with the specified sub-account credentials. Sub-accounts
         /// for API usage, along with their Account SID and Auth Token, can be set up from within the Verifalia dashboard, at 
-        /// <seealso cref="https://verifalia.com/client-area">https://verifalia.com/client-area</seealso>.
+        /// <seealso cref="https://verifalia.com/client-area">https://verifalia.com/client-area</seealso>, in the "API and
+        /// sub-accounts" section.
         /// </summary>
         public VerifaliaRestClient(string accountSid, string authToken)
         {

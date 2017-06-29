@@ -80,6 +80,12 @@ namespace Verifalia.Api.EmailAddresses.Models
         /// <remarks>This property returns <see langword="null">null</see> when there is not a <see cref="IsSyntaxFailure">syntax failure</see>.</remarks>
         public int? SyntaxFailureIndex { get; set; }
 
+        /// <summary>
+        /// The zero-based index of the first occurrence of this email address in this validation job, in the event the Status
+        /// for this entry equals to Duplicated; duplicated items do not expose any result detail apart from this pointer to the
+        /// aforementioned first occurrence entry and the eventual custom state.
+        /// </summary>
+        public int? DuplicateOf { get; set; }
 
         #region Shortcut Is* properties
 

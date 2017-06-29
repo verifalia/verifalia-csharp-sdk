@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<metadata xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+		<id>Verifalia</id>
+		<version>1.7.0.0</version>
+		<authors>Verifalia</authors>
+		<summary>Verifalia SDK (REST API helper library)</summary>
+		<description>Verifalia provides a simple HTTPS-based API for validating email addresses and checking whether or not they are deliverable. This library allows to easily integrate with Verifalia and validate email addresses in real-time.</description>
+		<copyright>Copyright © Cobisi Research</copyright>
+		<iconUrl>https://verifalia.com/favicon.ico</iconUrl>
+		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<licenseUrl>https://github.com/verifalia/verifalia-csharp-sdk/blob/master/LICENSE</licenseUrl>
+		<projectUrl>https://github.com/verifalia/verifalia-csharp-sdk</projectUrl>
+		<tags>email validation verification real-time verifalia api sdk</tags>
+		<dependencies>
+		  <group targetFramework=".NETFramework4.5">
+			<dependency id="Newtonsoft.Json" version="10.0.3" />
+			<dependency id="RestSharp" version="105.2.3" />
+		  </group>
+		</dependencies>
+	</metadata>
+</package>

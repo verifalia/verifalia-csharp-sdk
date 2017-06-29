@@ -246,6 +246,13 @@
         /// <summary>
         /// The domain literal of the email address couldn't accept messages from the Internet.
         /// </summary>
-        UnacceptableDomainLiteral
+        UnacceptableDomainLiteral,
+
+        /// <summary>
+        /// The item is a duplicate of another email address in the list.
+        /// </summary>
+        /// <remarks>To find out the entry this item is a duplicate of, check the DuplicateOf property for the ValidationEntry
+        /// instance which exposes this status code</remarks>
+        Duplicate
     }
 }

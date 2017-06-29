@@ -7,4 +7,4 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyProduct("C# SDK for Verifalia API")]
 [assembly: AssemblyCopyright("Copyright © Cobisi Research 2012-2017 - http://verifalia.com")]
 [assembly: ComVisible(false)]
-[assembly: AssemblyVersion("1.6.0.0")]
+[assembly: AssemblyVersion("1.7.0.0")]

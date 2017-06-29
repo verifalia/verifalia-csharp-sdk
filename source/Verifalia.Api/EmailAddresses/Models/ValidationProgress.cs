@@ -1,4 +1,6 @@
-﻿namespace Verifalia.Api.EmailAddresses.Models
+﻿using System;
+
+namespace Verifalia.Api.EmailAddresses.Models
 {
     /// <summary>
     /// Represents the completion progress of an email validation batch.
@@ -14,6 +16,11 @@
         /// The number of completed entries of the batch.
         /// </summary>
         public int NoOfCompletedEntries { get; set; }
+
+        /// <summary>
+        /// The estimated time remaining to complete the whole validation job, if available.
+        /// </summary>
+        public TimeSpan? EstimatedTimeRemaining { get; set; }
 
         /// <summary>
         /// Returns the number of pending entries of the batch.

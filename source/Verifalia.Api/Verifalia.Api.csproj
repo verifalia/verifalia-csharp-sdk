@@ -10,41 +10,46 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Verifalia.Api</RootNamespace>
     <AssemblyName>Verifalia.Api</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)' == 'net_4_5_debug' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <OutputPath>bin\Debug\net45\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX;NET_4_5</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <DocumentationFile>bin\Debug\net45\Verifalia.Api.xml</DocumentationFile>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)' == 'net_4_5_release' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <OutputPath>bin\Release\net45\</OutputPath>
+    <DefineConstants>TRACE;NETFX;NET_4_5</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <DocumentationFile>bin\Release\net45\Verifalia.Api.xml</DocumentationFile>
   </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+  <ItemGroup Condition="$(Configuration.StartsWith('net_4_5_'))">
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\RestSharp.105.2.3\lib\net4-client\RestSharp.dll</HintPath>
+      <HintPath>..\packages\RestSharp.105.2.3\lib\net45\RestSharp.dll</HintPath>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -53,10 +58,14 @@
     <Compile Include="AccountBalance\IAccountBalanceRestClient.cs" />
     <Compile Include="AccountBalance\Models\AccountBalance.cs" />
     <Compile Include="AccountBalance\AccountBalanceRestClient.cs" />
+    <Compile Include="EmailAddresses\Converters\ValidationPriorityConverter.cs" />
     <Compile Include="EmailAddresses\IValidationRestClient.cs" />
+    <Compile Include="EmailAddresses\Models\DeduplicationMode.cs" />
+    <Compile Include="EmailAddresses\Models\ValidationPriority.cs" />
+    <Compile Include="EmailAddresses\Models\ValidationRequest.cs" />
     <Compile Include="IVerifaliaRestClient.cs" />
     <Compile Include="ProgressiveStructJsonConverter.cs" />
-    <Compile Include="EmailAddresses\Models\RequestEntry.cs" />
+    <Compile Include="EmailAddresses\Models\ValidationRequestEntry.cs" />
     <Compile Include="EmailAddresses\Models\Validation.cs" />
     <Compile Include="EmailAddresses\Models\ValidationEntry.cs" />
     <Compile Include="EmailAddresses\Models\ValidationEntryStatus.cs" />

@@ -14,24 +14,26 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{F50EBC
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Any CPU = Debug|Any CPU
-		Debug|Mixed Platforms = Debug|Mixed Platforms
-		Debug|x86 = Debug|x86
-		Release|Any CPU = Release|Any CPU
-		Release|Mixed Platforms = Release|Mixed Platforms
-		Release|x86 = Release|x86
+		net_4_5_debug|Any CPU = net_4_5_debug|Any CPU
+		net_4_5_debug|Mixed Platforms = net_4_5_debug|Mixed Platforms
+		net_4_5_debug|x86 = net_4_5_debug|x86
+		net_4_5_release|Any CPU = net_4_5_release|Any CPU
+		net_4_5_release|Mixed Platforms = net_4_5_release|Mixed Platforms
+		net_4_5_release|x86 = net_4_5_release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{1D4B63DE-4FD0-4507-81C9-D29080999AB2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1D4B63DE-4FD0-4507-81C9-D29080999AB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1D4B63DE-4FD0-4507-81C9-D29080999AB2}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{1D4B63DE-4FD0-4507-81C9-D29080999AB2}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{1D4B63DE-4FD0-4507-81C9-D29080999AB2}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{1D4B63DE-4FD0-4507-81C9-D29080999AB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1D4B63DE-4FD0-4507-81C9-D29080999AB2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1D4B63DE-4FD0-4507-81C9-D29080999AB2}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{1D4B63DE-4FD0-4507-81C9-D29080999AB2}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{1D4B63DE-4FD0-4507-81C9-D29080999AB2}.Release|x86.ActiveCfg = Release|Any CPU
+		{1D4B63DE-4FD0-4507-81C9-D29080999AB2}.net_4_5_debug|Any CPU.ActiveCfg = net_4_5_debug|Any CPU
+		{1D4B63DE-4FD0-4507-81C9-D29080999AB2}.net_4_5_debug|Any CPU.Build.0 = net_4_5_debug|Any CPU
+		{1D4B63DE-4FD0-4507-81C9-D29080999AB2}.net_4_5_debug|Mixed Platforms.ActiveCfg = net_4_5_debug|Any CPU
+		{1D4B63DE-4FD0-4507-81C9-D29080999AB2}.net_4_5_debug|Mixed Platforms.Build.0 = net_4_5_debug|Any CPU
+		{1D4B63DE-4FD0-4507-81C9-D29080999AB2}.net_4_5_debug|x86.ActiveCfg = net_4_5_debug|Any CPU
+		{1D4B63DE-4FD0-4507-81C9-D29080999AB2}.net_4_5_debug|x86.Build.0 = net_4_5_debug|Any CPU
+		{1D4B63DE-4FD0-4507-81C9-D29080999AB2}.net_4_5_release|Any CPU.ActiveCfg = net_4_5_release|Any CPU
+		{1D4B63DE-4FD0-4507-81C9-D29080999AB2}.net_4_5_release|Any CPU.Build.0 = net_4_5_release|Any CPU
+		{1D4B63DE-4FD0-4507-81C9-D29080999AB2}.net_4_5_release|Mixed Platforms.ActiveCfg = net_4_5_release|Any CPU
+		{1D4B63DE-4FD0-4507-81C9-D29080999AB2}.net_4_5_release|Mixed Platforms.Build.0 = net_4_5_release|Any CPU
+		{1D4B63DE-4FD0-4507-81C9-D29080999AB2}.net_4_5_release|x86.ActiveCfg = net_4_5_release|Any CPU
+		{1D4B63DE-4FD0-4507-81C9-D29080999AB2}.net_4_5_release|x86.Build.0 = net_4_5_release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

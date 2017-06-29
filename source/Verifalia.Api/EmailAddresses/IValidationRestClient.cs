@@ -12,6 +12,32 @@ namespace Verifalia.Api.EmailAddresses
         /// Initiates a new email validation batch. Makes a POST request to the /email-validations resource.
         /// <remarks>Upon initialization, batches usually are in the <see cref="ValidationStatus.Pending">Pending</see> status.
         /// Validations are completed only when their <see cref="Validation.Status">Status</see> property
+        /// is <see cref="ValidationStatus.Completed">Completed</see>; the <seealso cref="waitForCompletionOptions"/> parameter
+        /// allows to wait for the completion of the batch, without having to manually poll the API.
+        /// In order to retrieve the most up-to-date snapshot of a validation batch, call the <see cref="ValidationRestClient.Query(System.Guid)">Query() method</see>
+        /// along with the batch's <see cref="Validation.UniqueID">unique identifier</see>.
+        /// </remarks>
+        /// </summary>
+        /// <returns>An object representing the email validation batch.</returns>
+        Validation Submit(ValidationRequest request);
+
+        /// <summary>
+        /// Initiates a new email validation batch. Makes a POST request to the /email-validations resource.
+        /// <remarks>Upon initialization, batches usually are in the <see cref="ValidationStatus.Pending">Pending</see> status.
+        /// Validations are completed only when their <see cref="Validation.Status">Status</see> property
+        /// is <see cref="ValidationStatus.Completed">Completed</see>; the <seealso cref="waitForCompletionOptions"/> parameter
+        /// allows to wait for the completion of the batch, without having to manually poll the API.
+        /// In order to retrieve the most up-to-date snapshot of a validation batch, call the <see cref="ValidationRestClient.Query(System.Guid)">Query() method</see>
+        /// along with the batch's <see cref="Validation.UniqueID">unique identifier</see>.
+        /// </remarks>
+        /// </summary>
+        /// <returns>An object representing the email validation batch.</returns>
+        Validation Submit(ValidationRequest request, ResultPollingOptions resultPollingOptions);
+
+        /// <summary>
+        /// Initiates a new email validation batch. Makes a POST request to the /email-validations resource.
+        /// <remarks>Upon initialization, batches usually are in the <see cref="ValidationStatus.Pending">Pending</see> status.
+        /// Validations are completed only when their <see cref="Validation.Status">Status</see> property
         /// is <see cref="ValidationStatus.Completed">Completed</see>. Use the <see cref="ValidationRestClient.Submit(System.Collections.Generic.IEnumerable{string},Verifalia.Api.ResultPollingOptions)"/> overload
         /// to wait for the completion of the batch without having to manually poll the API.
         /// In order to retrieve the most up-to-date snapshot of a validation batch, call the <see cref="ValidationRestClient.Query(System.Guid)">Query() method</see>
@@ -139,9 +165,9 @@ namespace Verifalia.Api.EmailAddresses
         /// along with the batch's <see cref="Validation.UniqueID">unique identifier</see>.
         /// </remarks>
         /// </summary>
-        /// <param name="entry">A <see cref="RequestEntry">RequestEntry</see> instance, representing the email address to validate and its optional custom data.</param>
+        /// <param name="entry">A <see cref="ValidationRequestEntry">RequestEntry</see> instance, representing the email address to validate and its optional custom data.</param>
         /// <returns>An object representing the email validation batch.</returns>
-        Validation Submit(RequestEntry entry);
+        Validation Submit(ValidationRequestEntry entry);
 
         /// <summary>
         /// Initiates a new email validation batch. Makes a POST request to the /email-validations resource.
@@ -153,10 +179,10 @@ namespace Verifalia.Api.EmailAddresses
         /// along with the batch's <see cref="Validation.UniqueID">unique identifier</see>.
         /// </remarks>
         /// </summary>
-        /// <param name="entry">A <see cref="RequestEntry">RequestEntry</see> instance, representing the email address to validate and its optional custom data.</param>
+        /// <param name="entry">A <see cref="ValidationRequestEntry">RequestEntry</see> instance, representing the email address to validate and its optional custom data.</param>
         /// <param name="quality">The desired quality of the results for this submission.</param>
         /// <returns>An object representing the email validation batch.</returns>
-        Validation Submit(RequestEntry entry, ValidationQuality quality);
+        Validation Submit(ValidationRequestEntry entry, ValidationQuality quality);
 
         /// <summary>
         /// Initiates a new email validation batch. Makes a POST request to the /email-validations resource.
@@ -168,10 +194,10 @@ namespace Verifalia.Api.EmailAddresses
         /// along with the batch's <see cref="Validation.UniqueID">unique identifier</see>.
         /// </remarks>
         /// </summary>
-        /// <param name="entry">A <see cref="RequestEntry">RequestEntry</see> instance, representing the email address to validate and its optional custom data.</param>
+        /// <param name="entry">A <see cref="ValidationRequestEntry">RequestEntry</see> instance, representing the email address to validate and its optional custom data.</param>
         /// <param name="resultPollingOptions">The options which rule out how to wait for the validation completion.</param>
         /// <returns>An object representing the email validation batch.</returns>
-        Validation Submit(RequestEntry entry, ResultPollingOptions resultPollingOptions);
+        Validation Submit(ValidationRequestEntry entry, ResultPollingOptions resultPollingOptions);
 
         /// <summary>
         /// Initiates a new email validation batch. Makes a POST request to the /email-validations resource.
@@ -183,11 +209,11 @@ namespace Verifalia.Api.EmailAddresses
         /// along with the batch's <see cref="Validation.UniqueID">unique identifier</see>.
         /// </remarks>
         /// </summary>
-        /// <param name="entry">A <see cref="RequestEntry">RequestEntry</see> instance, representing the email address to validate and its optional custom data.</param>
+        /// <param name="entry">A <see cref="ValidationRequestEntry">RequestEntry</see> instance, representing the email address to validate and its optional custom data.</param>
         /// <param name="quality">The desired quality of the results for this submission.</param>
         /// <param name="resultPollingOptions">The options which rule out how to wait for the validation completion.</param>
         /// <returns>An object representing the email validation batch.</returns>
-        Validation Submit(RequestEntry entry, ValidationQuality quality,
+        Validation Submit(ValidationRequestEntry entry, ValidationQuality quality,
             ResultPollingOptions resultPollingOptions);
 
         /// <summary>
@@ -200,9 +226,9 @@ namespace Verifalia.Api.EmailAddresses
         /// along with the batch's <see cref="Validation.UniqueID">unique identifier</see>.
         /// </remarks>
         /// </summary>
-        /// <param name="entries">A collection of <see cref="RequestEntry">RequestEntry</see> instances, representing the email addresses to validate and their optional custom data.</param>
+        /// <param name="entries">A collection of <see cref="ValidationRequestEntry">RequestEntry</see> instances, representing the email addresses to validate and their optional custom data.</param>
         /// <returns>An object representing the email validation batch.</returns>
-        Validation Submit(IEnumerable<RequestEntry> entries);
+        Validation Submit(IEnumerable<ValidationRequestEntry> entries);
 
         /// <summary>
         /// Initiates a new email validation batch. Makes a POST request to the /email-validations resource.
@@ -214,10 +240,10 @@ namespace Verifalia.Api.EmailAddresses
         /// along with the batch's <see cref="Validation.UniqueID">unique identifier</see>.
         /// </remarks>
         /// </summary>
-        /// <param name="entries">A collection of <see cref="RequestEntry">RequestEntry</see> instances, representing the email addresses to validate and their optional custom data.</param>
+        /// <param name="entries">A collection of <see cref="ValidationRequestEntry">RequestEntry</see> instances, representing the email addresses to validate and their optional custom data.</param>
         /// <param name="resultPollingOptions">The options which rule out how to wait for the validation completion.</param>
         /// <returns>An object representing the email validation batch.</returns>
-        Validation Submit(IEnumerable<RequestEntry> entries, ResultPollingOptions resultPollingOptions);
+        Validation Submit(IEnumerable<ValidationRequestEntry> entries, ResultPollingOptions resultPollingOptions);
 
         /// <summary>
         /// Initiates a new email validation batch. Makes a POST request to the /email-validations resource.
@@ -229,10 +255,10 @@ namespace Verifalia.Api.EmailAddresses
         /// along with the batch's <see cref="Validation.UniqueID">unique identifier</see>.
         /// </remarks>
         /// </summary>
-        /// <param name="entries">A collection of <see cref="RequestEntry">RequestEntry</see> instances, representing the email addresses to validate and their optional custom data.</param>
+        /// <param name="entries">A collection of <see cref="ValidationRequestEntry">RequestEntry</see> instances, representing the email addresses to validate and their optional custom data.</param>
         /// <param name="quality">The desired quality of the results for this submission.</param>
         /// <returns>An object representing the email validation batch.</returns>
-        Validation Submit(IEnumerable<RequestEntry> entries, ValidationQuality quality);
+        Validation Submit(IEnumerable<ValidationRequestEntry> entries, ValidationQuality quality);
 
         /// <summary>
         /// Initiates a new email validation batch. Makes a POST request to the /email-validations resource.
@@ -244,11 +270,27 @@ namespace Verifalia.Api.EmailAddresses
         /// along with the batch's <see cref="Validation.UniqueID">unique identifier</see>.
         /// </remarks>
         /// </summary>
-        /// <param name="entries">A collection of <see cref="RequestEntry">RequestEntry</see> instances, representing the email addresses to validate and their optional custom data.</param>
+        /// <param name="entries">A collection of <see cref="ValidationRequestEntry">RequestEntry</see> instances, representing the email addresses to validate and their optional custom data.</param>
         /// <param name="quality">The desired quality of the results for this submission.</param>
         /// <param name="resultPollingOptions">The options which rule out how to wait for the validation completion.</param>
         /// <returns>An object representing the email validation batch.</returns>
-        Validation Submit(IEnumerable<RequestEntry> entries, ValidationQuality quality, ResultPollingOptions resultPollingOptions);
+        Validation Submit(IEnumerable<ValidationRequestEntry> entries, ValidationQuality quality, ResultPollingOptions resultPollingOptions);
+
+        /// <summary>
+        /// Initiates a new email validation batch. Makes a POST request to the /email-validations resource.
+        /// <remarks>Upon initialization, batches usually are in the <see cref="ValidationStatus.Pending">Pending</see> status.
+        /// Validations are completed only when their <see cref="Validation.Status">Status</see> property
+        /// is <see cref="ValidationStatus.Completed">Completed</see>; the <seealso cref="waitForCompletionOptions"/> parameter
+        /// allows to wait for the completion of the batch, without having to manually poll the API.
+        /// In order to retrieve the most up-to-date snapshot of a validation batch, call the <see cref="ValidationRestClient.Query(System.Guid)">Query() method</see>
+        /// along with the batch's <see cref="Validation.UniqueID">unique identifier</see>.
+        /// </remarks>
+        /// </summary>
+        /// <param name="entries">A collection of <see cref="ValidationRequestEntry">RequestEntry</see> instances, representing the email addresses to validate and their optional custom data.</param>
+        /// <param name="quality">The desired quality of the results for this submission.</param>
+        /// <param name="resultPollingOptions">The options which rule out how to wait for the validation completion.</param>
+        /// <returns>An object representing the email validation batch.</returns>
+        Validation Submit(IEnumerable<ValidationRequestEntry> entries, ValidationQuality quality, DeduplicationMode deduplicationMode, ResultPollingOptions resultPollingOptions);
 
         /// <summary>
         /// Initiates a new email validation batch. Makes a POST request to the /email-validations resource.
@@ -343,6 +385,23 @@ namespace Verifalia.Api.EmailAddresses
         /// Initiates a new email validation batch. Makes a POST request to the /email-validations resource.
         /// <remarks>Upon initialization, batches usually are in the <see cref="ValidationStatus.Pending">Pending</see> status.
         /// Validations are completed only when their <see cref="Validation.Status">Status</see> property
+        /// is <see cref="ValidationStatus.Completed">Completed</see>. Use the <see cref="ValidationRestClient.Submit(System.Collections.Generic.IEnumerable{string},Verifalia.Api.ResultPollingOptions)"/> overload
+        /// to wait for the completion of the batch without having to manually poll the API.
+        /// In order to retrieve the most up-to-date snapshot of a validation batch, call the <see cref="ValidationRestClient.Query(System.Guid)">Query() method</see>
+        /// along with the batch's <see cref="Validation.UniqueID">unique identifier</see>.
+        /// </remarks>
+        /// </summary>
+        /// <param name="emailAddresses">A collection of email addresses to validate.</param>
+        /// <param name="quality">The desired quality of the results for this submission.</param>
+        /// <param name="deduplicationMode">The desired deduplication mode for the submitted job.</param>
+        /// <returns>An object representing the email validation batch.</returns>
+        Task<Validation> SubmitAsync(IEnumerable<string> emailAddresses, ValidationQuality quality, DeduplicationMode deduplicationMode, CancellationToken cancellationToken = default(CancellationToken));
+
+
+        /// <summary>
+        /// Initiates a new email validation batch. Makes a POST request to the /email-validations resource.
+        /// <remarks>Upon initialization, batches usually are in the <see cref="ValidationStatus.Pending">Pending</see> status.
+        /// Validations are completed only when their <see cref="Validation.Status">Status</see> property
         /// is <see cref="ValidationStatus.Completed">Completed</see>; the <seealso cref="waitForCompletionOptions"/> parameter
         /// allows to wait for the completion of the batch, without having to manually poll the API.
         /// In order to retrieve the most up-to-date snapshot of a validation batch, call the <see cref="ValidationRestClient.Query(System.Guid)">Query() method</see>
@@ -370,19 +429,7 @@ namespace Verifalia.Api.EmailAddresses
         /// <returns>An object representing the email validation batch.</returns>
         Task<Validation> SubmitAsync(IEnumerable<string> emailAddresses, ValidationQuality quality, ResultPollingOptions resultPollingOptions, CancellationToken cancellationToken = default(CancellationToken));
 
-        /// <summary>
-        /// Initiates a new email validation batch. Makes a POST request to the /email-validations resource.
-        /// <remarks>Upon initialization, batches usually are in the <see cref="ValidationStatus.Pending">Pending</see> status.
-        /// Validations are completed only when their <see cref="Validation.Status">Status</see> property
-        /// is <see cref="ValidationStatus.Completed">Completed</see>; the <seealso cref="waitForCompletionOptions"/> parameter
-        /// allows to wait for the completion of the batch, without having to manually poll the API.
-        /// In order to retrieve the most up-to-date snapshot of a validation batch, call the <see cref="ValidationRestClient.Query(System.Guid)">Query() method</see>
-        /// along with the batch's <see cref="Validation.UniqueID">unique identifier</see>.
-        /// </remarks>
-        /// </summary>
-        /// <param name="entry">A <see cref="RequestEntry">RequestEntry</see> instance, representing the email address to validate and its optional custom data.</param>
-        /// <returns>An object representing the email validation batch.</returns>
-        Task<Validation> SubmitAsync(RequestEntry entry, CancellationToken cancellationToken = default(CancellationToken));
+        Task<Validation> SubmitAsync(IEnumerable<string> emailAddresses, ValidationQuality quality, DeduplicationMode deduplicationMode, ResultPollingOptions resultPollingOptions, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Initiates a new email validation batch. Makes a POST request to the /email-validations resource.
@@ -394,10 +441,24 @@ namespace Verifalia.Api.EmailAddresses
         /// along with the batch's <see cref="Validation.UniqueID">unique identifier</see>.
         /// </remarks>
         /// </summary>
-        /// <param name="entry">A <see cref="RequestEntry">RequestEntry</see> instance, representing the email address to validate and its optional custom data.</param>
+        /// <param name="entry">A <see cref="ValidationRequestEntry">RequestEntry</see> instance, representing the email address to validate and its optional custom data.</param>
+        /// <returns>An object representing the email validation batch.</returns>
+        Task<Validation> SubmitAsync(ValidationRequestEntry entry, CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <summary>
+        /// Initiates a new email validation batch. Makes a POST request to the /email-validations resource.
+        /// <remarks>Upon initialization, batches usually are in the <see cref="ValidationStatus.Pending">Pending</see> status.
+        /// Validations are completed only when their <see cref="Validation.Status">Status</see> property
+        /// is <see cref="ValidationStatus.Completed">Completed</see>; the <seealso cref="waitForCompletionOptions"/> parameter
+        /// allows to wait for the completion of the batch, without having to manually poll the API.
+        /// In order to retrieve the most up-to-date snapshot of a validation batch, call the <see cref="ValidationRestClient.Query(System.Guid)">Query() method</see>
+        /// along with the batch's <see cref="Validation.UniqueID">unique identifier</see>.
+        /// </remarks>
+        /// </summary>
+        /// <param name="entry">A <see cref="ValidationRequestEntry">RequestEntry</see> instance, representing the email address to validate and its optional custom data.</param>
         /// <param name="quality">The desired quality of the results for this submission.</param>
         /// <returns>An object representing the email validation batch.</returns>
-        Task<Validation> SubmitAsync(RequestEntry entry, ValidationQuality quality, CancellationToken cancellationToken = default(CancellationToken));
+        Task<Validation> SubmitAsync(ValidationRequestEntry entry, ValidationQuality quality, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Initiates a new email validation batch. Makes a POST request to the /email-validations resource.
@@ -409,10 +470,10 @@ namespace Verifalia.Api.EmailAddresses
         /// along with the batch's <see cref="Validation.UniqueID">unique identifier</see>.
         /// </remarks>
         /// </summary>
-        /// <param name="entry">A <see cref="RequestEntry">RequestEntry</see> instance, representing the email address to validate and its optional custom data.</param>
+        /// <param name="entry">A <see cref="ValidationRequestEntry">RequestEntry</see> instance, representing the email address to validate and its optional custom data.</param>
         /// <param name="resultPollingOptions">The options which rule out how to wait for the validation completion.</param>
         /// <returns>An object representing the email validation batch.</returns>
-        Task<Validation> SubmitAsync(RequestEntry entry, ResultPollingOptions resultPollingOptions, CancellationToken cancellationToken = default(CancellationToken));
+        Task<Validation> SubmitAsync(ValidationRequestEntry entry, ResultPollingOptions resultPollingOptions, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Initiates a new email validation batch. Makes a POST request to the /email-validations resource.
@@ -424,71 +485,120 @@ namespace Verifalia.Api.EmailAddresses
         /// along with the batch's <see cref="Validation.UniqueID">unique identifier</see>.
         /// </remarks>
         /// </summary>
-        /// <param name="entry">A <see cref="RequestEntry">RequestEntry</see> instance, representing the email address to validate and its optional custom data.</param>
-        /// <param name="quality">The desired quality of the results for this submission.</param>
-        /// <param name="resultPollingOptions">The options which rule out how to wait for the validation completion.</param>
-        /// <returns>An object representing the email validation batch.</returns>
-        Task<Validation> SubmitAsync(RequestEntry entry, ValidationQuality quality, ResultPollingOptions resultPollingOptions, CancellationToken cancellationToken = default(CancellationToken));
-
-        /// <summary>
-        /// Initiates a new email validation batch. Makes a POST request to the /email-validations resource.
-        /// <remarks>Upon initialization, batches usually are in the <see cref="ValidationStatus.Pending">Pending</see> status.
-        /// Validations are completed only when their <see cref="Validation.Status">Status</see> property
-        /// is <see cref="ValidationStatus.Completed">Completed</see>; the <seealso cref="waitForCompletionOptions"/> parameter
-        /// allows to wait for the completion of the batch, without having to manually poll the API.
-        /// In order to retrieve the most up-to-date snapshot of a validation batch, call the <see cref="ValidationRestClient.Query(System.Guid)">Query() method</see>
-        /// along with the batch's <see cref="Validation.UniqueID">unique identifier</see>.
-        /// </remarks>
-        /// </summary>
-        /// <param name="entries">A collection of <see cref="RequestEntry">RequestEntry</see> instances, representing the email addresses to validate and their optional custom data.</param>
-        /// <returns>An object representing the email validation batch.</returns>
-        Task<Validation> SubmitAsync(IEnumerable<RequestEntry> entries, CancellationToken cancellationToken = default(CancellationToken));
-
-        /// <summary>
-        /// Initiates a new email validation batch. Makes a POST request to the /email-validations resource.
-        /// <remarks>Upon initialization, batches usually are in the <see cref="ValidationStatus.Pending">Pending</see> status.
-        /// Validations are completed only when their <see cref="Validation.Status">Status</see> property
-        /// is <see cref="ValidationStatus.Completed">Completed</see>; the <seealso cref="waitForCompletionOptions"/> parameter
-        /// allows to wait for the completion of the batch, without having to manually poll the API.
-        /// In order to retrieve the most up-to-date snapshot of a validation batch, call the <see cref="ValidationRestClient.Query(System.Guid)">Query() method</see>
-        /// along with the batch's <see cref="Validation.UniqueID">unique identifier</see>.
-        /// </remarks>
-        /// </summary>
-        /// <param name="entries">A collection of <see cref="RequestEntry">RequestEntry</see> instances, representing the email addresses to validate and their optional custom data.</param>
-        /// <param name="resultPollingOptions">The options which rule out how to wait for the validation completion.</param>
-        /// <returns>An object representing the email validation batch.</returns>
-        Task<Validation> SubmitAsync(IEnumerable<RequestEntry> entries, ResultPollingOptions resultPollingOptions, CancellationToken cancellationToken = default(CancellationToken));
-
-        /// <summary>
-        /// Initiates a new email validation batch. Makes a POST request to the /email-validations resource.
-        /// <remarks>Upon initialization, batches usually are in the <see cref="ValidationStatus.Pending">Pending</see> status.
-        /// Validations are completed only when their <see cref="Validation.Status">Status</see> property
-        /// is <see cref="ValidationStatus.Completed">Completed</see>; the <seealso cref="waitForCompletionOptions"/> parameter
-        /// allows to wait for the completion of the batch, without having to manually poll the API.
-        /// In order to retrieve the most up-to-date snapshot of a validation batch, call the <see cref="ValidationRestClient.Query(System.Guid)">Query() method</see>
-        /// along with the batch's <see cref="Validation.UniqueID">unique identifier</see>.
-        /// </remarks>
-        /// </summary>
-        /// <param name="entries">A collection of <see cref="RequestEntry">RequestEntry</see> instances, representing the email addresses to validate and their optional custom data.</param>
-        /// <param name="quality">The desired quality of the results for this submission.</param>
-        /// <returns>An object representing the email validation batch.</returns>
-        Task<Validation> SubmitAsync(IEnumerable<RequestEntry> entries, ValidationQuality quality, CancellationToken cancellationToken = default(CancellationToken));
-
-        /// <summary>
-        /// Initiates a new email validation batch. Makes a POST request to the /email-validations resource.
-        /// <remarks>Upon initialization, batches usually are in the <see cref="ValidationStatus.Pending">Pending</see> status.
-        /// Validations are completed only when their <see cref="Validation.Status">Status</see> property
-        /// is <see cref="ValidationStatus.Completed">Completed</see>; the <seealso cref="waitForCompletionOptions"/> parameter
-        /// allows to wait for the completion of the batch, without having to manually poll the API.
-        /// In order to retrieve the most up-to-date snapshot of a validation batch, call the <see cref="ValidationRestClient.Query(System.Guid)">Query() method</see>
-        /// along with the batch's <see cref="Validation.UniqueID">unique identifier</see>.
-        /// </remarks>
-        /// </summary>
-        /// <param name="entries">A collection of <see cref="RequestEntry">RequestEntry</see> instances, representing the email addresses to validate and their optional custom data.</param>
+        /// <param name="entry">A <see cref="ValidationRequestEntry">RequestEntry</see> instance, representing the email address to validate and its optional custom data.</param>
         /// <param name="quality">The desired quality of the results for this submission.</param>
         /// <param name="resultPollingOptions">The options which rule out how to wait for the validation completion.</param>
         /// <returns>An object representing the email validation batch.</returns>
-        Task<Validation> SubmitAsync(IEnumerable<RequestEntry> entries, ValidationQuality quality, ResultPollingOptions resultPollingOptions, CancellationToken cancellationToken = default(CancellationToken));
+        Task<Validation> SubmitAsync(ValidationRequestEntry entry, ValidationQuality quality, ResultPollingOptions resultPollingOptions, CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <summary>
+        /// Initiates a new email validation batch. Makes a POST request to the /email-validations resource.
+        /// <remarks>Upon initialization, batches usually are in the <see cref="ValidationStatus.Pending">Pending</see> status.
+        /// Validations are completed only when their <see cref="Validation.Status">Status</see> property
+        /// is <see cref="ValidationStatus.Completed">Completed</see>; the <seealso cref="waitForCompletionOptions"/> parameter
+        /// allows to wait for the completion of the batch, without having to manually poll the API.
+        /// In order to retrieve the most up-to-date snapshot of a validation batch, call the <see cref="ValidationRestClient.Query(System.Guid)">Query() method</see>
+        /// along with the batch's <see cref="Validation.UniqueID">unique identifier</see>.
+        /// </remarks>
+        /// </summary>
+        /// <param name="entries">A collection of <see cref="ValidationRequestEntry">RequestEntry</see> instances, representing the email addresses to validate and their optional custom data.</param>
+        /// <returns>An object representing the email validation batch.</returns>
+        Task<Validation> SubmitAsync(IEnumerable<ValidationRequestEntry> entries, CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <summary>
+        /// Initiates a new email validation batch. Makes a POST request to the /email-validations resource.
+        /// <remarks>Upon initialization, batches usually are in the <see cref="ValidationStatus.Pending">Pending</see> status.
+        /// Validations are completed only when their <see cref="Validation.Status">Status</see> property
+        /// is <see cref="ValidationStatus.Completed">Completed</see>; the <seealso cref="waitForCompletionOptions"/> parameter
+        /// allows to wait for the completion of the batch, without having to manually poll the API.
+        /// In order to retrieve the most up-to-date snapshot of a validation batch, call the <see cref="ValidationRestClient.Query(System.Guid)">Query() method</see>
+        /// along with the batch's <see cref="Validation.UniqueID">unique identifier</see>.
+        /// </remarks>
+        /// </summary>
+        /// <param name="entries">A collection of <see cref="ValidationRequestEntry">RequestEntry</see> instances, representing the email addresses to validate and their optional custom data.</param>
+        /// <param name="resultPollingOptions">The options which rule out how to wait for the validation completion.</param>
+        /// <returns>An object representing the email validation batch.</returns>
+        Task<Validation> SubmitAsync(IEnumerable<ValidationRequestEntry> entries, ResultPollingOptions resultPollingOptions, CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <summary>
+        /// Initiates a new email validation batch. Makes a POST request to the /email-validations resource.
+        /// <remarks>Upon initialization, batches usually are in the <see cref="ValidationStatus.Pending">Pending</see> status.
+        /// Validations are completed only when their <see cref="Validation.Status">Status</see> property
+        /// is <see cref="ValidationStatus.Completed">Completed</see>; the <seealso cref="waitForCompletionOptions"/> parameter
+        /// allows to wait for the completion of the batch, without having to manually poll the API.
+        /// In order to retrieve the most up-to-date snapshot of a validation batch, call the <see cref="ValidationRestClient.Query(System.Guid)">Query() method</see>
+        /// along with the batch's <see cref="Validation.UniqueID">unique identifier</see>.
+        /// </remarks>
+        /// </summary>
+        /// <param name="entries">A collection of <see cref="ValidationRequestEntry">RequestEntry</see> instances, representing the email addresses to validate and their optional custom data.</param>
+        /// <param name="quality">The desired quality of the results for this submission.</param>
+        /// <returns>An object representing the email validation batch.</returns>
+        Task<Validation> SubmitAsync(IEnumerable<ValidationRequestEntry> entries, ValidationQuality quality, CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <summary>
+        /// Initiates a new email validation batch. Makes a POST request to the /email-validations resource.
+        /// <remarks>Upon initialization, batches usually are in the <see cref="ValidationStatus.Pending">Pending</see> status.
+        /// Validations are completed only when their <see cref="Validation.Status">Status</see> property
+        /// is <see cref="ValidationStatus.Completed">Completed</see>; the <seealso cref="waitForCompletionOptions"/> parameter
+        /// allows to wait for the completion of the batch, without having to manually poll the API.
+        /// In order to retrieve the most up-to-date snapshot of a validation batch, call the <see cref="ValidationRestClient.Query(System.Guid)">Query() method</see>
+        /// along with the batch's <see cref="Validation.UniqueID">unique identifier</see>.
+        /// </remarks>
+        /// </summary>
+        /// <param name="entries">A collection of <see cref="ValidationRequestEntry">RequestEntry</see> instances, representing the email addresses to validate and their optional custom data.</param>
+        /// <param name="quality">The desired quality of the results for this submission.</param>
+        /// <param name="resultPollingOptions">The options which rule out how to wait for the validation completion.</param>
+        /// <returns>An object representing the email validation batch.</returns>
+        Task<Validation> SubmitAsync(IEnumerable<ValidationRequestEntry> entries, ValidationQuality quality, ResultPollingOptions resultPollingOptions, CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <summary>
+        /// Initiates a new email validation batch. Makes a POST request to the /email-validations resource.
+        /// <remarks>Upon initialization, batches usually are in the <see cref="ValidationStatus.Pending">Pending</see> status.
+        /// Validations are completed only when their <see cref="Validation.Status">Status</see> property
+        /// is <see cref="ValidationStatus.Completed">Completed</see>; the <seealso cref="waitForCompletionOptions"/> parameter
+        /// allows to wait for the completion of the batch, without having to manually poll the API.
+        /// In order to retrieve the most up-to-date snapshot of a validation batch, call the <see cref="Query(Guid)">Query() method</see>
+        /// along with the batch's <see cref="Validation.UniqueID">unique identifier</see>.
+        /// </remarks>
+        /// </summary>
+        /// <param name="entries">A collection of <see cref="ValidationRequestEntry">RequestEntry</see> instances, representing the email addresses to validate and their optional custom data.</param>
+        /// <param name="quality">The desired quality of the results for this submission.</param>
+        /// <param name="deduplicationMode">The desired deduplication mode for the submitted job.</param>
+        /// <param name="resultPollingOptions">The options which rule out how to wait for the validation completion.</param>
+        /// <returns>An object representing the email validation batch.</returns>
+        Task<Validation> SubmitAsync(IEnumerable<ValidationRequestEntry> entries, ValidationQuality quality, DeduplicationMode deduplicationMode, ResultPollingOptions resultPollingOptions, CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <summary>
+        /// Initiates a new email validation batch. Makes a POST request to the /email-validations resource.
+        /// <remarks>Upon initialization, batches usually are in the <see cref="ValidationStatus.Pending">Pending</see> status.
+        /// Validations are completed only when their <see cref="Validation.Status">Status</see> property
+        /// is <see cref="ValidationStatus.Completed">Completed</see>; the <seealso cref="waitForCompletionOptions"/> parameter
+        /// allows to wait for the completion of the batch, without having to manually poll the API.
+        /// In order to retrieve the most up-to-date snapshot of a validation batch, call the <see cref="Query(Guid)">Query() method</see>
+        /// along with the batch's <see cref="Validation.UniqueID">unique identifier</see>.
+        /// </remarks>
+        /// </summary>
+        /// <param name="entries">A collection of <see cref="ValidationRequestEntry">RequestEntry</see> instances, representing the email addresses to validate and their optional custom data.</param>
+        /// <param name="quality">The desired quality of the results for this submission.</param>
+        /// <param name="deduplicationMode">The desired deduplication mode for the submitted job.</param>
+        /// <param name="resultPollingOptions">The options which rule out how to wait for the validation completion.</param>
+        /// <returns>An object representing the email validation batch.</returns>
+        Task<Validation> SubmitAsync(IEnumerable<ValidationRequestEntry> entries, DeduplicationMode deduplicationMode, ResultPollingOptions resultPollingOptions, CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <summary>
+        /// Initiates a new email validation batch. Makes a POST request to the /email-validations resource.
+        /// <remarks>Upon initialization, batches usually are in the <see cref="ValidationStatus.Pending">Pending</see> status.
+        /// Validations are completed only when their <see cref="Validation.Status">Status</see> property
+        /// is <see cref="ValidationStatus.Completed">Completed</see>; the <seealso cref="waitForCompletionOptions"/> parameter
+        /// allows to wait for the completion of the batch, without having to manually poll the API.
+        /// In order to retrieve the most up-to-date snapshot of a validation batch, call the <see cref="Query(Guid)">Query() method</see>
+        /// along with the batch's <see cref="Validation.UniqueID">unique identifier</see>.
+        /// </remarks>
+        /// </summary>
+        /// <param name="validationRequest">Represents a validation request, along with the email addresses to validate, the desired result quality level, duplicates removal algorithm and priority.</param>
+        /// <param name="resultPollingOptions">The options which rule out how to wait for the validation completion.</param>
+        /// <returns>An object representing the email validation batch.</returns>
+        Task<Validation> SubmitAsync(ValidationRequest validationRequest, ResultPollingOptions resultPollingOptions, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Returns an object representing an email validation batch, identified by the specified unique identifier.
