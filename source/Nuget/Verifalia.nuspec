@@ -4,7 +4,8 @@
 		<id>Verifalia</id>
 		<version>1.7.0.0</version>
 		<authors>Verifalia</authors>
-		<summary>Verifalia SDK (REST API helper library)</summary>
+		<title>Verifalia SDK</title>
+		<summary>Helper library for Verifalia RESTful HTTPS API</summary>
 		<description>Verifalia provides a simple HTTPS-based API for validating email addresses and checking whether or not they are deliverable. This library allows to easily integrate with Verifalia and validate email addresses in real-time.</description>
 		<copyright>Copyright © Cobisi Research</copyright>
 		<iconUrl>https://verifalia.com/favicon.ico</iconUrl>

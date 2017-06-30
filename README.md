@@ -1,13 +1,22 @@
 Verifalia REST API - .NET SDK and helper library
 ================================================
 
-Verifalia provides a simple HTTPS-based API for validating email addresses and checking whether or not they are deliverable. Learn more at http://verifalia.com
+Verifalia provides a simple HTTPS-based API for validating email addresses in real-time and checking whether or not they are deliverable. Learn more at http://verifalia.com
 
 ## Adding Verifalia REST API support to your .NET solution ##
 
-The easiest way to add support for the Verifalia REST API to your .NET solution is to [download the SDK source project from github][1], eventually extract
-it to a folder of your choice and add a reference from your own solution to the SDK project. The SDK project is a C# project with support for Visual Studio
-2010, 2012, 2013 and 2015, which can be referenced and used with any other .NET language too, including Visual Basic (VB.NET), C++/CLI, J#, IronPython, IronRuby, F# and PowerShell.
+The best and easiest way to add the Verifalia libraries to your .NET project is to use the NuGet package manager.
+
+#### With Visual Studio IDE
+
+From within Visual Studio, you can use the NuGet GUI to search for and install the Verifalia NuGet package. Or, as a shortcut, simply type the following command into the Package Manager Console:
+
+    Install-Package Verifalia
+
+#### Manual download and compilation
+	
+As an alternative way to add Verifalia to your .NET solution, you can [download the SDK source project from github][1], extract it to a folder of your choice and add a reference from your own project to the Verifalia SDK project. The SDK project is a C# project with support for Visual Studio 2015, which can be referenced and used with any other .NET language too, including Visual Basic (VB.NET), C++/CLI, J#, IronPython, IronRuby, F# and PowerShell.
+
 Learn more at [http://verifalia.com][0].
 
 ### How to validate an email address ###
