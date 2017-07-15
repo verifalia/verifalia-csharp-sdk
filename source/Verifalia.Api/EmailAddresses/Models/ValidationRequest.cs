@@ -106,7 +106,7 @@ namespace Verifalia.Api.EmailAddresses.Models
             var enumeratedEntries = entries.ToArray();
 
             if (enumeratedEntries.Length == 0)
-                throw new ArgumentException("Can't create a validation request out of an empty collection of entries.", "entries");
+                throw new ArgumentException("Can't create a validation request out of an empty collection of entries.", nameof(entries));
 
             Entries = enumeratedEntries;
             Quality = quality;

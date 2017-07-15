@@ -4,31 +4,13 @@ namespace Verifalia.Api.EmailAddresses.Models
 {
     public class DeduplicationMode
     {
-        internal string NameOrGuid { get; private set; }
+        internal string NameOrGuid { get; }
 
-        public static DeduplicationMode Default
-        {
-            get
-            {
-                return new DeduplicationMode();
-            }
-        }
+        public static DeduplicationMode Default => new DeduplicationMode();
 
-        public static DeduplicationMode Off
-        {
-            get
-            {
-                return new DeduplicationMode("off");
-            }
-        }
+        public static DeduplicationMode Off => new DeduplicationMode("off");
 
-        public static DeduplicationMode Safe
-        {
-            get
-            {
-                return new DeduplicationMode("safe");
-            }
-        }
+        public static DeduplicationMode Safe => new DeduplicationMode("safe");
 
         private DeduplicationMode()
         {
@@ -36,7 +18,7 @@ namespace Verifalia.Api.EmailAddresses.Models
 
         public DeduplicationMode(string modeName)
         {
-            if (modeName == null) throw new ArgumentNullException("modeName");
+            if (modeName == null) throw new ArgumentNullException(nameof(modeName));
 
             NameOrGuid = modeName;
         }

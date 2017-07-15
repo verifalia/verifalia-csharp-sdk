@@ -4,9 +4,9 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using RestSharp;
 using Verifalia.Api.EmailAddresses.Models;
 using Verifalia.Api.Exceptions;
+using System.Net.Http;
 
 namespace Verifalia.Api.EmailAddresses
 {
@@ -21,8 +21,7 @@ namespace Verifalia.Api.EmailAddresses
 
         internal ValidationRestClient(IRestClientFactory restClientFactory)
         {
-            if (restClientFactory == null)
-                throw new ArgumentNullException("restClientFactory", "restClientFactory is null.");
+            if (restClientFactory == null) throw new ArgumentNullException(nameof(restClientFactory));
 
             _restClientFactory = restClientFactory;
         }
@@ -41,8 +40,7 @@ namespace Verifalia.Api.EmailAddresses
         /// <returns>An object representing the email validation batch.</returns>
         public Validation Submit(string emailAddress)
         {
-            if (emailAddress == null)
-                throw new ArgumentNullException("emailAddress");
+            if (emailAddress == null) throw new ArgumentNullException(nameof(emailAddress));
 
             return Submit(emailAddress, ValidationQuality.Default, ResultPollingOptions.NoPolling);
         }
@@ -62,10 +60,8 @@ namespace Verifalia.Api.EmailAddresses
         /// <returns>An object representing the email validation batch.</returns>
         public Validation Submit(string emailAddress, ValidationQuality quality)
         {
-            if (emailAddress == null)
-                throw new ArgumentNullException("emailAddress");
-            if (quality == null)
-                throw new ArgumentNullException("quality");
+            if (emailAddress == null) throw new ArgumentNullException(nameof(emailAddress));
+            if (quality == null) throw new ArgumentNullException(nameof(quality));
 
             return Submit(emailAddress, quality, ResultPollingOptions.NoPolling);
         }
@@ -74,7 +70,7 @@ namespace Verifalia.Api.EmailAddresses
         /// Initiates a new email validation batch. Makes a POST request to the /email-validations resource.
         /// <remarks>Upon initialization, batches usually are in the <see cref="ValidationStatus.Pending">Pending</see> status.
         /// Validations are completed only when their <see cref="Validation.Status">Status</see> property
-        /// is <see cref="ValidationStatus.Completed">Completed</see>; the <seealso cref="waitForCompletionOptions"/> parameter
+        /// is <see cref="ValidationStatus.Completed">Completed</see>; the <seealso cref="resultPollingOptions"/> parameter
         /// allows to wait for the completion of the batch, without having to manually poll the API.
         /// In order to retrieve the most up-to-date snapshot of a validation batch, call the <see cref="Query(Guid)">Query() method</see>
         /// along with the batch's <see cref="Validation.UniqueID">unique identifier</see>.
@@ -85,10 +81,8 @@ namespace Verifalia.Api.EmailAddresses
         /// <returns>An object representing the email validation batch.</returns>
         public Validation Submit(string emailAddress, ResultPollingOptions resultPollingOptions)
         {
-            if (emailAddress == null)
-                throw new ArgumentNullException("emailAddress");
-            if (resultPollingOptions == null)
-                throw new ArgumentNullException("resultPollingOptions");
+            if (emailAddress == null) throw new ArgumentNullException(nameof(emailAddress));
+            if (resultPollingOptions == null) throw new ArgumentNullException(nameof(resultPollingOptions));
 
             return Submit(emailAddress, ValidationQuality.Default, resultPollingOptions);
         }
@@ -97,7 +91,7 @@ namespace Verifalia.Api.EmailAddresses
         /// Initiates a new email validation batch. Makes a POST request to the /email-validations resource.
         /// <remarks>Upon initialization, batches usually are in the <see cref="ValidationStatus.Pending">Pending</see> status.
         /// Validations are completed only when their <see cref="Validation.Status">Status</see> property
-        /// is <see cref="ValidationStatus.Completed">Completed</see>; the <seealso cref="waitForCompletionOptions"/> parameter
+        /// is <see cref="ValidationStatus.Completed">Completed</see>; the <seealso cref="resultPollingOptions"/> parameter
         /// allows to wait for the completion of the batch, without having to manually poll the API.
         /// In order to retrieve the most up-to-date snapshot of a validation batch, call the <see cref="Query(Guid)">Query() method</see>
         /// along with the batch's <see cref="Validation.UniqueID">unique identifier</see>.
@@ -109,12 +103,9 @@ namespace Verifalia.Api.EmailAddresses
         /// <returns>An object representing the email validation batch.</returns>
         public Validation Submit(string emailAddress, ValidationQuality quality, ResultPollingOptions resultPollingOptions)
         {
-            if (emailAddress == null)
-                throw new ArgumentNullException("emailAddress");
-            if (quality == null)
-                throw new ArgumentNullException("quality");
-            if (resultPollingOptions == null)
-                throw new ArgumentNullException("resultPollingOptions");
+            if (emailAddress == null) throw new ArgumentNullException(nameof(emailAddress));
+            if (quality == null) throw new ArgumentNullException(nameof(quality));
+            if (resultPollingOptions == null) throw new ArgumentNullException(nameof(resultPollingOptions));
 
             return Submit(new[] {emailAddress}, quality, resultPollingOptions);
         }
@@ -133,8 +124,7 @@ namespace Verifalia.Api.EmailAddresses
         /// <returns>An object representing the email validation batch.</returns>
         public Validation Submit(IEnumerable<string> emailAddresses)
         {
-            if (emailAddresses == null)
-                throw new ArgumentNullException("emailAddresses");
+            if (emailAddresses == null) throw new ArgumentNullException(nameof(emailAddresses));
 
             return Submit(emailAddresses, ValidationQuality.Default, ResultPollingOptions.NoPolling);
         }
@@ -154,10 +144,8 @@ namespace Verifalia.Api.EmailAddresses
         /// <returns>An object representing the email validation batch.</returns>
         public Validation Submit(IEnumerable<string> emailAddresses, ValidationQuality quality)
         {
-            if (emailAddresses == null)
-                throw new ArgumentNullException("emailAddresses");
-            if (quality == null)
-                throw new ArgumentNullException("quality");
+            if (emailAddresses == null) throw new ArgumentNullException(nameof(emailAddresses));
+            if (quality == null) throw new ArgumentNullException(nameof(quality));
 
             return Submit(emailAddresses, quality, ResultPollingOptions.NoPolling);
         }
@@ -176,8 +164,7 @@ namespace Verifalia.Api.EmailAddresses
         /// <returns>An object representing the email validation batch.</returns>
         public Validation Submit(IEnumerable<string> emailAddresses, DeduplicationMode deduplicationMode)
         {
-            if (emailAddresses == null)
-                throw new ArgumentNullException("emailAddresses");
+            if (emailAddresses == null) throw new ArgumentNullException(nameof(emailAddresses));
 
             return Submit(emailAddresses,
                 ValidationQuality.Default,
@@ -200,8 +187,7 @@ namespace Verifalia.Api.EmailAddresses
         /// <returns>An object representing the email validation batch.</returns>
         public Validation Submit(IEnumerable<string> emailAddresses, ResultPollingOptions resultPollingOptions)
         {
-            if (emailAddresses == null)
-                throw new ArgumentNullException("emailAddresses");
+            if (emailAddresses == null) throw new ArgumentNullException(nameof(emailAddresses));
 
             return Submit(emailAddresses.Select(emailAddress => new ValidationRequestEntry(emailAddress)),
                 ValidationQuality.Default, resultPollingOptions);
@@ -245,9 +231,9 @@ namespace Verifalia.Api.EmailAddresses
         /// <returns>An object representing the email validation batch.</returns>
         public Validation Submit(IEnumerable<string> emailAddresses, ValidationQuality quality, DeduplicationMode deduplicationMode, ResultPollingOptions resultPollingOptions)
         {
-            if (emailAddresses == null) throw new ArgumentNullException("emailAddresses");
-            if (quality == null) throw new ArgumentNullException("quality");
-            if (deduplicationMode == null) throw new ArgumentNullException("deduplicationMode");
+            if (emailAddresses == null) throw new ArgumentNullException(nameof(emailAddresses));
+            if (quality == null) throw new ArgumentNullException(nameof(quality));
+            if (deduplicationMode == null) throw new ArgumentNullException(nameof(deduplicationMode));
 
             return Submit(emailAddresses.Select(emailAddress => new ValidationRequestEntry(emailAddress)),
                 quality,
@@ -510,8 +496,7 @@ namespace Verifalia.Api.EmailAddresses
         /// <returns>An object representing the email validation batch.</returns>
         public Task<Validation> SubmitAsync(string emailAddress, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (emailAddress == null)
-                throw new ArgumentNullException("emailAddress");
+            if (emailAddress == null) throw new ArgumentNullException(nameof(emailAddress));
 
             return SubmitAsync(emailAddress,
                 ValidationQuality.Default,
@@ -534,10 +519,8 @@ namespace Verifalia.Api.EmailAddresses
         /// <returns>An object representing the email validation batch.</returns>
         public Task<Validation> Submit(string emailAddress, ValidationQuality quality, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (emailAddress == null)
-                throw new ArgumentNullException("emailAddress");
-            if (quality == null)
-                throw new ArgumentNullException("quality");
+            if (emailAddress == null) throw new ArgumentNullException(nameof(emailAddress));
+            if (quality == null) throw new ArgumentNullException(nameof(quality));
 
             return SubmitAsync(emailAddress,
                 quality,
@@ -560,10 +543,8 @@ namespace Verifalia.Api.EmailAddresses
         /// <returns>An object representing the email validation batch.</returns>
         public Task<Validation> SubmitAsync(string emailAddress, ResultPollingOptions resultPollingOptions, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (emailAddress == null)
-                throw new ArgumentNullException("emailAddress");
-            if (resultPollingOptions == null)
-                throw new ArgumentNullException("resultPollingOptions");
+            if (emailAddress == null) throw new ArgumentNullException(nameof(emailAddress));
+            if (resultPollingOptions == null) throw new ArgumentNullException(nameof(resultPollingOptions));
 
             return SubmitAsync(emailAddress,
                 ValidationQuality.Default,
@@ -587,12 +568,9 @@ namespace Verifalia.Api.EmailAddresses
         /// <returns>An object representing the email validation batch.</returns>
         public Task<Validation> SubmitAsync(string emailAddress, ValidationQuality quality, ResultPollingOptions resultPollingOptions, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (emailAddress == null)
-                throw new ArgumentNullException("emailAddress");
-            if (quality == null)
-                throw new ArgumentNullException("quality");
-            if (resultPollingOptions == null)
-                throw new ArgumentNullException("resultPollingOptions");
+            if (emailAddress == null) throw new ArgumentNullException(nameof(emailAddress));
+            if (quality == null) throw new ArgumentNullException(nameof(quality));
+            if (resultPollingOptions == null) throw new ArgumentNullException(nameof(resultPollingOptions));
 
             return SubmitAsync(new[] { emailAddress },
                 quality,
@@ -614,8 +592,7 @@ namespace Verifalia.Api.EmailAddresses
         /// <returns>An object representing the email validation batch.</returns>
         public Task<Validation> SubmitAsync(IEnumerable<string> emailAddresses, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (emailAddresses == null)
-                throw new ArgumentNullException("emailAddresses");
+            if (emailAddresses == null) throw new ArgumentNullException(nameof(emailAddresses));
 
             return SubmitAsync(emailAddresses,
                 ValidationQuality.Default,
@@ -638,10 +615,8 @@ namespace Verifalia.Api.EmailAddresses
         /// <returns>An object representing the email validation batch.</returns>
         public Task<Validation> SubmitAsync(IEnumerable<string> emailAddresses, ValidationQuality quality, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (emailAddresses == null)
-                throw new ArgumentNullException("emailAddresses");
-            if (quality == null)
-                throw new ArgumentNullException("quality");
+            if (emailAddresses == null) throw new ArgumentNullException(nameof(emailAddresses));
+            if (quality == null) throw new ArgumentNullException(nameof(quality));
 
             return SubmitAsync(emailAddresses,
                 quality,
@@ -673,8 +648,7 @@ namespace Verifalia.Api.EmailAddresses
         /// <returns>An object representing the email validation batch.</returns>
         public Task<Validation> SubmitAsync(IEnumerable<string> emailAddresses, ResultPollingOptions resultPollingOptions, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (emailAddresses == null)
-                throw new ArgumentNullException("emailAddresses");
+            if (emailAddresses == null) throw new ArgumentNullException(nameof(emailAddresses));
 
             return SubmitAsync(emailAddresses.Select(emailAddress => new ValidationRequestEntry(emailAddress)),
                 ValidationQuality.Default,
@@ -721,10 +695,8 @@ namespace Verifalia.Api.EmailAddresses
         /// <returns>An object representing the email validation batch.</returns>
         public Task<Validation> SubmitAsync(IEnumerable<string> emailAddresses, ValidationQuality quality, DeduplicationMode deduplicationMode, ResultPollingOptions resultPollingOptions, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (emailAddresses == null)
-                throw new ArgumentNullException("emailAddresses");
-            if (quality == null)
-                throw new ArgumentNullException("quality");
+            if (emailAddresses == null) throw new ArgumentNullException(nameof(emailAddresses));
+            if (quality == null) throw new ArgumentNullException(nameof(quality));
 
             return SubmitAsync(emailAddresses.Select(emailAddress => new ValidationRequestEntry(emailAddress)),
                 quality,
@@ -954,104 +926,116 @@ namespace Verifalia.Api.EmailAddresses
         /// <returns>An object representing the email validation batch.</returns>
         public async Task<Validation> SubmitAsync(ValidationRequest validationRequest, ResultPollingOptions resultPollingOptions, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (validationRequest == null)
-                throw new ArgumentNullException("validationRequest");
-            if (resultPollingOptions == null)
-                throw new ArgumentNullException("resultPollingOptions");
-
-            // Build the REST request
-
-            var request = new RestRequest
-            {
-                Method = Method.POST,
-                RequestFormat = DataFormat.Json,
-                Resource = "email-validations",
-                JsonSerializer = new ProgressiveJsonSerializer()
-            };
+            if (validationRequest == null) throw new ArgumentNullException(nameof(validationRequest));
+            if (resultPollingOptions == null) throw new ArgumentNullException(nameof(resultPollingOptions));
 
             // Generate the additional parameters, where needed
 
-            request.AddBody(new
-            {
-                entries = validationRequest.Entries,
-                quality = validationRequest.Quality == ValidationQuality.Default
-                    ? null
-                    : validationRequest.Quality.NameOrGuid,
-                deduplication = validationRequest.Deduplication == DeduplicationMode.Default
-                    ? null
-                    : validationRequest.Deduplication.NameOrGuid,
-                priority = validationRequest.Priority == ValidationPriority.Default
-                    ? (byte?) null
-                    : validationRequest.Priority.Value
-            });
+            var restClient = _restClientFactory.Build();
+
+            var content = restClient
+                .SerializeContent(new
+                {
+                    entries = validationRequest.Entries,
+                    quality = validationRequest.Quality == ValidationQuality.Default
+                        ? null
+                        : validationRequest.Quality.NameOrGuid,
+                    deduplication = validationRequest.Deduplication == DeduplicationMode.Default
+                        ? null
+                        : validationRequest.Deduplication.NameOrGuid,
+                    priority = validationRequest.Priority == ValidationPriority.Default
+                        ? (byte?)null
+                        : validationRequest.Priority.Value
+                });
 
             // Send the request to the Verifalia servers
 
-            var restClient = _restClientFactory.Build();
-            var response = await restClient.ExecuteTaskAsync<Validation>(request, cancellationToken)
+            var response = await restClient.InvokeAsync(HttpMethod.Post,
+                    "email-validations",
+                    content,
+                    cancellationToken)
                 .ConfigureAwait(false);
 
             switch (response.StatusCode)
             {
                 case HttpStatusCode.OK:
-                {
-                    // The batch has been completed in real time
-
-                    response.Data.Status = ValidationStatus.Completed;
-                    return response.Data;
-                }
-
                 case HttpStatusCode.Accepted:
                 {
-                    // The batch has been accepted but is not yet completed
-
-                    if (ReferenceEquals(resultPollingOptions, ResultPollingOptions.NoPolling))
-                    {
-                        response.Data.Status = ValidationStatus.Pending;
-                        return response.Data;
-                    }
-
-                    // Poll the service until completion
-
-                    return await QueryAsync(response.Data.UniqueID, resultPollingOptions, cancellationToken)
+                        var data = await restClient
+                            .DeserializeContentAsync<Validation>(response)
                             .ConfigureAwait(false);
-                }
 
-                case HttpStatusCode.BadRequest:
-                {
-                    // The batch has NOT been accepted because of an issue with the request
+                        if (response.StatusCode == HttpStatusCode.OK)
+                        {
+                            // The batch has been completed in real-time
 
-                    throw new VerifaliaException(response.StatusDescription)
-                    {
-                        Response = response
-                    };
-                }
+                            data.Status = ValidationStatus.Completed;
+                        }
+                        else
+                        {
+                            // The batch has been accepted but is not yet completed
 
-                case HttpStatusCode.Unauthorized:
-                {
-                    // The batch has NOT been accepted because of an issue with the supplied credentials
+                            if (ReferenceEquals(resultPollingOptions, ResultPollingOptions.NoPolling))
+                            {
+                                data.Status = ValidationStatus.Pending;
+                            }
+                            else
+                            {
+                                // Poll the service until completion
 
-                    throw new AuthorizationException(response.ErrorMessage)
-                    {
-                        Response = response
-                    };
-                }
+                                return await QueryAsync(data.UniqueID,
+                                        resultPollingOptions,
+                                        cancellationToken)
+                                    .ConfigureAwait(false);
+                            }
+                        }
 
-                case HttpStatusCode.PaymentRequired:
-                {
-                    // The batch has NOT been accepted because of low account credit
-
-                    throw new InsufficientCreditException(response.ErrorMessage)
-                    {
-                        Response = response
-                    };
+                        return data;
                 }
 
                 default:
                 {
-                    // An unexpected HTTP status code has been received
+                    var responseBody = await response
+                        .Content
+                        .ReadAsStringAsync()
+                        .ConfigureAwait(false);
 
-                    throw new VerifaliaException(String.Format("Unexpected HTTP response: {0} {1}", (int) response.StatusCode, response.StatusDescription))
+                    switch (response.StatusCode)
+                    {
+                        case HttpStatusCode.BadRequest:
+                            {
+                                // The batch has NOT been accepted because of an issue with the request
+
+                                throw new VerifaliaException(String.Format("Unexpected HTTP response: {0} {1}", (int)response.StatusCode, responseBody))
+                                {
+                                    Response = response
+                                };
+                            }
+
+                        case HttpStatusCode.Unauthorized:
+                            {
+                                // The batch has NOT been accepted because of an issue with the supplied credentials
+
+                                throw new AuthorizationException(responseBody)
+                                {
+                                    Response = response
+                                };
+                            }
+
+                        case HttpStatusCode.PaymentRequired:
+                            {
+                                // The batch has NOT been accepted because of low account credit
+
+                                throw new InsufficientCreditException(responseBody)
+                                {
+                                    Response = response
+                                };
+                            }
+                    }
+
+                    // An unexpected HTTP status code has been received at this point
+
+                    throw new VerifaliaException(String.Format("Unexpected HTTP response: {0} {1}", (int) response.StatusCode, responseBody))
                     {
                         Response = response
                     };
@@ -1077,7 +1061,7 @@ namespace Verifalia.Api.EmailAddresses
         /// <remarks>To initiate a new email validation batch, please use <see cref="Submit(IEnumerable{string})" />.</remarks>
         /// </summary>
         /// <param name="uniqueId">The unique identifier for an email validation batch to be retrieved.</param>
-        /// <param name="resultPollingOptionsions">The options about waiting for the validation completion.</param>
+        /// <param name="resultPollingOptions">The options about waiting for the validation completion.</param>
         /// <returns>An object representing the current status of the requested email validation batch.</returns>
         public Validation Query(Guid uniqueId, ResultPollingOptions resultPollingOptions)
         {
@@ -1124,7 +1108,7 @@ namespace Verifalia.Api.EmailAddresses
         /// <remarks>To initiate a new email validation batch, please use <see cref="Submit(IEnumerable{string})" />.</remarks>
         /// </summary>
         /// <param name="uniqueId">The unique identifier for an email validation batch to be retrieved.</param>
-        /// <param name="resultPollingOptionsions">The options about waiting for the validation completion.</param>
+        /// <param name="resultPollingOptions">The options about waiting for the validation completion.</param>
         /// <returns>An object representing the current status of the requested email validation batch.</returns>
         public async Task<Validation> QueryAsync(Guid uniqueId, ResultPollingOptions resultPollingOptions, CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -1176,32 +1160,29 @@ namespace Verifalia.Api.EmailAddresses
         /// <returns>An object representing the current status of the requested email validation batch.</returns>
         async Task<Validation> QueryOnceAsync(Guid uniqueId, CancellationToken cancellationToken = default(CancellationToken))
         {
-            var request = new RestRequest
-            {
-                Resource = "email-validations/{uniqueId}",
-                JsonSerializer = new ProgressiveJsonSerializer()
-            };
-
-            request.AddUrlSegment("uniqueId", uniqueId.ToString());
+            var resource = String.Format("email-validations/{0}", uniqueId);
 
             // Sends the request to the Verifalia servers
 
             var restClient = _restClientFactory.Build();
-            var response = await restClient.ExecuteTaskAsync<Validation>(request, cancellationToken)
+            var response = await restClient
+                .InvokeAsync(HttpMethod.Get, resource, cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
 
             switch (response.StatusCode)
             {
                 case HttpStatusCode.OK:
-                {
-                    response.Data.Status = ValidationStatus.Completed;
-                    return response.Data;
-                }
-
                 case HttpStatusCode.Accepted:
                 {
-                    response.Data.Status = ValidationStatus.Pending;
-                    return response.Data;
+                    var data = await restClient
+                            .DeserializeContentAsync<Validation>(response)
+                            .ConfigureAwait(false);
+
+                    data.Status = response.StatusCode == HttpStatusCode.Accepted ?
+                            ValidationStatus.Pending :
+                            ValidationStatus.Completed;
+
+                    return data;
                 }
 
                 case HttpStatusCode.Gone:
@@ -1209,17 +1190,19 @@ namespace Verifalia.Api.EmailAddresses
                 {
                     return null;
                 }
-
-                default:
-                {
-                    // An unexpected HTTP status code has been received
-
-                    throw new VerifaliaException(String.Format("Unexpected HTTP response: {0} {1}", (int) response.StatusCode, response.StatusDescription))
-                    {
-                        Response = response
-                    };
-                }
             }
+
+            // An unexpected HTTP status code has been received at this point
+
+            var responseBody = await response
+                .Content
+                .ReadAsStringAsync()
+                .ConfigureAwait(false);
+
+            throw new VerifaliaException(String.Format("Unexpected HTTP response: {0} {1}", (int)response.StatusCode, responseBody))
+            {
+                Response = response
+            };
         }
 
         /// <summary>
@@ -1261,19 +1244,13 @@ namespace Verifalia.Api.EmailAddresses
         /// <param name="uniqueId">The unique identifier for an email validation batch to be deleted.</param>
         public async Task DeleteAsync(Guid uniqueId, CancellationToken cancellationToken = default(CancellationToken))
         {
-            var request = new RestRequest
-            {
-                Resource = "email-validations/{uniqueId}",
-                JsonSerializer = new ProgressiveJsonSerializer()
-            };
-
-            request.AddUrlSegment("uniqueId", uniqueId.ToString());
-            request.Method = Method.DELETE;
+            var resource = String.Format("email-validations/{0}", uniqueId);
 
             // Sends the request to the Verifalia servers
 
             var restClient = _restClientFactory.Build();
-            var response = await restClient.ExecuteTaskAsync(request, cancellationToken)
+            var response = await restClient
+                .InvokeAsync(HttpMethod.Delete, resource, cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
 
             switch (response.StatusCode)
@@ -1285,17 +1262,19 @@ namespace Verifalia.Api.EmailAddresses
 
                         return;
                     }
-
-                default:
-                    {
-                        // An unexpected HTTP status code has been received
-
-                        throw new VerifaliaException(String.Format("Unexpected HTTP response: {0} {1}", (int)response.StatusCode, response.StatusDescription))
-                        {
-                            Response = response
-                        };
-                    }
             }
+
+            // An unexpected HTTP status code has been received at this point
+
+            var responseBody = await response
+                .Content
+                .ReadAsStringAsync()
+                .ConfigureAwait(false);
+
+            throw new VerifaliaException(String.Format("Unexpected HTTP response: {0} {1}", (int)response.StatusCode, responseBody))
+            {
+                Response = response
+            };
         }
     }
 }

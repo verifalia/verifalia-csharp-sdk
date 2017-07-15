@@ -1,9 +1,7 @@
-﻿using RestSharp;
-
-namespace Verifalia.Api
+﻿namespace Verifalia.Api
 {
     public interface IRestClientFactory
     {
-        RestClient Build();
+        IRestClient Build();
     }
 }

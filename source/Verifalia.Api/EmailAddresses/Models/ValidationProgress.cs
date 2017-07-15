@@ -36,12 +36,6 @@ namespace Verifalia.Api.EmailAddresses.Models
         /// <summary>
         /// Returns the progress percentage of the batch.
         /// </summary>
-        public double Percentage
-        {
-            get
-            {
-                return 100d * NoOfCompletedEntries / NoOfTotalEntries;
-            }
-        }
+        public double Percentage => 100d * NoOfCompletedEntries / NoOfTotalEntries;
     }
 }

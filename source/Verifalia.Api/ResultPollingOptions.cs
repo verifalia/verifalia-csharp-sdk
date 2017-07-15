@@ -40,11 +40,11 @@ namespace Verifalia.Api
         /// </summary>
         public int MaxPollingCount
         {
-            get { return _maxPollingCount; }
+            get => _maxPollingCount;
             set
             {
                 if (value < 0)
-                    throw new ArgumentOutOfRangeException("value");
+                    throw new ArgumentOutOfRangeException(nameof(value));
 
                 _maxPollingCount = value;
             }

@@ -29,7 +29,7 @@ namespace Verifalia.Api.EmailAddresses.Models
                 {
                     if (value.Length > 50)
                     {
-                        throw new ArgumentOutOfRangeException("value", String.Format("Custom value '{0}' exceeds the maximum allowed length of 50 characters.", value));
+                        throw new ArgumentOutOfRangeException(nameof(value), String.Format("Custom value '{0}' exceeds the maximum allowed length of 50 characters.", value));
                     }
                 }
 
@@ -55,7 +55,7 @@ namespace Verifalia.Api.EmailAddresses.Models
         /// <exception cref="System.ArgumentNullException">inputData</exception>
         public ValidationRequestEntry(string inputData, string custom)
         {
-            if (inputData == null) throw new ArgumentNullException("inputData");
+            if (inputData == null) throw new ArgumentNullException(nameof(inputData));
             
             InputData = inputData;
             Custom = custom;

@@ -1,10 +1,8 @@
 ﻿using System.IO;
 using Newtonsoft.Json;
-using RestSharp;
-using RestSharp.Deserializers;
-using RestSharp.Serializers;
 using Verifalia.Api.EmailAddresses.Converters;
 using Verifalia.Api.EmailAddresses.Models;
+using System.Text;
 
 namespace Verifalia.Api
 {
@@ -12,13 +10,13 @@ namespace Verifalia.Api
     /// Progressive json serializer / deserializer using Newtonsoft Json.
     /// Code partially adapted from: http://bytefish.de/blog/restsharp_custom_json_serializer/
     /// </summary>
-    internal class ProgressiveJsonSerializer : ISerializer, IDeserializer
+    internal class ProgressiveJsonSerializer : Flurl.Http.Configuration.ISerializer
     {
-        readonly Newtonsoft.Json.JsonSerializer _serializer;
+        private readonly JsonSerializer _serializer;
 
         internal ProgressiveJsonSerializer()
         {
-            _serializer = new Newtonsoft.Json.JsonSerializer()
+            _serializer = new JsonSerializer()
             {
                 NullValueHandling = NullValueHandling.Ignore,
                 CheckAdditionalContent = false,
@@ -35,18 +33,6 @@ namespace Verifalia.Api
             _serializer.Converters.Add(new ValidationPriorityConverter());
         }
 
-        public string ContentType
-        {
-            get { return "application/json"; } // Probably used for Serialization?
-            set { }
-        }
-
-        public string DateFormat { get; set; }
-
-        public string Namespace { get; set; }
-
-        public string RootElement { get; set; }
-
         public string Serialize(object obj)
         {
             using (var stringWriter = new StringWriter())
@@ -60,16 +46,22 @@ namespace Verifalia.Api
             }
         }
 
-        public T Deserialize<T>(IRestResponse response)
+        public T Deserialize<T>(string s)
         {
-            var content = response.Content;
-
-            using (var stringReader = new StringReader(content))
+            using (var textReader = new StringReader(s))
             {
-                using (var jsonTextReader = new JsonTextReader(stringReader))
+                using (var jsonReader = new JsonTextReader(textReader))
                 {
-                    return _serializer.Deserialize<T>(jsonTextReader);
+                    return _serializer.Deserialize<T>(jsonReader);
                 }
+            }
+        }
+
+        public T Deserialize<T>(Stream stream)
+        {
+            using (var streamReader = new StreamReader(stream, Encoding.UTF8))
+            {
+                return Deserialize<T>(streamReader.ReadToEnd());
             }
         }
     }

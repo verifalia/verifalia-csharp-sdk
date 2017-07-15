@@ -4,39 +4,15 @@ namespace Verifalia.Api.EmailAddresses.Models
 {
     public class ValidationQuality
     {
-        internal string NameOrGuid { get; private set; }
+        internal string NameOrGuid { get; }
 
-        public static ValidationQuality Default
-        {
-            get
-            {
-                return new ValidationQuality();
-            }
-        }
+        public static ValidationQuality Default => new ValidationQuality();
 
-        public static ValidationQuality Standard
-        {
-            get
-            {
-                return new ValidationQuality("standard");
-            }
-        }
+        public static ValidationQuality Standard => new ValidationQuality("standard");
 
-        public static ValidationQuality High
-        {
-            get
-            {
-                return new ValidationQuality("high");
-            }
-        }
+        public static ValidationQuality High => new ValidationQuality("high");
 
-        public static ValidationQuality Extreme
-        {
-            get
-            {
-                return new ValidationQuality("extreme");
-            }
-        }
+        public static ValidationQuality Extreme => new ValidationQuality("extreme");
 
         private ValidationQuality()
         {
@@ -44,7 +20,7 @@ namespace Verifalia.Api.EmailAddresses.Models
 
         public ValidationQuality(string qualityName)
         {
-            if (qualityName == null) throw new ArgumentNullException("qualityName");
+            if (qualityName == null) throw new ArgumentNullException(nameof(qualityName));
 
             NameOrGuid = qualityName;
         }

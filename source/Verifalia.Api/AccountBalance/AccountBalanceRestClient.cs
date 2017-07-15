@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Net;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using RestSharp;
 using Verifalia.Api.Exceptions;
 
 namespace Verifalia.Api.AccountBalance
@@ -14,12 +14,11 @@ namespace Verifalia.Api.AccountBalance
     /// </summary>
     internal class AccountBalanceRestClient : IAccountBalanceRestClient
     {
-        readonly IRestClientFactory _restClientFactory;
+        private readonly IRestClientFactory _restClientFactory;
 
         internal AccountBalanceRestClient(IRestClientFactory restClientFactory)
         {
-            if (restClientFactory == null)
-                throw new ArgumentNullException("restClientFactory", "restClientFactory is null.");
+            if (restClientFactory == null) throw new ArgumentNullException(nameof(restClientFactory));
 
             _restClientFactory = restClientFactory;
         }
@@ -59,35 +58,32 @@ namespace Verifalia.Api.AccountBalance
         /// </summary>
         public async Task<Models.AccountBalance> QueryAsync(CancellationToken cancellationToken = default(CancellationToken))
         {
-            var request = new RestRequest
-            {
-                Resource = "account-balance",
-                JsonSerializer = new ProgressiveJsonSerializer()
-            };
-
             // Sends the request to the Verifalia servers
 
             var restClient = _restClientFactory.Build();
-            var response = await restClient.ExecuteTaskAsync<Models.AccountBalance>(request, cancellationToken)
+            var response = await restClient
+                .InvokeAsync(HttpMethod.Get, "account-balance", cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
 
             switch (response.StatusCode)
             {
                 case HttpStatusCode.OK:
-                {
-                    return response.Data;
-                }
-
-                default:
-                {
-                    // An unexpected HTTP status code has been received
-
-                    throw new VerifaliaException(String.Format("Unexpected HTTP response: {0} {1}", (int) response.StatusCode, response.StatusDescription))
                     {
-                        Response = response
-                    };
-                }
+                        return await restClient.DeserializeContentAsync<Models.AccountBalance>(response);
+                    }
             }
+
+            // An unexpected HTTP status code has been received at this point
+
+            var responseBody = await response
+                .Content
+                .ReadAsStringAsync()
+                .ConfigureAwait(false);
+
+            throw new VerifaliaException(String.Format("Unexpected HTTP response: {0} {1}", (int)response.StatusCode, responseBody))
+            {
+                Response = response
+            };
         }
     }
 }

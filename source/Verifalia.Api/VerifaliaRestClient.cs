@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
-using RestSharp;
-using RestSharp.Authenticators;
 using Verifalia.Api.AccountBalance;
 using Verifalia.Api.EmailAddresses;
 
@@ -13,34 +11,30 @@ namespace Verifalia.Api
     /// </summary>
     public class VerifaliaRestClient : IRestClientFactory, IVerifaliaRestClient
     {
-        const string DefaultApiVersion = "v1.4";
+        private const string DefaultApiVersion = "v1.4";
 
-        readonly Random _uriShuffler;
-        readonly string _accountSid;
-        readonly string _authToken;
+        private readonly Random _uriShuffler;
+        private readonly string _accountSid;
+        private readonly string _authToken;
 
-        public static Uri[] DefaultBaseUris { get; private set; }
+        private Uri[] _baseUris;
+        private string _apiVersion;
+        private MultiplexedRestClient _cachedRestClient;
 
-        Uri[] _baseUris;
-        string _apiVersion;
-        RestClient _cachedRestClient;
+        private IValidationRestClient _emailValidations;
+        private IAccountBalanceRestClient _accountBalance;
 
-        IValidationRestClient _emailValidations;
-        IAccountBalanceRestClient _accountBalance;
+        public static Uri[] DefaultBaseUris { get; }
 
         /// <summary>
         /// Verifalia API version to use when making requests.
         /// </summary>
         public string ApiVersion
         {
-            get
-            {
-                return _apiVersion;
-            }
+            get => _apiVersion;
             set
             {
-                if (value == null)
-                    throw new ArgumentNullException("value");
+                if (value == null) throw new ArgumentNullException(nameof(value));
 
                 _apiVersion = value;
             }
@@ -52,10 +46,7 @@ namespace Verifalia.Api
         /// </summary>
         public Uri[] BaseUris
         {
-            get
-            {
-                return _baseUris;
-            }
+            get => _baseUris;
             set
             {
                 if (value == null)
@@ -68,7 +59,7 @@ namespace Verifalia.Api
 
                     if (value.Length == 0)
                     {
-                        throw new ArgumentException("Value must contain at least one base URI.", "value");
+                        throw new ArgumentException("Value must contain at least one base URI.", nameof(value));
                     }
 
                     _baseUris = value;
@@ -83,24 +74,12 @@ namespace Verifalia.Api
         /// <summary>
         /// Allows to submit and manage email validations using the Verifalia service.
         /// </summary>
-        public IValidationRestClient EmailValidations
-        {
-            get
-            {
-                return _emailValidations ?? (_emailValidations = new ValidationRestClient(this));
-            }
-        }
+        public IValidationRestClient EmailValidations => _emailValidations ?? (_emailValidations = new ValidationRestClient(this));
 
         /// <summary>
         /// Allows to manage the credits for the Verifalia account.
         /// </summary>
-        public IAccountBalanceRestClient AccountBalance
-        {
-            get
-            {
-                return _accountBalance ?? (_accountBalance = new AccountBalanceRestClient(this));
-            }
-        }
+        public IAccountBalanceRestClient AccountBalance => _accountBalance ?? (_accountBalance = new AccountBalanceRestClient(this));
 
         static VerifaliaRestClient()
         {
@@ -122,9 +101,9 @@ namespace Verifalia.Api
         public VerifaliaRestClient(string accountSid, string authToken)
         {
             if (String.IsNullOrEmpty(accountSid))
-                throw new ArgumentException("accountSid is null or empty.", "accountSid");
+                throw new ArgumentException("accountSid is null or empty: please visit https://verifalia.com/client-area to set up a new API sub-account if you don't have one.", nameof(accountSid));
             if (String.IsNullOrEmpty(authToken))
-                throw new ArgumentException("authToken is null or empty.", "authToken");
+                throw new ArgumentException("authToken is null or empty: please visit https://verifalia.com/client-area to set up a new API sub-account if you don't have one.", nameof(authToken));
 
             _accountSid = accountSid;
             _authToken = authToken;
@@ -143,16 +122,23 @@ namespace Verifalia.Api
         /// Builds a custom REST client which peeks a random API endpoint and automatically retries on the others, in the event
         /// of a network failure.
         /// </summary>
-        RestClient IRestClientFactory.Build()
+        IRestClient IRestClientFactory.Build()
         {
             if (_cachedRestClient != null)
                 return _cachedRestClient;
-            
+
             // The user agent string brings the type of the client and its version (for statistical purposes
             // at the server side):
 
-            var userAgent = String.Concat("verifalia-rest-client/netfx/",
-                Assembly.GetExecutingAssembly().GetName().Version);
+            var userAgent = String.Format("verifalia-rest-client/{0}/{1}",
+#if NET45
+                "net45",
+#elif NETSTANDARD1_4
+                "netstandard1.4",
+#else
+#error Unsupported platform.
+#endif
+                typeof(VerifaliaRestClient).GetTypeInfo().Assembly.GetName().Version);
 
             // Setup the REST client
 
@@ -160,17 +146,10 @@ namespace Verifalia.Api
                 .Select(uri => new Uri(uri, ApiVersion))
                 .OrderBy(uri => _uriShuffler.Next());
 
-            var restClient = new MultiplexedRestClient(shuffledFinalUris)
-            {
-                Authenticator = new HttpBasicAuthenticator(_accountSid, _authToken),
-                UserAgent = userAgent
-            };
-
-            restClient.ClearHandlers();
-            restClient.AddHandler("application/json", new ProgressiveJsonSerializer());
-            restClient.FollowRedirects = false;
-
-            _cachedRestClient = restClient;
+            _cachedRestClient = new MultiplexedRestClient(shuffledFinalUris,
+                _accountSid,
+                _authToken,
+                userAgent);
 
             return _cachedRestClient;
         }

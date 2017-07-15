@@ -1,7 +1,8 @@
 ﻿namespace Verifalia.Api.Exceptions
 {
     /// <summary>
-    /// Signals an issue with the credentials provided to the Verifalia service.
+    /// An exception thrown in the event the client finishes to poll the API endpoints for the specified maximum duration or iterations
+    /// count, without leading to a final result.
     /// </summary>
     public class UncompletedBatchException : VerifaliaException
     {
