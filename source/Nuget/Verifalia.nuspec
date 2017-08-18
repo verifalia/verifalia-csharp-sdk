@@ -2,7 +2,7 @@
 <package xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<metadata xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 		<id>Verifalia</id>
-		<version>1.8.0.0</version>
+		<version>1.8.1.0</version>
 		<authors>Verifalia</authors>
 		<title>Verifalia SDK</title>
 		<summary>Helper library for Verifalia RESTful HTTPS API</summary>
@@ -16,11 +16,12 @@
 		<dependencies>
 		  <group targetFramework=".NETFramework4.5">
 			<dependency id="Newtonsoft.Json" version="10.0.3" />
-			<dependency id="Flurl.Http" version="1.1.2" />
+			<dependency id="Flurl.Http" version="1.2.0" />
+			<dependency id="System.Net.Http" version="4.3.2" />
 		  </group>
-		  <group targetFramework=".NETStandard1.4">
+		  <group targetFramework=".NETStandard1.3">
 			<dependency id="Newtonsoft.Json" version="10.0.3" />
-			<dependency id="Flurl.Http" version="1.1.2" />
+			<dependency id="Flurl.Http" version="1.2.0" />
 		  </group>
 		</dependencies>
 	</metadata>

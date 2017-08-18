@@ -32,12 +32,7 @@ namespace Verifalia.Api
         public string ApiVersion
         {
             get => _apiVersion;
-            set
-            {
-                if (value == null) throw new ArgumentNullException(nameof(value));
-
-                _apiVersion = value;
-            }
+            set => _apiVersion = value ?? throw new ArgumentNullException(nameof(value));
         }
 
         /// <summary>
@@ -133,8 +128,8 @@ namespace Verifalia.Api
             var userAgent = String.Format("verifalia-rest-client/{0}/{1}",
 #if NET45
                 "net45",
-#elif NETSTANDARD1_4
-                "netstandard1.4",
+#elif NETSTANDARD1_3
+                "netstandard1.3",
 #else
 #error Unsupported platform.
 #endif

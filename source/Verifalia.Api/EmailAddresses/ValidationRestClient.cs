@@ -21,9 +21,7 @@ namespace Verifalia.Api.EmailAddresses
 
         internal ValidationRestClient(IRestClientFactory restClientFactory)
         {
-            if (restClientFactory == null) throw new ArgumentNullException(nameof(restClientFactory));
-
-            _restClientFactory = restClientFactory;
+            _restClientFactory = restClientFactory ?? throw new ArgumentNullException(nameof(restClientFactory));
         }
 
         /// <summary>
@@ -902,7 +900,6 @@ namespace Verifalia.Api.EmailAddresses
         /// </remarks>
         /// </summary>
         /// <param name="entries">A collection of <see cref="ValidationRequestEntry">RequestEntry</see> instances, representing the email addresses to validate and their optional custom data.</param>
-        /// <param name="quality">The desired quality of the results for this submission.</param>
         /// <param name="deduplicationMode">The desired deduplication mode for the submitted job.</param>
         /// <param name="resultPollingOptions">The options which rule out how to wait for the validation completion.</param>
         /// <returns>An object representing the email validation batch.</returns>

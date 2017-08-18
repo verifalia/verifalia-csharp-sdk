@@ -18,9 +18,7 @@ namespace Verifalia.Api.AccountBalance
 
         internal AccountBalanceRestClient(IRestClientFactory restClientFactory)
         {
-            if (restClientFactory == null) throw new ArgumentNullException(nameof(restClientFactory));
-
-            _restClientFactory = restClientFactory;
+            _restClientFactory = restClientFactory ?? throw new ArgumentNullException(nameof(restClientFactory));
         }
 
         /// <summary>

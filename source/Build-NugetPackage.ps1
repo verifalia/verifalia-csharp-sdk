@@ -21,7 +21,7 @@ try {
 	# Copy the package artifacts
 
 	cp .\Verifalia.Api\bin\Release\net45 .\Nuget\lib -Recurse -Container -Filter Verifalia.Api.* 
-	cp .\Verifalia.Api\bin\Release\netstandard1.4 .\Nuget\lib -Recurse -Container -Filter Verifalia.Api.* 
+	cp .\Verifalia.Api\bin\Release\netstandard1.3 .\Nuget\lib -Recurse -Container -Filter Verifalia.Api.* 
 
 	# Build the nuget package
 
