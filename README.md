@@ -1,7 +1,7 @@
 Verifalia REST API - .NET SDK and helper library
 ================================================
 
-[Verifalia][0] provides a simple HTTPS-based API for validating email addresses in real-time and checking whether they are deliverable or not; this library integrates with Verifalia and allows to [verify email addresses][0] under both .NET 4.5 (and higher) and .NET Standard 1.4 (and higher, including .NET Core 1.0+, Mono 4.6+, Xamarin.iOS 10.0+, Xamarin.Mac 3.0+, Xamarin.Android 7.0+, Universal Windows Platform 10.0+).
+[Verifalia][0] provides a simple HTTPS-based API for validating email addresses in real-time and checking whether they are deliverable or not; this library integrates with Verifalia and allows to [verify email addresses][0] under both .NET 4.5 (and higher) and .NET Standard 1.3 (and higher, including .NET Core 1.0+, Mono 4.6+, Xamarin.iOS 10.0+, Xamarin.Mac 3.0+, Xamarin.Android 7.0+, Universal Windows Platform 10.0+).
 
 Learn more at http://verifalia.com
 
