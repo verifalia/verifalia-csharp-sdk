@@ -1115,6 +1115,14 @@ namespace Verifalia.Api.EmailAddresses
 
             for (var pollingIteration = 0; pollingIteration <= resultPollingOptions.MaxPollingCount; pollingIteration++)
             {
+                if (pollingIteration > 0)
+                {
+                    // Wait for the polling interval
+
+                    await Task.Delay(resultPollingOptions.PollingInterval, cancellationToken)
+                        .ConfigureAwait(false);
+                }
+
                 result = await QueryOnceAsync(uniqueId, cancellationToken)
                     .ConfigureAwait(false);
 
@@ -1131,11 +1139,6 @@ namespace Verifalia.Api.EmailAddresses
                 {
                     return result;
                 }
-
-                // Wait for the polling interval
-
-                await Task.Delay(resultPollingOptions.PollingInterval, cancellationToken)
-                    .ConfigureAwait(false);
             }
 
             // At this point, we have exhausted the configured maximum number of allowed polling iterations
