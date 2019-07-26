@@ -1,4 +1,4 @@
-[![Verifalia API](https://img.shields.io/badge/Verifalia%20API-v1.4-green)]
+![Verifalia API](https://img.shields.io/badge/Verifalia%20API-v1.4-green)
 [![NuGet](https://img.shields.io/nuget/v/Verifalia.svg)](https://www.nuget.org/packages/Verifalia)
 
 Verifalia REST API - .NET SDK and helper library
