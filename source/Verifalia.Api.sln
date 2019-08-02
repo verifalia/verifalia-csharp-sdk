@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29001.49
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Verifalia.Api", "Verifalia.Api\Verifalia.Api.csproj", "{8BB1819D-EE9C-4B27-854B-88C2BDE0F3B3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Verifalia.Api.Tests", "Verifalia.Api.Tests\Verifalia.Api.Tests.csproj", "{3C9EF29D-6A90-49E9-9CE1-F084C74E81F3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8BB1819D-EE9C-4B27-854B-88C2BDE0F3B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8BB1819D-EE9C-4B27-854B-88C2BDE0F3B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8BB1819D-EE9C-4B27-854B-88C2BDE0F3B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8BB1819D-EE9C-4B27-854B-88C2BDE0F3B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3C9EF29D-6A90-49E9-9CE1-F084C74E81F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C9EF29D-6A90-49E9-9CE1-F084C74E81F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C9EF29D-6A90-49E9-9CE1-F084C74E81F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C9EF29D-6A90-49E9-9CE1-F084C74E81F3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7C8A1E7E-EA61-42C0-8F6A-AF4BD66F6AEF}
+	EndGlobalSection
+EndGlobal

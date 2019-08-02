@@ -1,135 +1,175 @@
-﻿using System;
+﻿/*
+* Verifalia - Email list cleaning and real-time email verification service
+* https://verifalia.com/
+* support@verifalia.com
+*
+* Copyright (c) 2005-2019 Cobisi Research
+*
+* Cobisi Research
+* Via Prima Strada, 35
+* 35129, Padova
+* Italy - European Union
+*
+* Permission is hereby granted, free of charge, to any person obtaining a copy
+* of this software and associated documentation files (the "Software"), to deal
+* in the Software without restriction, including without limitation the rights
+* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+* copies of the Software, and to permit persons to whom the Software is
+* furnished to do so, subject to the following conditions:
+*
+* The above copyright notice and this permission notice shall be included in
+* all copies or substantial portions of the Software.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+* LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+* THE SOFTWARE.
+*/
+
+using System;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
-using Verifalia.Api.AccountBalance;
-using Verifalia.Api.EmailAddresses;
+using System.Security.Cryptography.X509Certificates;
+using Verifalia.Api.BaseUrisProviders;
+using Verifalia.Api.Credits;
+using Verifalia.Api.EmailValidations;
+using Verifalia.Api.Security;
 
 namespace Verifalia.Api
 {
-    /// <summary>
-    /// REST client for Verifalia API.
-    /// </summary>
-    public class VerifaliaRestClient : IRestClientFactory, IVerifaliaRestClient
+    /// <inheritdoc cref="IVerifaliaRestClient"/>
+    public sealed class VerifaliaRestClient : IRestClientFactory, IVerifaliaRestClient, IDisposable
     {
-        private const string DefaultApiVersion = "v1.4";
+        public const string DefaultApiVersion = "v2.0";
 
         private readonly Random _uriShuffler;
-        private readonly string _accountSid;
-        private readonly string _authToken;
+        private readonly IAuthenticator _authenticator;
+        private readonly BaseUrisProvider _baseUrisProvider;
 
-        private Uri[] _baseUris;
         private string _apiVersion;
-        private MultiplexedRestClient _cachedRestClient;
+        private IEmailValidationsRestClient _emailValidations;
+        private ICreditsRestClient _accountBalance;
 
-        private IValidationRestClient _emailValidations;
-        private IAccountBalanceRestClient _accountBalance;
+        internal MultiplexedRestClient CachedRestClient; // Marked as internal for unit testing purposes
 
-        public static Uri[] DefaultBaseUris { get; }
-
-        /// <summary>
-        /// Verifalia API version to use when making requests.
-        /// </summary>
+        /// <inheritdoc cref="IVerifaliaRestClient.ApiVersion"/>
         public string ApiVersion
         {
             get => _apiVersion;
-            set => _apiVersion = value ?? throw new ArgumentNullException(nameof(value));
-        }
-
-        /// <summary>
-        /// Base URIs of Verifalia API (defaults to https://api-1.verifalia.com/ and https://api-2.verifalia.com). Do not use this property
-        /// unless instructed to do so by the Verifalia support team.
-        /// </summary>
-        public Uri[] BaseUris
-        {
-            get => _baseUris;
             set
             {
-                if (value == null)
-                {
-                    _baseUris = DefaultBaseUris;
-                }
-                else
-                {
-                    // Custom base URIs
+                _apiVersion = value ?? throw new ArgumentNullException(nameof(value));
 
-                    if (value.Length == 0)
-                    {
-                        throw new ArgumentException("Value must contain at least one base URI.", nameof(value));
-                    }
+                // Invalidate the cached REST client on changes
 
-                    _baseUris = value;
-                }
-
-                // Invalidate the cached rest client
-
-                _cachedRestClient = null;
+                CachedRestClient = null;
             }
         }
 
-        /// <summary>
-        /// Allows to submit and manage email validations using the Verifalia service.
-        /// </summary>
-        public IValidationRestClient EmailValidations => _emailValidations ?? (_emailValidations = new ValidationRestClient(this));
+        /// <inheritdoc cref="IVerifaliaRestClient.EmailValidations"/>
+        public IEmailValidationsRestClient EmailValidations => _emailValidations ??= new EmailValidationsRestClient(this);
+
+        /// <inheritdoc cref="IVerifaliaRestClient.Credits"/>
+        public ICreditsRestClient Credits => _accountBalance ??= new CreditsRestClient(this);
 
         /// <summary>
-        /// Allows to manage the credits for the Verifalia account.
+        /// Initializes a new HTTPS-based REST client for Verifalia with the specified username and password.
+        /// <remarks>While authenticating with your Verifalia main account credentials is possible, it is strongly advised
+        /// to create one or more users (formerly known as sub-accounts) with just the required permissions, for improved
+        /// security. To create a new user or manage existing ones, please visit https://verifalia.com/client-area#/users </remarks>
         /// </summary>
-        public IAccountBalanceRestClient AccountBalance => _accountBalance ?? (_accountBalance = new AccountBalanceRestClient(this));
-
-        static VerifaliaRestClient()
+        public VerifaliaRestClient(string username, string password, Uri[] baseUris = default)
+            : this(new UsernamePasswordAuthenticator(username, password), baseUris == default(Uri[]) ? new DefaultBaseUrisProvider() : new BaseUrisProvider(baseUris))
         {
-            // Default base URIs
-
-            DefaultBaseUris = new[]
-            {
-                new Uri("https://api-1.verifalia.com"),
-                new Uri("https://api-2.verifalia.com")
-            };
         }
 
-        /// <summary>
-        /// Initializes a new Verifalia REST client with the specified sub-account credentials. Sub-accounts
-        /// for API usage, along with their Account SID and Auth Token, can be set up from within the Verifalia dashboard, at 
-        /// <seealso cref="https://verifalia.com/client-area">https://verifalia.com/client-area</seealso>, in the "API and
-        /// sub-accounts" section.
-        /// </summary>
-        public VerifaliaRestClient(string accountSid, string authToken)
-        {
-            if (String.IsNullOrEmpty(accountSid))
-                throw new ArgumentException("accountSid is null or empty: please visit https://verifalia.com/client-area to set up a new API sub-account if you don't have one.", nameof(accountSid));
-            if (String.IsNullOrEmpty(authToken))
-                throw new ArgumentException("authToken is null or empty: please visit https://verifalia.com/client-area to set up a new API sub-account if you don't have one.", nameof(authToken));
+#if HAS_CLIENT_CERTIFICATES_SUPPORT
 
-            _accountSid = accountSid;
-            _authToken = authToken;
+        /// <summary>
+        /// Initializes a new HTTPS-based REST client for Verifalia with the specified client certificate (for enterprise-grade
+        /// mutual TLS authentication).
+        /// <remarks>TLS client certificate authentication is available to premium plans only.</remarks>
+        /// <remarks>It is strongly advised to create one or more users (formerly known as sub-accounts) with just the required
+        /// permissions,
+        /// for improved security. To create a new user or manage existing ones, please visit https://verifalia.com/client-area#/users
+        /// </remarks>
+        /// </summary>
+        public VerifaliaRestClient(X509Certificate2 clientCertificate, Uri[] baseUris = default)
+            : this(new ClientCertificateAuthenticator(clientCertificate), baseUris == default(Uri[]) ? new ClientCertificateBaseUrisProvider() : new BaseUrisProvider(baseUris))
+        {
+        }
+
+#endif
+
+        private VerifaliaRestClient(IAuthenticator authenticator, BaseUrisProvider baseUrisProvider)
+        {
+            _authenticator = authenticator ?? throw new ArgumentNullException(nameof(authenticator));
+            _baseUrisProvider = baseUrisProvider ?? throw new ArgumentNullException(nameof(baseUrisProvider));
 
             // Initialize the shuffle mechanism which randomizes the API endpoints usage
 
             _uriShuffler = new Random();
-
-            // Default values used to build the base URL needed to access the service
-
-            _baseUris = DefaultBaseUris;
             _apiVersion = DefaultApiVersion;
         }
 
         /// <summary>
-        /// Builds a custom REST client which peeks a random API endpoint and automatically retries on the others, in the event
-        /// of a network failure.
+        /// Builds a REST client which peeks a random Verifalia API endpoint and automatically retries on the others, in the event
+        /// of a network (or server error) failure.
         /// </summary>
         IRestClient IRestClientFactory.Build()
         {
-            if (_cachedRestClient != null)
-                return _cachedRestClient;
+            if (CachedRestClient != null)
+                return CachedRestClient;
 
             // The user agent string brings the type of the client and its version (for statistical purposes
             // at the server side):
 
-            var userAgent = String.Format("verifalia-rest-client/{0}/{1}",
+            var userAgent = String.Format(CultureInfo.InvariantCulture,
+                "verifalia-rest-client/{0}/{1}",
 #if NET45
                 "net45",
+#elif NET451
+                "net451",
+#elif NET452
+                "net452",
+#elif NET46
+                "net46",
+#elif NET461
+                "net461",
+#elif NET462
+                "net462",
+#elif NET47
+                "net47",
+#elif NET471
+                "net471",
+#elif NET472
+                "net472",
 #elif NETSTANDARD1_3
                 "netstandard1.3",
+#elif NETSTANDARD1_4
+                "netstandard1.4",
+#elif NETSTANDARD1_5
+                "netstandard1.5",
+#elif NETSTANDARD1_6
+                "netstandard1.6",
+#elif NETSTANDARD2_0
+                "netstandard2.0",
+#elif NETCOREAPP1_0
+                "netcoreapp1.0",
+#elif NETCOREAPP1_1
+                "netcoreapp1.1",
+#elif NETCOREAPP2_0
+                "netcoreapp2.0",
+#elif NETCOREAPP2_1
+                "netcoreapp2.1",
+#elif NETCOREAPP2_2
+                "netcoreapp2.2",
+#elif NETCOREAPP3_0
+                "netcoreapp3.0",
 #else
 #error Unsupported platform.
 #endif
@@ -137,16 +177,21 @@ namespace Verifalia.Api
 
             // Setup the REST client
 
-            var shuffledFinalUris = _baseUris
+            var shuffledFinalUris = _baseUrisProvider
+                .ProvideBaseUris()
                 .Select(uri => new Uri(uri, ApiVersion))
                 .OrderBy(uri => _uriShuffler.Next());
 
-            _cachedRestClient = new MultiplexedRestClient(shuffledFinalUris,
-                _accountSid,
-                _authToken,
-                userAgent);
+            CachedRestClient = new MultiplexedRestClient(_authenticator,
+                userAgent,
+                shuffledFinalUris);
 
-            return _cachedRestClient;
+            return CachedRestClient;
+        }
+
+        public void Dispose()
+        {
+            CachedRestClient?.Dispose();
         }
     }
 }
