@@ -149,9 +149,9 @@ Here is how to iterate over your jobs, from the most recent to the oldest one:
 var jobOverviews = verifalia
     .EmailValidations
     .ListAsync(new ValidationOverviewListingOptions
-		{
-			Direction = Direction.Backward
-		});
+	{
+		Direction = Direction.Backward
+	});
 
 await foreach (var jobOverview in jobOverviews)
 {
@@ -208,12 +208,12 @@ Here is how to retrieve the daily credits consumption for the last thirty days:
 var dailyUsages = verifalia
     .Credits
     .ListDailyUsagesAsync(new DailyUsageListingOptions
+	{
+		DateFilter = new DateBetweenPredicate
 		{
-			DateFilter = new DateBetweenPredicate
-			{
-				Since = DateTime.Now.AddDays(-30)
-			}
-		});
+			Since = DateTime.Now.AddDays(-30)
+		}
+	});
 
 await foreach (var dailyUsage in dailyUsages)
 {
@@ -229,6 +229,8 @@ await foreach (var dailyUsage in dailyUsages)
 // 20190729 - credit packs: 15.32, free daily credits: 200
 // ...
 ```
+
+> The `ListDailyUsagesAsync()` method uses the *C# 8.0 async enumerable* feature; for previous language support please check the `ListDailyUsagesSegmentedAsync()` methods group.
 
 [0]: https://verifalia.com
 [1]: https://github.com/verifalia/verifalia-csharp-sdk/archive/master.zip
