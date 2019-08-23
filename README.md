@@ -39,7 +39,7 @@ First things first: authentication to the Verifalia API is performed by way of e
 
 Learn more about authenticating to the Verifalia API at [https://verifalia.com/developers#authentication][2]
 
-Once you have your Verifalia credentials at hand, use them while creating a new instantance of the `VerifaliaRestClient` type, which will be the starting point to every other operation against the Verifalia API:
+Once you have your Verifalia credentials at hand, use them while creating a new instance of the `VerifaliaRestClient` type, which will be the starting point to every other operation against the Verifalia API:
 
 ```c#
 using Verifalia.Api;

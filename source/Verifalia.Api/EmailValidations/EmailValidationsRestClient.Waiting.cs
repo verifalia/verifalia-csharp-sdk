@@ -54,7 +54,7 @@ namespace Verifalia.Api.EmailValidations
                 // Wait for the next polling schedule
 
                 await waitingStrategy
-                    .WaitForNextPoll(validationOverview, cancellationToken)
+                    .WaitForNextPoll(resultOverview, cancellationToken)
                     .ConfigureAwait(false);
 
                 // Fetch the job from the API
@@ -95,7 +95,7 @@ namespace Verifalia.Api.EmailValidations
                 }
                 else
                 {
-                    throw new ArgumentOutOfRangeException(nameof(TResult));
+                    throw new NotSupportedException("TResult must be either of type Validation or ValidationOverview.");
                 }
 
                 // Returns immediately if the validation has been completed
