@@ -42,12 +42,15 @@ using Verifalia.Api.Security;
 namespace Verifalia.Api
 {
     /// <inheritdoc cref="IVerifaliaRestClient"/>
-    public sealed class VerifaliaRestClient : IRestClientFactory, IVerifaliaRestClient, IDisposable
+    public class VerifaliaRestClient : IRestClientFactory, IVerifaliaRestClient, IDisposable
     {
+        /// <summary>
+        /// The default API version used by this SDK.
+        /// </summary>
         public const string DefaultApiVersion = "v2.0";
 
         private readonly Random _uriShuffler;
-        private readonly IAuthenticator _authenticator;
+        private readonly IAuthenticationProvider _authenticator;
         private readonly BaseUrisProvider _baseUrisProvider;
 
         private string _apiVersion;
@@ -83,7 +86,18 @@ namespace Verifalia.Api
         /// security. To create a new user or manage existing ones, please visit https://verifalia.com/client-area#/users </remarks>
         /// </summary>
         public VerifaliaRestClient(string username, string password, Uri[] baseUris = default)
-            : this(new UsernamePasswordAuthenticator(username, password), baseUris == default(Uri[]) ? new DefaultBaseUrisProvider() : new BaseUrisProvider(baseUris))
+            : this(new UsernamePasswordAuthenticationProvider(username, password), baseUris)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new HTTPS-based REST client for Verifalia with the specified authentication provider.
+        /// <remarks>While authenticating with your Verifalia main account credentials is possible, it is strongly advised
+        /// to create one or more users (formerly known as sub-accounts) with just the required permissions, for improved
+        /// security. To create a new user or manage existing ones, please visit https://verifalia.com/client-area#/users </remarks>
+        /// </summary>
+        public VerifaliaRestClient(IAuthenticationProvider authenticationProvider, Uri[] baseUris = default)
+            : this(authenticationProvider, baseUris == default(Uri[]) ? new DefaultBaseUrisProvider() : new BaseUrisProvider(baseUris))
         {
         }
 
@@ -99,13 +113,13 @@ namespace Verifalia.Api
         /// </remarks>
         /// </summary>
         public VerifaliaRestClient(X509Certificate2 clientCertificate, Uri[] baseUris = default)
-            : this(new ClientCertificateAuthenticator(clientCertificate), baseUris == default(Uri[]) ? new ClientCertificateBaseUrisProvider() : new BaseUrisProvider(baseUris))
+            : this(new ClientCertificateAuthenticationProvider(clientCertificate), baseUris == default(Uri[]) ? new ClientCertificateBaseUrisProvider() : new BaseUrisProvider(baseUris))
         {
         }
 
 #endif
 
-        private VerifaliaRestClient(IAuthenticator authenticator, BaseUrisProvider baseUrisProvider)
+        private VerifaliaRestClient(IAuthenticationProvider authenticator, BaseUrisProvider baseUrisProvider)
         {
             _authenticator = authenticator ?? throw new ArgumentNullException(nameof(authenticator));
             _baseUrisProvider = baseUrisProvider ?? throw new ArgumentNullException(nameof(baseUrisProvider));
@@ -156,8 +170,12 @@ namespace Verifalia.Api
                 "netstandard1.5",
 #elif NETSTANDARD1_6
                 "netstandard1.6",
+#elif NETSTANDARD1_7
+                "netstandard1.7",
 #elif NETSTANDARD2_0
                 "netstandard2.0",
+#elif NETSTANDARD2_1
+                "netstandard2.1",
 #elif NETCOREAPP1_0
                 "netcoreapp1.0",
 #elif NETCOREAPP1_1
@@ -189,9 +207,18 @@ namespace Verifalia.Api
             return CachedRestClient;
         }
 
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                CachedRestClient?.Dispose();
+            }
+        }
+
         public void Dispose()
         {
-            CachedRestClient?.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

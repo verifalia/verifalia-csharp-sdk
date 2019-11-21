@@ -58,7 +58,7 @@ namespace Verifalia.Api.EmailValidations
             using (var response = await restClient
                 .InvokeAsync(HttpMethod.Get,
                     $"email-validations/{id:D}",
-                    headers: new Dictionary<string, object> {{"Accept", WellKnowMimeContentTypes.ApplicationJson}},
+                    headers: new Dictionary<string, object> {{"Accept", WellKnownMimeContentTypes.ApplicationJson}},
                     cancellationToken: cancellationToken)
                 .ConfigureAwait(false))
             {
@@ -148,7 +148,7 @@ namespace Verifalia.Api.EmailValidations
             using (var response = await restClient
                 .InvokeAsync(HttpMethod.Get,
                     $"email-validations/{id:D}/overview",
-                    headers: new Dictionary<string, object> {{"Accept", WellKnowMimeContentTypes.ApplicationJson}},
+                    headers: new Dictionary<string, object> {{"Accept", WellKnownMimeContentTypes.ApplicationJson}},
                     cancellationToken: cancellationToken)
                 .ConfigureAwait(false))
             {
@@ -251,7 +251,7 @@ namespace Verifalia.Api.EmailValidations
                 .InvokeAsync(HttpMethod.Get,
                     $"email-validations/{validationId:D}/entries",
                     queryParams: queryParams,
-                    headers: new Dictionary<string, object> { { "Accept", WellKnowMimeContentTypes.ApplicationJson } },
+                    headers: new Dictionary<string, object> { { "Accept", WellKnownMimeContentTypes.ApplicationJson } },
                     cancellationToken: cancellationToken)
                 .ConfigureAwait(false))
             {
@@ -288,7 +288,7 @@ namespace Verifalia.Api.EmailValidations
                 .InvokeAsync(HttpMethod.Get,
                     $"email-validations/{validationId:D}/entries",
                     queryParams,
-                    headers: new Dictionary<string, object> { { "Accept", WellKnowMimeContentTypes.ApplicationJson } },
+                    headers: new Dictionary<string, object> { { "Accept", WellKnownMimeContentTypes.ApplicationJson } },
                     cancellationToken: cancellationToken)
                 .ConfigureAwait(false))
             {

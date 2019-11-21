@@ -29,15 +29,44 @@
 * THE SOFTWARE.
 */
 
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Flurl.Http;
 
 namespace Verifalia.Api.Security
 {
-    internal static class FlurlClientExtensions
+    internal class UsernamePasswordAuthenticationProvider : IAuthenticationProvider
     {
-        internal static IFlurlClient AddAuthentication(this IFlurlClient flurlClient, IAuthenticator authenticator)
+        private readonly string _username;
+        private readonly string _password;
+
+        public UsernamePasswordAuthenticationProvider(string username, string password)
         {
-            return authenticator.AddAuthentication(flurlClient);
+            if (String.IsNullOrEmpty(username))
+            {
+                throw new ArgumentNullException(nameof(username),
+                    "username is null or empty: please visit https://verifalia.com/client-area to set up a new user, if you don't have one.");
+            }
+
+            if (String.IsNullOrEmpty(password))
+            {
+                throw new ArgumentNullException(nameof(password),
+                    "password is null or empty: please visit https://verifalia.com/client-area to set up a new user, if you don't have one.");
+            }
+
+            _username = username;
+            _password = password;
+        }
+
+        public Task ProvideAuthenticationAsync(IRestClient restClient, CancellationToken cancellationToken = default)
+        {
+            restClient.UnderlyingClient.WithBasicAuth(_username, _password);
+#if HAS_TASK_COMPLETED_TASK
+            return Task.CompletedTask;
+#else
+            return Task.FromResult((object) null);
+#endif
         }
     }
 }

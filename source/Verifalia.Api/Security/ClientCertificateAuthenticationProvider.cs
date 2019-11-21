@@ -31,6 +31,8 @@
 
 #if HAS_CLIENT_CERTIFICATES_SUPPORT
 
+using System.Threading;
+using System.Threading.Tasks;
 using System;
 using System.Net.Http;
 using System.Security.Cryptography.X509Certificates;
@@ -39,7 +41,7 @@ using Flurl.Http.Configuration;
 
 namespace Verifalia.Api.Security
 {
-    internal class ClientCertificateAuthenticator : IAuthenticator
+    internal class ClientCertificateAuthenticationProvider : IAuthenticationProvider
     {
         private readonly X509Certificate2 _certificate;
 
@@ -54,7 +56,7 @@ namespace Verifalia.Api.Security
 
             public override HttpMessageHandler CreateMessageHandler()
             {
-                var handler = (HttpClientHandler) base.CreateMessageHandler();
+                var handler = (HttpClientHandler)base.CreateMessageHandler();
 
                 handler.ClientCertificates.Clear();
                 handler.ClientCertificates.Add(_certificate);
@@ -63,7 +65,7 @@ namespace Verifalia.Api.Security
             }
         }
 
-        public ClientCertificateAuthenticator(X509Certificate2 certificate)
+        public ClientCertificateAuthenticationProvider(X509Certificate2 certificate)
         {
             if (certificate == null) throw new ArgumentNullException(nameof(certificate));
 
@@ -75,11 +77,15 @@ namespace Verifalia.Api.Security
             _certificate = certificate;
         }
 
-        public IFlurlClient AddAuthentication(IFlurlClient flurlClient)
+        public Task ProvideAuthenticationAsync(IRestClient restClient, CancellationToken cancellationToken = default)
         {
-            if (flurlClient == null) throw new ArgumentNullException(nameof(flurlClient));
+            if (restClient == null) throw new ArgumentNullException(nameof(restClient));
 
-            return flurlClient.Configure(settings => settings.HttpClientFactory = new X509HttpFactory(_certificate));
+            restClient
+                .UnderlyingClient
+                .Configure(settings => settings.HttpClientFactory = new X509HttpFactory(_certificate));
+
+            return Task.CompletedTask;
         }
     }
 }

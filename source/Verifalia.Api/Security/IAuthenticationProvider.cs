@@ -29,12 +29,17 @@
 * THE SOFTWARE.
 */
 
+using System.Threading;
+using System.Threading.Tasks;
 using Flurl.Http;
 
 namespace Verifalia.Api.Security
 {
-    internal interface IAuthenticator
+    public interface IAuthenticationProvider
     {
-        IFlurlClient AddAuthentication(IFlurlClient flurlClient);
+        /// <summary>
+        /// Authenticates the specified REST client.
+        /// </summary>
+        Task ProvideAuthenticationAsync(IRestClient restClient, CancellationToken cancellationToken);
     }
 }

@@ -59,28 +59,26 @@ namespace Verifalia.Api.Credits
 
             var restClient = _restClientFactory.Build();
 
-            using (var response = await restClient
+            using var response = await restClient
                 .InvokeAsync(HttpMethod.Get, "credits/balance", cancellationToken: cancellationToken)
-                .ConfigureAwait(false))
+                .ConfigureAwait(false);
+            
+            if (response.StatusCode == HttpStatusCode.OK)
             {
-
-                if (response.StatusCode == HttpStatusCode.OK)
-                {
-                    return await response
-                        .Content
-                        .DeserializeAsync<Balance>(restClient)
-                        .ConfigureAwait(false);
-                }
-
-                // An unexpected HTTP status code has been received at this point
-
-                var responseBody = await response
+                return await response
                     .Content
-                    .ReadAsStringAsync()
+                    .DeserializeAsync<Balance>(restClient)
                     .ConfigureAwait(false);
-
-                throw new VerifaliaException($"Unexpected HTTP response: {(int)response.StatusCode} {responseBody}");
             }
+
+            // An unexpected HTTP status code has been received at this point
+
+            var responseBody = await response
+                .Content
+                .ReadAsStringAsync()
+                .ConfigureAwait(false);
+
+            throw new VerifaliaException($"Unexpected HTTP response: {(int)response.StatusCode} {responseBody}");
         }
 
 #if HAS_ASYNC_ENUMERABLE_SUPPORT
@@ -167,7 +165,7 @@ namespace Verifalia.Api.Credits
                 .InvokeAsync(HttpMethod.Get,
                     "credits/daily-usage",
                     queryParams,
-                    headers: new Dictionary<string, object> { { "Accept", WellKnowMimeContentTypes.ApplicationJson } },
+                    headers: new Dictionary<string, object> { { "Accept", WellKnownMimeContentTypes.ApplicationJson } },
                     cancellationToken: cancellationToken)
                 .ConfigureAwait(false))
 

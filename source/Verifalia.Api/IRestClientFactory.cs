@@ -31,7 +31,7 @@
 
 namespace Verifalia.Api
 {
-    internal interface IRestClientFactory
+    public interface IRestClientFactory
     {
         IRestClient Build();
     }

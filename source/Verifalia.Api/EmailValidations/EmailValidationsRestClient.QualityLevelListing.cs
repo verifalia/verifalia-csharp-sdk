@@ -85,7 +85,7 @@ namespace Verifalia.Api.EmailValidations
                 .InvokeAsync(HttpMethod.Get,
                     "email-validations/quality-levels",
                     queryParams: queryParams,
-                    headers: new Dictionary<string, object> {{"Accept", WellKnowMimeContentTypes.ApplicationJson}},
+                    headers: new Dictionary<string, object> {{"Accept", WellKnownMimeContentTypes.ApplicationJson}},
                     cancellationToken: cancellationToken)
                 .ConfigureAwait(false))
             {
@@ -122,7 +122,7 @@ namespace Verifalia.Api.EmailValidations
                 .InvokeAsync(HttpMethod.Get,
                     "email-validations/quality-levels",
                     queryParams,
-                    headers: new Dictionary<string, object> {{"Accept", WellKnowMimeContentTypes.ApplicationJson}},
+                    headers: new Dictionary<string, object> {{"Accept", WellKnownMimeContentTypes.ApplicationJson}},
                     cancellationToken: cancellationToken)
                 .ConfigureAwait(false))
             {

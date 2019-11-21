@@ -101,11 +101,11 @@ namespace Verifalia.Api.EmailValidations
 
             // Send the request to the Verifalia servers
 
-            using (var postedContent = new StringContent(content, Encoding.UTF8, WellKnowMimeContentTypes.ApplicationJson))
+            using (var postedContent = new StringContent(content, Encoding.UTF8, WellKnownMimeContentTypes.ApplicationJson))
             using (var response = await restClient.InvokeAsync(HttpMethod.Post,
                     "email-validations",
                     queryParams: null,
-                    headers: new Dictionary<string, object> { { "Accept", WellKnowMimeContentTypes.ApplicationJson } },
+                    headers: new Dictionary<string, object> { { "Accept", WellKnownMimeContentTypes.ApplicationJson } },
                     content: postedContent,
                     cancellationToken: cancellationToken)
                 .ConfigureAwait(false))

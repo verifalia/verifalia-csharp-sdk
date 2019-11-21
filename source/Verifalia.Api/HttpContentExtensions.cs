@@ -43,10 +43,11 @@ namespace Verifalia.Api
             if (content == null) throw new ArgumentNullException(nameof(content));
             if (restClient == null) throw new ArgumentNullException(nameof(restClient));
 
-            using (var stream = await content.ReadAsStreamAsync().ConfigureAwait(false))
-            {
-                return restClient.Deserialize<T>(stream);
-            }
+            using var stream = await content
+                .ReadAsStreamAsync()
+                .ConfigureAwait(false);
+            
+            return restClient.Deserialize<T>(stream);
         }
 
         internal static HttpContent Serialize(this HttpContent content, IRestClient restClient, object obj)

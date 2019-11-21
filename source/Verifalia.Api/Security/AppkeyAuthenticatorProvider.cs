@@ -29,14 +29,36 @@
 * THE SOFTWARE.
 */
 
-namespace Verifalia.Api
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Flurl.Http;
+
+namespace Verifalia.Api.Security
 {
-    internal class WellKnowMimeContentTypes
+    internal class AppkeyAuthenticatorProvider : IAuthenticationProvider
     {
-        internal const string ApplicationJson = "application/json";
-        internal const string TextPlain = "text/plain";
-        internal const string TextCsv = "text/csv";
-        internal const string ExcelXls = "application/vnd.ms-excel";
-        internal const string ExcelXlsx = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+        private readonly string _appKey;
+
+        public AppkeyAuthenticatorProvider(string appKey)
+        {
+            if (String.IsNullOrEmpty(appKey))
+            {
+                throw new ArgumentNullException(nameof(appKey),
+                    "appKey is null or empty: please visit https://verifalia.com/client-area to set up a new browser app, if you don't have one.");
+            }
+
+            _appKey = appKey;
+        }
+
+        public Task ProvideAuthenticationAsync(IRestClient restClient, CancellationToken cancellationToken = default)
+        {
+            restClient.UnderlyingClient.WithBasicAuth(_appKey, String.Empty);
+#if HAS_TASK_COMPLETED_TASK
+            return Task.CompletedTask;
+#else
+            return Task.FromResult((object) null);
+#endif
+        }
     }
 }

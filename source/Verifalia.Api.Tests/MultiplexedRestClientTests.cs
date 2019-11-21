@@ -1,4 +1,4 @@
-/*
+﻿/*
 * Verifalia - Email list cleaning and real-time email verification service
 * https://verifalia.com/
 * support@verifalia.com

@@ -30,16 +30,31 @@
 */
 
 using System;
+using System.Net;
+using System.Net.Http;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using Flurl.Http;
+using Newtonsoft.Json;
+using Verifalia.Api.Exceptions;
 
 namespace Verifalia.Api.Security
 {
-    internal class UsernamePasswordAuthenticator : IAuthenticator
+    internal class BearerAuthenticationProvider : IAuthenticationProvider
     {
+        internal class BearerAuthenticationResponseModel
+        {
+            [JsonProperty("accessToken")]
+            public string AccessToken { get; set; }
+        }
+
         private readonly string _username;
         private readonly string _password;
+        
+        private string _cachedAccessToken;
 
-        public UsernamePasswordAuthenticator(string username, string password)
+        public BearerAuthenticationProvider(string username, string password)
         {
             if (String.IsNullOrEmpty(username))
             {
@@ -57,9 +72,40 @@ namespace Verifalia.Api.Security
             _password = password;
         }
 
-        public IFlurlClient AddAuthentication(IFlurlClient flurlClient)
+        public async Task ProvideAuthenticationAsync(IRestClient restClient, CancellationToken cancellationToken = default)
         {
-            return flurlClient.WithBasicAuth(_username, _password);
+            // TODO: Use the cached access token, if available
+            // TODO: How to check if the access token is expired?
+
+            restClient.UnderlyingClient.WithBasicAuth(_username, _password);
+
+            var content = restClient.Serialize(new
+            {
+                username = _username,
+                password = _password
+            });
+
+            using var postedContent = new StringContent(content, Encoding.UTF8, WellKnownMimeContentTypes.ApplicationJson);
+            using var authResponse = await restClient.InvokeAsync(HttpMethod.Post,
+                    "/auth/tokens",
+                    content: postedContent,
+                    cancellationToken: cancellationToken)
+                .ConfigureAwait(false);
+
+            if (authResponse.StatusCode == HttpStatusCode.OK)
+            {
+                var bearerAuthenticationResponse = await authResponse
+                    .Content
+                    .DeserializeAsync<BearerAuthenticationResponseModel>(restClient)
+                    .ConfigureAwait(false);
+
+                _cachedAccessToken = bearerAuthenticationResponse.AccessToken;
+                restClient.UnderlyingClient.WithHeader("Authorization", $"Bearer {_cachedAccessToken}");
+            }
+            else
+            {
+                throw new AuthorizationException("Invalid credentials used while attempting to retrieve a bearer auth token.");
+            }
         }
     }
 }

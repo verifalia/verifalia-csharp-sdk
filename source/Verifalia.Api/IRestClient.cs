@@ -35,17 +35,19 @@ using System.IO;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using Flurl.Http;
 
 namespace Verifalia.Api
 {
-    internal interface IRestClient : IDisposable
+    public interface IRestClient : IDisposable
     {
+        IFlurlClient UnderlyingClient { get; }
+
         Task<HttpResponseMessage> InvokeAsync(HttpMethod verb, string resource, Dictionary<string, string> queryParams = null, Dictionary<string, object> headers = null, HttpContent content = null, bool bufferResponseContent = true, CancellationToken cancellationToken = default);
 
         // Json serialization
 
         T Deserialize<T>(Stream stream);
-        T Deserialize<T>(string value);
         string Serialize(object obj);
     }
 }

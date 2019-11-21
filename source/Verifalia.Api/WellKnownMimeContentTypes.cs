@@ -29,27 +29,21 @@
 * THE SOFTWARE.
 */
 
-using System;
-
-namespace Verifalia.Api.Exceptions
+namespace Verifalia.Api
 {
     /// <summary>
-    /// The exception that is thrown when a Verifalia API endpoint returned a server error status code (HTTP 5xx).
+    /// Defines the MIME content types understood by the Verifalia API.
     /// </summary>
-    public class EndpointServerErrorException : VerifaliaException
+    public static class WellKnownMimeContentTypes
     {
-        public EndpointServerErrorException()
-        {
-        }
+        /// <summary>
+        /// application/json MIME content type.
+        /// </summary>
+        public const string ApplicationJson = "application/json";
 
-        public EndpointServerErrorException(string message)
-            : base(message)
-        {
-        }
-
-        public EndpointServerErrorException(string message, Exception innerException)
-            : base(message, innerException)
-        {
-        }
+//        public const string TextPlain = "text/plain";
+//        public const string TextCsv = "text/csv";
+//        public const string ExcelXls = "application/vnd.ms-excel";
+//        public const string ExcelXlsx = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
     }
 }

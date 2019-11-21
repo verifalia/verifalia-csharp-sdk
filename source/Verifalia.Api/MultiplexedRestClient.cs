@@ -46,18 +46,22 @@ namespace Verifalia.Api
 {
     internal sealed class MultiplexedRestClient : IRestClient
     {
-        private readonly IFlurlClient _underlyingClient;
+        private readonly IAuthenticationProvider _authenticator;
+        private int _currentBaseUrlIdx = 0;
         private readonly Url[] _baseUrls;
 
-        public MultiplexedRestClient(IAuthenticator authenticator, string userAgent, IEnumerable<Uri> baseUris)
+        public IFlurlClient UnderlyingClient { get; }
+
+        public MultiplexedRestClient(IAuthenticationProvider authenticator, string userAgent, IEnumerable<Uri> baseUris)
             : this(baseUris)
         {
-            if (authenticator == null) throw new ArgumentNullException(nameof(authenticator));
             if (userAgent == null) throw new ArgumentNullException(nameof(userAgent));
+            
+            _authenticator = authenticator ?? throw new ArgumentNullException(nameof(authenticator));
 
             // Setup the underlying Flurl instance
 
-            _underlyingClient = new FlurlClient()
+            UnderlyingClient = new FlurlClient()
                 .Configure(settings =>
                 {
                     settings.JsonSerializer = new ProgressiveJsonSerializer();
@@ -66,11 +70,10 @@ namespace Verifalia.Api
 
                     settings.AllowedHttpStatusRange = "*";
                 })
-                .AddAuthentication(authenticator)
                 .WithHeader("Accept-Encoding", "gzip, deflate")
                 .AllowAnyHttpStatus();
 
-            _underlyingClient
+            UnderlyingClient
                 .HttpClient
                 .DefaultRequestHeaders
                 .TryAddWithoutValidation("User-Agent", userAgent);
@@ -79,7 +82,7 @@ namespace Verifalia.Api
         public MultiplexedRestClient(IFlurlClient underlyingClient, IEnumerable<Uri> baseUris)
             : this(baseUris)
         {
-            _underlyingClient = underlyingClient ?? throw new ArgumentNullException(nameof(underlyingClient));
+            UnderlyingClient = underlyingClient ?? throw new ArgumentNullException(nameof(underlyingClient));
         }
 
         private MultiplexedRestClient(IEnumerable<Uri> baseUris)
@@ -97,12 +100,22 @@ namespace Verifalia.Api
             if (verb == null) throw new ArgumentNullException(nameof(verb));
             if (resource == null) throw new ArgumentNullException(nameof(resource));
 
+            // Authenticates the underlying flurl client, if needed
+
+            await _authenticator.ProvideAuthenticationAsync(this, cancellationToken)
+                .ConfigureAwait(false);
+
+            // Performs a maximum of as many attempts as the number of configured base API endpoints, keeping track
+            // of the last used endpoint after each call, in order to try to distribute the load evenly across the
+            // available endpoints.
+
             var errors = new Dictionary<Url, Exception>();
 
-            foreach (var baseUrl in _baseUrls)
+            for (var idxAttempt = 0; idxAttempt < _baseUrls.Length; idxAttempt++, _currentBaseUrlIdx++)
             {
                 // Build the final url based on the base url and the specified path and query
 
+                var baseUrl = _baseUrls[_currentBaseUrlIdx % _baseUrls.Length];
                 var finalUrl = new Url(baseUrl)
                     .AppendPathSegment(resource);
 
@@ -116,7 +129,7 @@ namespace Verifalia.Api
                     }
                 }
 
-                var request = _underlyingClient.Request(finalUrl);
+                var request = UnderlyingClient.Request(finalUrl);
 
                 // Add the eventual custom headers
 
@@ -185,22 +198,17 @@ namespace Verifalia.Api
 
         public T Deserialize<T>(Stream stream)
         {
-            return _underlyingClient.Settings.JsonSerializer.Deserialize<T>(stream);
-        }
-
-        public T Deserialize<T>(string value)
-        {
-            return _underlyingClient.Settings.JsonSerializer.Deserialize<T>(value);
+            return UnderlyingClient.Settings.JsonSerializer.Deserialize<T>(stream);
         }
 
         public string Serialize(object obj)
         {
-            return _underlyingClient.Settings.JsonSerializer.Serialize(obj);
+            return UnderlyingClient.Settings.JsonSerializer.Serialize(obj);
         }
 
         public void Dispose()
         {
-            _underlyingClient?.Dispose();
+            UnderlyingClient?.Dispose();
         }
     }
 }

@@ -33,6 +33,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Verifalia.Api.Common.Models;
@@ -47,7 +48,7 @@ namespace Verifalia.Api.Common
         internal static async IAsyncEnumerable<TItem> ToAsyncEnumerable<TList, TItem, TOptions>(
             Func<TOptions, CancellationToken, Task<TList>> fetchFirstSegment,
             Func<ListingCursor, CancellationToken, Task<TList>> fetchNextSegment, TOptions options = null,
-            CancellationToken cancellationToken = default)
+            [EnumeratorCancellation] CancellationToken cancellationToken = default)
             where TOptions : ListingOptions
             where TList : ListSegment<TItem>
         {
