@@ -41,7 +41,7 @@ namespace Verifalia.Api.Tests
 
         public DummyRestClientFactory()
         {
-            _restClient = new MultiplexedRestClient(new UsernamePasswordAuthenticator("username", "password"),
+            _restClient = new MultiplexedRestClient(new UsernamePasswordAuthenticationProvider("username", "password"), 
                 "dummy-UA",
                 new[]
                 {

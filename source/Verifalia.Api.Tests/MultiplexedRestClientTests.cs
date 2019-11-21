@@ -42,7 +42,7 @@ namespace Verifalia.Api.Tests
 {
     public class MultiplexedRestClientTests
     {
-        private readonly IAuthenticator _authenticator = new UsernamePasswordAuthenticator("username", "password");
+        private readonly IAuthenticationProvider _authenticator = new UsernamePasswordAuthenticationProvider("username", "password");
 
         [Fact]
         public async Task ShouldThrowServiceUnreachableExceptionWhenAllEndpointsReturnServerError()
