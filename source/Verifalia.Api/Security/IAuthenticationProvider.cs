@@ -31,15 +31,24 @@
 
 using System.Threading;
 using System.Threading.Tasks;
-using Flurl.Http;
 
 namespace Verifalia.Api.Security
 {
+    /// <summary>
+    /// Represents a type which can authenticate a REST client against the Verifalia API.
+    /// </summary>
     public interface IAuthenticationProvider
     {
         /// <summary>
         /// Authenticates the specified REST client.
         /// </summary>
-        Task ProvideAuthenticationAsync(IRestClient restClient, CancellationToken cancellationToken);
+        Task AuthenticateAsync(IRestClient restClient, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Performs recovery actions (on providers which support that) with the aim of making the next authenticated
+        /// request successful. This makes sense on providers whose authentication state has a finite time duration
+        /// (e.g. bearer authentication via JWT token).
+        /// </summary>
+        Task HandleUnauthorizedRequestAsync(IRestClient restClient, CancellationToken cancellationToken);
     }
 }

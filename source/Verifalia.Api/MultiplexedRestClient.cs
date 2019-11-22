@@ -95,15 +95,12 @@ namespace Verifalia.Api
         }
 
 
-        public async Task<HttpResponseMessage> InvokeAsync(HttpMethod verb, string resource, Dictionary<string, string> queryParams = null, Dictionary<string, object> headers = null, HttpContent content = null, bool bufferResponseContent = true, CancellationToken cancellationToken = default)
+        public async Task<HttpResponseMessage> InvokeAsync(HttpMethod verb, string resource, Dictionary<string, string> queryParams = null,
+            Dictionary<string, object> headers = null, HttpContent content = null, bool bufferResponseContent = true, bool skipAuthentication = false,
+            CancellationToken cancellationToken = default)
         {
             if (verb == null) throw new ArgumentNullException(nameof(verb));
             if (resource == null) throw new ArgumentNullException(nameof(resource));
-
-            // Authenticates the underlying flurl client, if needed
-
-            await _authenticator.ProvideAuthenticationAsync(this, cancellationToken)
-                .ConfigureAwait(false);
 
             // Performs a maximum of as many attempts as the number of configured base API endpoints, keeping track
             // of the last used endpoint after each call, in order to try to distribute the load evenly across the
@@ -113,7 +110,15 @@ namespace Verifalia.Api
 
             for (var idxAttempt = 0; idxAttempt < _baseUrls.Length; idxAttempt++, _currentBaseUrlIdx++)
             {
-                // Build the final url based on the base url and the specified path and query
+                // Authenticates the underlying flurl client, if needed
+
+                if (!skipAuthentication)
+                {
+                    await _authenticator.AuthenticateAsync(this, cancellationToken)
+                        .ConfigureAwait(false);
+                }
+
+                // Build the final url by combining the base url and the specified path and query
 
                 var baseUrl = _baseUrls[_currentBaseUrlIdx % _baseUrls.Length];
                 var finalUrl = new Url(baseUrl)
@@ -157,13 +162,23 @@ namespace Verifalia.Api
                     if ((int)response.StatusCode >= 500 && (int)response.StatusCode <= 599)
                     {
                         errors.Add(finalUrl, new EndpointServerErrorException($"The API endpoint {baseUrl} returned a server error HTTP status code {response.StatusCode}."));
+                        continue;
+                    }
+                    
+                    // If the request is unauthorized, give the authentication provider a chance to remediate (on a subsequent attempt)
 
+                    if (response.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        await _authenticator.HandleUnauthorizedRequestAsync(this, cancellationToken)
+                            .ConfigureAwait(false);
+                        
+                        errors.Add(finalUrl, new AuthorizationException("Can't authenticate to Verifalia using the provided credentials (will retry in the next attempt)."));
                         continue;
                     }
 
                     // Fails on the first occurrence of an HTTP 403 status code
 
-                    if (response.StatusCode == HttpStatusCode.Unauthorized || response.StatusCode == HttpStatusCode.Forbidden)
+                    if (response.StatusCode == HttpStatusCode.Forbidden)
                     {
                         throw new AuthorizationException(response.ReasonPhrase);
                     }

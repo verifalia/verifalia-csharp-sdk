@@ -29,6 +29,9 @@
 * THE SOFTWARE.
 */
 
+#if HAS_JWT_SUPPORT
+
+using System.Linq;
 using System;
 using System.Net;
 using System.Net.Http;
@@ -37,24 +40,38 @@ using System.Threading;
 using System.Threading.Tasks;
 using Flurl.Http;
 using Newtonsoft.Json;
+using System.IdentityModel.Tokens.Jwt;
 using Verifalia.Api.Exceptions;
 
 namespace Verifalia.Api.Security
 {
-    internal class BearerAuthenticationProvider : IAuthenticationProvider
+    /// <summary>
+    /// Allows to authenticate a REST client against the Verifalia API using bearer authentication.
+    /// </summary>
+    public class BearerAuthenticationProvider : IAuthenticationProvider
     {
         internal class BearerAuthenticationResponseModel
         {
-            [JsonProperty("accessToken")]
-            public string AccessToken { get; set; }
+            [JsonProperty("accessToken")] public string AccessToken { get; set; }
         }
+
+        private const string JwtClaimMfaRequiredName = "verifalia:mfa";
+        private const string AuthorizationHttpHeaderName = "Authorization"; 
+        private const int MaxNoOfMfaAttempts = 5;
 
         private readonly string _username;
         private readonly string _password;
-        
-        private string _cachedAccessToken;
+        private readonly ITotpTokenProvider _totpTokenProvider;
 
-        public BearerAuthenticationProvider(string username, string password)
+        private JwtSecurityToken _securityToken = null;
+
+        /// <summary>
+        /// Initializes a new bearer authentication provider for the Verifalia API, with the specified username and password.
+        /// </summary>
+        /// <param name="username">The username of the user.</param>
+        /// <param name="password">The password of the user.</param>
+        /// <param name="totpTokenProvider">An optional provider of TOTP tokens (needed if the user has multi-factor authentication enabled).</param>
+        public BearerAuthenticationProvider(string username, string password, ITotpTokenProvider totpTokenProvider = default)
         {
             if (String.IsNullOrEmpty(username))
             {
@@ -70,42 +87,158 @@ namespace Verifalia.Api.Security
 
             _username = username;
             _password = password;
+            _totpTokenProvider = totpTokenProvider;
         }
 
-        public async Task ProvideAuthenticationAsync(IRestClient restClient, CancellationToken cancellationToken = default)
+        public async Task AuthenticateAsync(IRestClient restClient, CancellationToken cancellationToken = default)
         {
-            // TODO: Use the cached access token, if available
-            // TODO: How to check if the access token is expired?
-
-            restClient.UnderlyingClient.WithBasicAuth(_username, _password);
-
-            var content = restClient.Serialize(new
+            if (restClient is null)
             {
-                username = _username,
-                password = _password
-            });
+                throw new ArgumentNullException(nameof(restClient));
+            }
 
-            using var postedContent = new StringContent(content, Encoding.UTF8, WellKnownMimeContentTypes.ApplicationJson);
-            using var authResponse = await restClient.InvokeAsync(HttpMethod.Post,
-                    "/auth/tokens",
-                    content: postedContent,
-                    cancellationToken: cancellationToken)
-                .ConfigureAwait(false);
+            // Request a new security token to the Verifalia API, if one is not yet available
 
-            if (authResponse.StatusCode == HttpStatusCode.OK)
+            if (_securityToken == null)
             {
-                var bearerAuthenticationResponse = await authResponse
-                    .Content
-                    .DeserializeAsync<BearerAuthenticationResponseModel>(restClient)
+                // Remove any eventual authorization header and request the token
+
+                restClient.UnderlyingClient.WithHeader(AuthorizationHttpHeaderName, null);
+
+                var content = restClient.Serialize(new
+                {
+                    username = _username,
+                    password = _password
+                });
+
+                using var postedContent =
+                    new StringContent(content, Encoding.UTF8, WellKnownMimeContentTypes.ApplicationJson);
+                using var authResponse = await restClient.InvokeAsync(HttpMethod.Post,
+                        "/auth/tokens",
+                        content: postedContent,
+                        // Avoid using the configured authentication provider - as auth tokens must be retrieved using HTTP basic auth
+                        skipAuthentication: true,
+                        cancellationToken: cancellationToken)
                     .ConfigureAwait(false);
+                
+                if (authResponse.StatusCode == HttpStatusCode.OK)
+                {
+                    var bearerAuthenticationResponse = await authResponse
+                        .Content
+                        .DeserializeAsync<BearerAuthenticationResponseModel>(restClient)
+                        .ConfigureAwait(false);
 
-                _cachedAccessToken = bearerAuthenticationResponse.AccessToken;
-                restClient.UnderlyingClient.WithHeader("Authorization", $"Bearer {_cachedAccessToken}");
+                    // Handle the multi-factor auth (MFA) request, if needed
+
+                    _securityToken = (JwtSecurityToken) new JwtSecurityTokenHandler()
+                        .ReadToken(bearerAuthenticationResponse.AccessToken);
+
+                    var mfaRequiredClaim = _securityToken
+                        .Claims
+                        .FirstOrDefault(claim => claim.Type == JwtClaimMfaRequiredName);
+
+                    if (mfaRequiredClaim != null)
+                    {
+                        // Requests a new bearer token, passing the TOTP first
+
+                        bearerAuthenticationResponse = await ProvideAdditionalAuthFactorAsync(restClient, cancellationToken)
+                            .ConfigureAwait(false);
+
+                        _securityToken = (JwtSecurityToken) new JwtSecurityTokenHandler()
+                            .ReadToken(bearerAuthenticationResponse.AccessToken);
+                    }
+                }
+                else
+                {
+                    throw new AuthorizationException(
+                        "Invalid credentials used while attempting to retrieve a bearer auth token.");
+                }
             }
-            else
+
+            AddBearerAuth(restClient);
+        }
+
+        /// <inheritdoc cref="IAuthenticationProvider.AuthenticateAsync(IRestClient, CancellationToken)"/>
+        private async Task<BearerAuthenticationResponseModel> ProvideAdditionalAuthFactorAsync(IRestClient restClient, CancellationToken cancellationToken)
+        {
+            if (restClient is null)
             {
-                throw new AuthorizationException("Invalid credentials used while attempting to retrieve a bearer auth token.");
+                throw new ArgumentNullException(nameof(restClient));
             }
+
+            if (_totpTokenProvider == null)
+            {
+                throw new AuthorizationException(
+                    "A multi-factor authentication is required but no token provider has been provided.");
+            }
+
+            for (var idxAttempt = 0; idxAttempt < MaxNoOfMfaAttempts; idxAttempt++)
+            {
+                // Retrieve the one-time token from the configured device
+
+                var totp = await _totpTokenProvider
+                    .ProvideTotpTokenAsync(cancellationToken)
+                    .ConfigureAwait(false);
+                
+                // Validates the provided token against the Verifalia API
+
+                using var postedContent = new StringContent(restClient.Serialize(new
+                {
+                    passCode = totp
+                }), Encoding.UTF8, WellKnownMimeContentTypes.ApplicationJson);
+
+                try
+                {
+                    AddBearerAuth(restClient);
+
+                    using var authResponse = await restClient
+                        .InvokeAsync(HttpMethod.Post,
+                            "/auth/totp/verifications",
+                            content: postedContent,
+                            // Avoid using the configured authentication provider - as auth tokens must be retrieved using HTTP basic auth
+                            skipAuthentication: true,
+                            cancellationToken: cancellationToken)
+                        .ConfigureAwait(false);
+
+                    if (authResponse.StatusCode == HttpStatusCode.OK)
+                    {
+                        return await authResponse
+                            .Content
+                            .DeserializeAsync<BearerAuthenticationResponseModel>(restClient)
+                            .ConfigureAwait(false);
+                    }
+                }
+                catch (AuthorizationException)
+                {
+                    // Having an authorization issue is allowed here, as we are working on an TOTP token validation attempt.
+                    // We will re-throw an AuthorizationException below in the even all the configured TOTP validation attempts fail. 
+                }
+            }
+            
+            throw new AuthorizationException($"Invalid TOTP token provided after {MaxNoOfMfaAttempts} attempt(s): aborting the authentication.");
+        }
+
+        /// <inheritdoc cref="IAuthenticationProvider.HandleUnauthorizedRequestAsync(IRestClient, CancellationToken)"/>
+        public Task HandleUnauthorizedRequestAsync(IRestClient restClient, CancellationToken cancellationToken)
+        {
+            // Invalidates the stored security token, which will be acquired again in the next AuthenticateAsync() invocation
+            
+            _securityToken = null;
+            
+            // TODO: We may want to refresh the token, instead of forcing the library to re-acquire a new one
+
+#if HAS_TASK_COMPLETED_TASK
+            return Task.CompletedTask;
+#else
+            return Task.FromResult((object) null);
+#endif
+        }
+
+        private void AddBearerAuth(IRestClient restClient)
+        {
+            restClient.UnderlyingClient.WithHeader(AuthorizationHttpHeaderName, $"Bearer {_securityToken.RawData}");
         }
     }
 }
+
+#endif

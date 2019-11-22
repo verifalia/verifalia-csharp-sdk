@@ -33,10 +33,14 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Flurl.Http;
+using Verifalia.Api.Exceptions;
 
 namespace Verifalia.Api.Security
 {
-    internal class UsernamePasswordAuthenticationProvider : IAuthenticationProvider
+    /// <summary>
+    /// Allows to authenticate a REST client against the Verifalia API using HTTP basic auth.
+    /// </summary>
+    public class UsernamePasswordAuthenticationProvider : IAuthenticationProvider
     {
         private readonly string _username;
         private readonly string _password;
@@ -59,7 +63,8 @@ namespace Verifalia.Api.Security
             _password = password;
         }
 
-        public Task ProvideAuthenticationAsync(IRestClient restClient, CancellationToken cancellationToken = default)
+        /// <inheritdoc cref="IAuthenticationProvider.AuthenticateAsync(IRestClient, CancellationToken)"/>
+        public Task AuthenticateAsync(IRestClient restClient, CancellationToken cancellationToken = default)
         {
             restClient.UnderlyingClient.WithBasicAuth(_username, _password);
 #if HAS_TASK_COMPLETED_TASK
@@ -67,6 +72,12 @@ namespace Verifalia.Api.Security
 #else
             return Task.FromResult((object) null);
 #endif
+        }
+
+        /// <inheritdoc cref="IAuthenticationProvider.HandleUnauthorizedRequestAsync(IRestClient, CancellationToken)"/>
+        public Task HandleUnauthorizedRequestAsync(IRestClient restClient, CancellationToken cancellationToken)
+        {
+            throw new AuthorizationException("Can't authenticate to Verifalia using the provided username and password: please check your credentials and retry.");
         }
     }
 }

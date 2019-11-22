@@ -90,17 +90,6 @@ namespace Verifalia.Api
         {
         }
 
-        /// <summary>
-        /// Initializes a new HTTPS-based REST client for Verifalia with the specified authentication provider.
-        /// <remarks>While authenticating with your Verifalia main account credentials is possible, it is strongly advised
-        /// to create one or more users (formerly known as sub-accounts) with just the required permissions, for improved
-        /// security. To create a new user or manage existing ones, please visit https://verifalia.com/client-area#/users </remarks>
-        /// </summary>
-        public VerifaliaRestClient(IAuthenticationProvider authenticationProvider, Uri[] baseUris = default)
-            : this(authenticationProvider, baseUris == default(Uri[]) ? new DefaultBaseUrisProvider() : new BaseUrisProvider(baseUris))
-        {
-        }
-
 #if HAS_CLIENT_CERTIFICATES_SUPPORT
 
         /// <summary>
@@ -118,6 +107,17 @@ namespace Verifalia.Api
         }
 
 #endif
+
+        /// <summary>
+        /// Initializes a new HTTPS-based REST client for Verifalia with the specified authentication provider.
+        /// <remarks>While authenticating with your Verifalia main account credentials is possible, it is strongly advised
+        /// to create one or more users (formerly known as sub-accounts) with just the required permissions, for improved
+        /// security. To create a new user or manage existing ones, please visit https://verifalia.com/client-area#/users </remarks>
+        /// </summary>
+        public VerifaliaRestClient(IAuthenticationProvider authenticationProvider, Uri[] baseUris = default)
+            : this(authenticationProvider, baseUris == default(Uri[]) ? new DefaultBaseUrisProvider() : new BaseUrisProvider(baseUris))
+        {
+        }
 
         private VerifaliaRestClient(IAuthenticationProvider authenticator, BaseUrisProvider baseUrisProvider)
         {
@@ -162,6 +162,8 @@ namespace Verifalia.Api
                 "net471",
 #elif NET472
                 "net472",
+#elif NET48
+                "net48",
 #elif NETSTANDARD1_3
                 "netstandard1.3",
 #elif NETSTANDARD1_4

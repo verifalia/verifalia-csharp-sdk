@@ -1,6 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFrameworks>netstandard1.3;netstandard1.4;netstandard1.5;netstandard1.6;netstandard2.0;net45;net451;net452;net46;net461;net462;net47;net471;net472;netcoreapp1.0;netcoreapp1.1;netcoreapp2.0;netcoreapp2.1;netcoreapp3.0</TargetFrameworks>
+        <TargetFrameworks>netstandard1.3;netstandard1.4;netstandard1.5;netstandard1.6;netstandard2.0;netstandard2.1;
+            net45;net451;net452;net46;net461;net462;net47;net471;net472;net48;
+            netcoreapp1.0;netcoreapp1.1;netcoreapp2.0;netcoreapp2.1;netcoreapp2.2;netcoreapp3.0</TargetFrameworks>
         <PackageId>Verifalia</PackageId>
         <Version>2.1.0</Version>
         <Company>Cobisi Research</Company>
@@ -23,11 +25,14 @@
         <DefineConstants>$(DefineConstants);HAS_TASK_COMPLETED_TASK;</DefineConstants>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(TargetFramework)' == 'net471' or '$(TargetFramework)' == 'net472' or $(TargetFramework.StartsWith('netcoreapp')) or $(TargetFramework.StartsWith('netstandard'))">
+    <PropertyGroup Condition="'$(TargetFramework)' == 'net471' or '$(TargetFramework)' == 'net472' or '$(TargetFramework)' == 'net48' or $(TargetFramework.StartsWith('netcoreapp')) or $(TargetFramework.StartsWith('netstandard'))">
         <DefineConstants>$(DefineConstants);HAS_CLIENT_CERTIFICATES_SUPPORT;</DefineConstants>
     </PropertyGroup>
     <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0'">
         <DefineConstants>$(DefineConstants);HAS_ASYNC_ENUMERABLE_SUPPORT;</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0' or '$(TargetFramework)' == 'netstandard2.1' or $(TargetFramework.StartsWith('netcoreapp')) or '$(TargetFramework)' == 'net45' or '$(TargetFramework)' == 'net451' or '$(TargetFramework)' == 'net46' or '$(TargetFramework)' == 'net461'  or '$(TargetFramework)' == 'net462'  or '$(TargetFramework)' == 'net47' or '$(TargetFramework)' == 'net471' or '$(TargetFramework)' == 'net472'  or '$(TargetFramework)' == 'net48'">
+        <DefineConstants>$(DefineConstants);HAS_JWT_SUPPORT;</DefineConstants>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)'=='Debug'">
@@ -45,13 +50,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-<!--        <FrameworkReference Include="Microsoft.NETCore.App" Condition="'$(TargetFramework)' == 'netcoreapp3.0'"/>-->
         <PackageReference Include="Flurl.Http" Version="2.4.2" />
         <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.7">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.6.0" Condition="$(DefineConstants.Contains(';HAS_JWT_SUPPORT;'))" />
     </ItemGroup>
 
     <ItemGroup>

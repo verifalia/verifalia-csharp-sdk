@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Verifalia - Email list cleaning and real-time email verification service
 * https://verifalia.com/
 * support@verifalia.com
@@ -29,32 +29,23 @@
 * THE SOFTWARE.
 */
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Net.Http;
+#if HAS_JWT_SUPPORT
+
 using System.Threading;
 using System.Threading.Tasks;
-using Flurl.Http;
 
-namespace Verifalia.Api
+namespace Verifalia.Api.Security
 {
-    public interface IRestClient : IDisposable
+    /// <summary>
+    /// Defines a type which can provide time-based one-time password (TOTP) tokens for multi-factor authentication.
+    /// </summary>
+    public interface ITotpTokenProvider
     {
-        IFlurlClient UnderlyingClient { get; }
-
-        Task<HttpResponseMessage> InvokeAsync(HttpMethod verb,
-            string resource,
-            Dictionary<string, string> queryParams = null,
-            Dictionary<string, object> headers = null,
-            HttpContent content = null,
-            bool bufferResponseContent = true,
-            bool skipAuthentication = false,
-            CancellationToken cancellationToken = default);
-
-        // Json serialization
-
-        T Deserialize<T>(Stream stream);
-        string Serialize(object obj);
+        /// <summary>
+        /// Returns a TOTP token read from an authenticator app or device.
+        /// </summary>
+        Task<string> ProvideTotpTokenAsync(CancellationToken cancellationToken);
     }
 }
+
+#endif

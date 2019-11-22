@@ -33,10 +33,14 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Flurl.Http;
+using Verifalia.Api.Exceptions;
 
 namespace Verifalia.Api.Security
 {
-    internal class AppkeyAuthenticatorProvider : IAuthenticationProvider
+    /// <summary>
+    /// Allows to authenticate a REST client against the Verifalia API using a browser appKey.
+    /// </summary>
+    public class AppkeyAuthenticatorProvider : IAuthenticationProvider
     {
         private readonly string _appKey;
 
@@ -51,7 +55,8 @@ namespace Verifalia.Api.Security
             _appKey = appKey;
         }
 
-        public Task ProvideAuthenticationAsync(IRestClient restClient, CancellationToken cancellationToken = default)
+        /// <inheritdoc cref="IAuthenticationProvider.AuthenticateAsync(IRestClient, CancellationToken)"/>
+        public Task AuthenticateAsync(IRestClient restClient, CancellationToken cancellationToken = default)
         {
             restClient.UnderlyingClient.WithBasicAuth(_appKey, String.Empty);
 #if HAS_TASK_COMPLETED_TASK
@@ -59,6 +64,12 @@ namespace Verifalia.Api.Security
 #else
             return Task.FromResult((object) null);
 #endif
+        }
+
+        /// <inheritdoc cref="IAuthenticationProvider.HandleUnauthorizedRequestAsync(IRestClient, CancellationToken)"/>
+        public Task HandleUnauthorizedRequestAsync(IRestClient restClient, CancellationToken cancellationToken)
+        {
+            throw new AuthorizationException("Can't authenticate to Verifalia using the provided appKey: please check your credentials and retry.");
         }
     }
 }
