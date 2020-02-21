@@ -3,7 +3,7 @@
 * https://verifalia.com/
 * support@verifalia.com
 *
-* Copyright (c) 2005-2019 Cobisi Research
+* Copyright (c) 2005-2020 Cobisi Research
 *
 * Cobisi Research
 * Via Prima Strada, 35
@@ -143,6 +143,11 @@ namespace Verifalia.Api.EmailValidations.Models
         /// host on the Internet.
         /// </summary>
         DomainIsMisconfigured,
+        
+        /// <summary>
+        /// The domain has a NULL MX (RFC 7505) resource record and can't thus accept email messages.
+        /// </summary>
+        DomainHasNullMx,
 
         #endregion
 

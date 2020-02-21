@@ -1,4 +1,4 @@
-![Verifalia API](https://img.shields.io/badge/Verifalia%20API-v2.0-green)
+![Verifalia API](https://img.shields.io/badge/Verifalia%20API-v2.1-green)
 [![NuGet](https://img.shields.io/nuget/v/Verifalia.svg)](https://www.nuget.org/packages/Verifalia)
 
 Verifalia RESTful API - .NET SDK and helper library
@@ -7,7 +7,7 @@ Verifalia RESTful API - .NET SDK and helper library
 [Verifalia][0] provides a simple HTTPS-based API for validating email addresses in real-time and checking whether they are deliverable or not; this SDK library integrates with Verifalia and allows to [verify email addresses][0] under the following platforms:
 
 - .NET Framework 4.5 (and higher)
-- .NET Core 1.0 (and higher, including .NET Core 3.0)
+- .NET Core 1.0 (and higher, including .NET Core 3.1)
 - .NET Standard 1.3 (and higher)
   - Mono 4.6+
   - Xamarin.iOS 10.0+
@@ -39,13 +39,53 @@ First things first: authentication to the Verifalia API is performed by way of e
 
 Learn more about authenticating to the Verifalia API at [https://verifalia.com/developers#authentication][2]
 
-Once you have your Verifalia credentials at hand, use them while creating a new instance of the `VerifaliaRestClient` type, which will be the starting point to every other operation against the Verifalia API:
+Once you have your Verifalia credentials at hand, use them while creating a new instance of the `VerifaliaRestClient` type, which will be the starting point to every other operation against the Verifalia API: the supplied credentials will be automatically provided to the API using the HTTP Basic Auth method.
 
 ```c#
 using Verifalia.Api;
 
 var verifalia = new VerifaliaRestClient("username", "password");
 ```
+
+In addition to the HTTP Basic Auth method, this SDK also supports other different ways to authenticate to the Verifalia API, as explained in the subsequent paragraphs.
+
+#### Authenticating via bearer token
+
+Bearer authentication offers higher security over HTTP Basic Auth, as the latter requires sending the actual credentials on each API call, while the former only requires it on a first, dedicated authentication request. On the other side, the first authentication request needed by Bearer authentication takes a non-negligible time: if you need to perform only a single request, using HTTP Basic Auth provides the same degree of security and is the faster option too.
+
+```c#
+using Verifalia.Api;
+using Verifalia.Api.Security;
+
+var verifalia = new VerifaliaRestClient(new BearerAuthenticationProvider("username", "password"));
+```
+
+Handling multi-factor auth (MFA) is also possible by defining a custom implementation of the `ITotpTokenProvider` interface, which should be used to acquire the time-based one-time password from an external authenticator app or device: to add multi-factor auth to your root Verifalia account, [configure your security settings](https://verifalia.com/client-area#/account/security-settings).
+
+```c#
+using Verifalia.Api;
+using Verifalia.Api.Security;
+
+class MyTotpProvider : ITotpTokenProvider
+{
+	public Task<string> ProvideTotpTokenAsync(CancellationToken cancellationToken)
+	{
+		Console.WriteLine("Acquire your TOTP token and type it here:");
+		var totpToken = Console.ReadLine();
+
+		return Task.FromResult(totpToken);
+	}
+}
+
+// ...
+
+var verifalia = new VerifaliaRestClient(new BearerAuthenticationProvider("username", "password", new MyTotpProvider()));
+```
+
+#### Authenticating via X.509 client certificate (TLS mutual authentication)
+
+This authentication method uses a cryptographic X.509 client certificate to authenticate against the Verifalia API, through the TLS protocol. This method, also called mutual TLS authentication (mTLS) or two-way authentication, offers the highest degree of security, as only a cryptographically-derived key (and not the actual credentials) is sent over the wire on each request.
+
 
 ## Validating email addresses ##
 

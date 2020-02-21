@@ -3,7 +3,7 @@
 * https://verifalia.com/
 * support@verifalia.com
 *
-* Copyright (c) 2005-2019 Cobisi Research
+* Copyright (c) 2005-2020 Cobisi Research
 *
 * Cobisi Research
 * Via Prima Strada, 35
@@ -50,6 +50,12 @@ namespace Verifalia.Api.EmailValidations.Models
         /// Identifies duplicates using an algorithm with safe rules-only, which guarantee no false duplicates.
         /// </summary>
         public static DeduplicationMode Safe => new DeduplicationMode("Safe");
+
+        /// <summary>
+        /// Identifies duplicates using a set of relaxed rules which assume the target email service providers
+        /// are configured with modern settings only (instead of the broader options the RFCs from the '80s allow).
+        /// </summary>
+        public static DeduplicationMode Relaxed => new DeduplicationMode("Relaxed");
 
         private DeduplicationMode()
         {
@@ -116,6 +122,11 @@ namespace Verifalia.Api.EmailValidations.Models
                 return $"{NameOrGuid} (safe)";
             }
 
+            if (String.Equals(NameOrGuid, Relaxed.NameOrGuid, StringComparison.OrdinalIgnoreCase))
+            {
+                return $"{NameOrGuid} (relaxed)";
+            }
+            
             return NameOrGuid;
         }
     }

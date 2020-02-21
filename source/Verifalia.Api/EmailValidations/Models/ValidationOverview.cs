@@ -3,7 +3,7 @@
 * https://verifalia.com/
 * support@verifalia.com
 *
-* Copyright (c) 2005-2019 Cobisi Research
+* Copyright (c) 2005-2020 Cobisi Research
 *
 * Cobisi Research
 * Via Prima Strada, 35
@@ -31,6 +31,7 @@
 
 using System;
 using System.Net;
+using System.Threading;
 using Newtonsoft.Json;
 
 namespace Verifalia.Api.EmailValidations.Models
@@ -99,6 +100,15 @@ namespace Verifalia.Api.EmailValidations.Models
         [JsonProperty("quality")]
         public QualityLevelName Quality { get; set; }
 
+        /// <summary>
+        /// The maximum data retention period Verifalia observes for this verification job, after which the job will be
+        /// automatically deleted.
+        /// <remarks>A verification job can be deleted anytime prior to its retention period through the
+        /// <see cref="EmailValidationsRestClient.DeleteAsync(Guid, CancellationToken)"/> method.</remarks>
+        /// </summary>
+        [JsonProperty("retention")]
+        public TimeSpan Retention { get; set; }
+        
         /// <summary>
         /// A <see cref="DeduplicationMode"/> option which affected the way Verifalia eventually marked entries as
         /// duplicates upon processing.

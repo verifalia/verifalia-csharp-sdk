@@ -3,7 +3,7 @@
 * https://verifalia.com/
 * support@verifalia.com
 *
-* Copyright (c) 2005-2019 Cobisi Research
+* Copyright (c) 2005-2020 Cobisi Research
 *
 * Cobisi Research
 * Via Prima Strada, 35

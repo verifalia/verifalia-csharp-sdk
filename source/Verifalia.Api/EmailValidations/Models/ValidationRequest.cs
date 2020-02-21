@@ -3,7 +3,7 @@
 * https://verifalia.com/
 * support@verifalia.com
 *
-* Copyright (c) 2005-2019 Cobisi Research
+* Copyright (c) 2005-2020 Cobisi Research
 *
 * Cobisi Research
 * Via Prima Strada, 35
@@ -67,6 +67,16 @@ namespace Verifalia.Api.EmailValidations.Models
         /// <remarks>Duplicated items (after the first occurrence) will have the <see cref="ValidationEntryStatus.Duplicate"/> status.</remarks>
         /// </summary>
         public DeduplicationMode Deduplication { get; set; }
+
+        /// <summary>
+        /// The maximum data retention period Verifalia observes for this verification job, after which the job will be
+        /// automatically deleted. The default value of null forces the service to fall back to the default retention
+        /// period for the user or browser app which is submitting the job.
+        /// <remarks>A verification job can be deleted anytime prior to its retention period through the
+        /// <see cref="EmailValidationsRestClient.DeleteAsync(Guid, CancellationToken)"/> method.</remarks>
+        /// <remarks>If set, the retention period must have a value between 5 minutes and 30 days.</remarks>
+        /// </summary>
+        public TimeSpan? Retention { get; set; }
 
         /// <summary>
         /// An optional user-defined name for the validation job, for your own reference. The name will be returned

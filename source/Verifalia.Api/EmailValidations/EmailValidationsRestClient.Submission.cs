@@ -3,7 +3,7 @@
 * https://verifalia.com/
 * support@verifalia.com
 *
-* Copyright (c) 2005-2019 Cobisi Research
+* Copyright (c) 2005-2020 Cobisi Research
 *
 * Cobisi Research
 * Via Prima Strada, 35
@@ -96,7 +96,15 @@ namespace Verifalia.Api.EmailValidations
                     quality = validationRequest.Quality?.NameOrGuid,
                     deduplication = validationRequest.Deduplication?.NameOrGuid,
                     priority = validationRequest.Priority?.Value,
-                    name = validationRequest.Name
+                    name = validationRequest.Name,
+                    // Strips the milliseconds portion from the specified retention period, if any
+                    retention = validationRequest.Retention == null
+                        ? null
+                        : new TimeSpan(validationRequest.Retention.Value.Days,
+                                validationRequest.Retention.Value.Hours,
+                                validationRequest.Retention.Value.Minutes,
+                                validationRequest.Retention.Value.Seconds)
+                            .ToString()
                 });
 
             // Send the request to the Verifalia servers

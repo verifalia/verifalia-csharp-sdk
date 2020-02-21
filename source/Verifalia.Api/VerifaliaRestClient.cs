@@ -3,7 +3,7 @@
 * https://verifalia.com/
 * support@verifalia.com
 *
-* Copyright (c) 2005-2019 Cobisi Research
+* Copyright (c) 2005-2020 Cobisi Research
 *
 * Cobisi Research
 * Via Prima Strada, 35
@@ -47,7 +47,7 @@ namespace Verifalia.Api
         /// <summary>
         /// The default API version used by this SDK.
         /// </summary>
-        public const string DefaultApiVersion = "v2.0";
+        public const string DefaultApiVersion = "v2.1";
 
         private readonly Random _uriShuffler;
         private readonly IAuthenticationProvider _authenticator;
@@ -190,6 +190,8 @@ namespace Verifalia.Api
                 "netcoreapp2.2",
 #elif NETCOREAPP3_0
                 "netcoreapp3.0",
+#elif NETCOREAPP3_1
+                "netcoreapp3.1",
 #else
 #error Unsupported platform.
 #endif
