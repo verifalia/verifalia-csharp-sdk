@@ -70,6 +70,8 @@ class MyTotpProvider : ITotpTokenProvider
 {
 	public Task<string> ProvideTotpTokenAsync(CancellationToken cancellationToken)
 	{
+		// Ask the user to type his or her TOTP token
+
 		Console.WriteLine("Acquire your TOTP token and type it here:");
 		var totpToken = Console.ReadLine();
 
@@ -86,6 +88,12 @@ var verifalia = new VerifaliaRestClient(new BearerAuthenticationProvider("userna
 
 This authentication method uses a cryptographic X.509 client certificate to authenticate against the Verifalia API, through the TLS protocol. This method, also called mutual TLS authentication (mTLS) or two-way authentication, offers the highest degree of security, as only a cryptographically-derived key (and not the actual credentials) is sent over the wire on each request.
 
+```c#
+using Verifalia.Api;
+using Verifalia.Api.Security;
+
+var verifalia = new VerifaliaRestClient(new X509Certificate2("mycertificate.pem"));
+```
 
 ## Validating email addresses ##
 
@@ -100,7 +108,7 @@ In the next example, we are showing how to verify a single email address using t
 ```c#
 var validation = await verifalia
     .EmailValidations
-    .SubmitAsync("batman@gmail.com", new WaitingStrategy(true));
+    .SubmitAsync("batman@gmail.com", waitingStrategy: new WaitingStrategy(true));
 
 // At this point the address has been validated: let's print
 // its email validation result to the console.
@@ -264,9 +272,9 @@ await foreach (var dailyUsage in dailyUsages)
 }
 
 // Prints out something like:
-// 20190801 - credit packs: 1965.68, free daily credits: 200
-// 20190731 - credit packs: 0, free daily credits: 185.628
-// 20190729 - credit packs: 15.32, free daily credits: 200
+// 20200301 - credit packs: 1965.68, free daily credits: 200
+// 20200226 - credit packs: 0, free daily credits: 185.628
+// 20200225 - credit packs: 15.32, free daily credits: 200
 // ...
 ```
 
