@@ -6,8 +6,8 @@
 * Copyright (c) 2005-2020 Cobisi Research
 *
 * Cobisi Research
-* Via Prima Strada, 35
-* 35129, Padova
+* Via Della Costituzione, 31
+* 35010 Vigonza
 * Italy - European Union
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy

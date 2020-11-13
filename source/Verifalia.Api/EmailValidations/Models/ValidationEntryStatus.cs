@@ -6,8 +6,8 @@
 * Copyright (c) 2005-2020 Cobisi Research
 *
 * Cobisi Research
-* Via Prima Strada, 35
-* 35129, Padova
+* Via Della Costituzione, 31
+* 35010 Vigonza
 * Italy - European Union
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -28,6 +28,8 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 * THE SOFTWARE.
 */
+
+using System;
 
 namespace Verifalia.Api.EmailValidations.Models
 {
@@ -208,8 +210,7 @@ namespace Verifalia.Api.EmailValidations.Models
         MailboxValidationTimeout,
 
         /// <summary>
-        /// The requested mailbox is temporarily unavailable; it could be experiencing technical issues or some other transient problem
-        /// (could be over quota, for example).
+        /// The requested mailbox is temporarily unavailable; it could be experiencing technical issues or some other transient problem.
         /// </summary>
         MailboxTemporarilyUnavailable,
 
@@ -218,6 +219,11 @@ namespace Verifalia.Api.EmailValidations.Models
         /// <a href="http://www.ietf.org/rfc/rfc5336.txt">RFC 5336</a> and support and announce both the 8BITMIME and the UTF8SMTP protocol extensions.
         /// </summary>
         ServerDoesNotSupportInternationalMailboxes,
+        
+        /// <summary>
+        /// The requested mailbox is currently over quota.
+        /// </summary>
+        MailboxHasInsufficientStorage,
 
         #endregion
 

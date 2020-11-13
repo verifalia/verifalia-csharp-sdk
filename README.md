@@ -1,4 +1,4 @@
-![Verifalia API](https://img.shields.io/badge/Verifalia%20API-v2.1-green)
+![Verifalia API](https://img.shields.io/badge/Verifalia%20API-v2.2-green)
 [![NuGet](https://img.shields.io/nuget/v/Verifalia.svg)](https://www.nuget.org/packages/Verifalia)
 
 Verifalia RESTful API - .NET SDK and helper library
@@ -6,8 +6,9 @@ Verifalia RESTful API - .NET SDK and helper library
 
 [Verifalia][0] provides a simple HTTPS-based API for validating email addresses in real-time and checking whether they are deliverable or not; this SDK library integrates with Verifalia and allows to [verify email addresses][0] under the following platforms:
 
+- .NET 5.0 ![new](https://img.shields.io/badge/new-green)
+- .NET Core 1.0 (and higher)
 - .NET Framework 4.5 (and higher)
-- .NET Core 1.0 (and higher, including .NET Core 3.1)
 - .NET Standard 1.3 (and higher)
   - Mono 4.6+
   - Xamarin.iOS 10.0+

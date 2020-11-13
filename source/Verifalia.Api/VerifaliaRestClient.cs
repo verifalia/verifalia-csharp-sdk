@@ -6,8 +6,8 @@
 * Copyright (c) 2005-2020 Cobisi Research
 *
 * Cobisi Research
-* Via Prima Strada, 35
-* 35129, Padova
+* Via Della Costituzione, 31
+* 35010 Vigonza
 * Italy - European Union
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -47,7 +47,7 @@ namespace Verifalia.Api
         /// <summary>
         /// The default API version used by this SDK.
         /// </summary>
-        public const string DefaultApiVersion = "v2.1";
+        public const string DefaultApiVersion = "v2.2";
 
         private readonly Random _uriShuffler;
         private readonly IAuthenticationProvider _authenticator;
@@ -192,6 +192,9 @@ namespace Verifalia.Api
                 "netcoreapp3.0",
 #elif NETCOREAPP3_1
                 "netcoreapp3.1",
+#elif NET5_0
+                // Note: starting .NET 5.0, TFM compilation constants mean "version X or greater", see: https://github.com/dotnet/sdk/issues/13377   
+                "net5.0",
 #else
 #error Unsupported platform.
 #endif

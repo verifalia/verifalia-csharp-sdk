@@ -6,8 +6,8 @@
 * Copyright (c) 2005-2020 Cobisi Research
 *
 * Cobisi Research
-* Via Prima Strada, 35
-* 35129, Padova
+* Via Della Costituzione, 31
+* 35010 Vigonza
 * Italy - European Union
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -58,7 +58,10 @@ namespace Verifalia.Api.Security
         /// <inheritdoc cref="IAuthenticationProvider.AuthenticateAsync(IRestClient, CancellationToken)"/>
         public Task AuthenticateAsync(IRestClient restClient, CancellationToken cancellationToken = default)
         {
+            if (restClient == null) throw new ArgumentNullException(nameof(restClient));
+
             restClient.UnderlyingClient.WithBasicAuth(_appKey, String.Empty);
+
 #if HAS_TASK_COMPLETED_TASK
             return Task.CompletedTask;
 #else
