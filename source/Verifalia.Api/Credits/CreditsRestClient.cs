@@ -75,7 +75,11 @@ namespace Verifalia.Api.Credits
 
             var responseBody = await response
                 .Content
+#if NET5_0
+                .ReadAsStringAsync(cancellationToken)
+#else
                 .ReadAsStringAsync()
+#endif
                 .ConfigureAwait(false);
 
             throw new VerifaliaException($"Unexpected HTTP response: {(int)response.StatusCode} {responseBody}");
@@ -183,7 +187,11 @@ namespace Verifalia.Api.Credits
                         {
                             var responseBody = await response
                                 .Content
+#if NET5_0
+                                .ReadAsStringAsync(cancellationToken)
+#else
                                 .ReadAsStringAsync()
+#endif
                                 .ConfigureAwait(false);
 
                             // An unexpected HTTP status code has been received at this point

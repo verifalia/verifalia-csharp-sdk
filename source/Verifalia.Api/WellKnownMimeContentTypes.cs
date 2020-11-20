@@ -41,9 +41,29 @@ namespace Verifalia.Api
         /// </summary>
         public const string ApplicationJson = "application/json";
 
-//        public const string TextPlain = "text/plain";
-//        public const string TextCsv = "text/csv";
-//        public const string ExcelXls = "application/vnd.ms-excel";
-//        public const string ExcelXlsx = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+        /// <summary>
+        /// Plain-text files (.txt), with one email address per line.
+        /// </summary>
+        public const string TextPlain = "text/plain";
+        
+        /// <summary>
+        /// Comma-separated values (.csv).
+        /// </summary>
+        public const string TextCsv = "text/csv";
+        
+        /// <summary>
+        /// Tab-separated values (usually coming with the .tsv extension).
+        /// </summary>
+        public const string TextTsv = "text/tab-separated-values";
+
+        /// <summary>
+        /// Microsoft Excel 97-2003 Worksheet (.xls).
+        /// </summary>
+        public const string ExcelXls = "application/vnd.ms-excel";
+
+        /// <summary>
+        /// Microsoft Excel workbook (.xslx).
+        /// </summary>
+        public const string ExcelXlsx = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
     }
 }

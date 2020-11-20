@@ -92,10 +92,7 @@ namespace Verifalia.Api.Security
 
         public async Task AuthenticateAsync(IRestClient restClient, CancellationToken cancellationToken = default)
         {
-            if (restClient is null)
-            {
-                throw new ArgumentNullException(nameof(restClient));
-            }
+            if (restClient == null) throw new ArgumentNullException(nameof(restClient));
 
             // Request a new security token to the Verifalia API, if one is not yet available
 

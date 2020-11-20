@@ -89,7 +89,7 @@ namespace Verifalia.Api.EmailValidations
                     cancellationToken: cancellationToken)
                 .ConfigureAwait(false))
             {
-                return await ListQualityLevelsSegmentedImplAsync(restClient, response)
+                return await ListQualityLevelsSegmentedImplAsync(restClient, response, cancellationToken)
                     .ConfigureAwait(false);
             }
         }
@@ -126,12 +126,12 @@ namespace Verifalia.Api.EmailValidations
                     cancellationToken: cancellationToken)
                 .ConfigureAwait(false))
             {
-                return await ListQualityLevelsSegmentedImplAsync(restClient, response)
+                return await ListQualityLevelsSegmentedImplAsync(restClient, response, cancellationToken)
                     .ConfigureAwait(false);
             }
         }
 
-        private async Task<QualityLevelListSegment> ListQualityLevelsSegmentedImplAsync(IRestClient restClient, HttpResponseMessage response)
+        private async Task<QualityLevelListSegment> ListQualityLevelsSegmentedImplAsync(IRestClient restClient, HttpResponseMessage response, CancellationToken cancellationToken)
         {
             switch (response.StatusCode)
             {
@@ -147,7 +147,11 @@ namespace Verifalia.Api.EmailValidations
                     {
                         var responseBody = await response
                             .Content
+#if NET5_0
+                            .ReadAsStringAsync(cancellationToken)
+#else
                             .ReadAsStringAsync()
+#endif
                             .ConfigureAwait(false);
 
                         // An unexpected HTTP status code has been received at this point

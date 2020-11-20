@@ -32,6 +32,8 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
+using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 using Verifalia.Api.Common.Models;
@@ -152,6 +154,81 @@ namespace Verifalia.Api.EmailValidations
         /// <returns>A <see cref="Validation"/> object representing the submitted email validation job.</returns>
         Task<Validation> SubmitAsync(ValidationRequest validationRequest, WaitingStrategy waitingStrategy = default, CancellationToken cancellationToken = default);
 
+        /// <summary>
+        /// Submits a new email validation for processing through a file, with support for the following formats:
+        /// - plain text files (.txt), with one email address per line
+        /// - comma-separated values (.csv), tab-separated values (.tsv) and other delimiter-separated values files
+        /// - Microsoft Excel spreadsheets (.xls and .xlsx)
+        /// <remarks>
+        /// By default, this method does not wait for the completion of the email validation job: pass a <see cref="WaitingStrategy"/> to request
+        /// a different waiting behavior.
+        /// </remarks>
+        /// </summary>
+        /// <param name="file">An array of bytes with the content of the file to submit for validation.</param>
+        /// <param name="contentType">The MIME content type of the file.</param>
+        /// <param name="quality">The desired results quality for this email validation.</param>
+        /// <param name="deduplication">The strategy to follow while determining which email addresses are duplicates.</param>
+        /// <param name="waitingStrategy">The strategy which rules out how to wait for the completion of the email validation.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>A <see cref="Validation"/> object representing the submitted email validation job.</returns>
+        Task<Validation> SubmitAsync(byte[] file, MediaTypeHeaderValue contentType, QualityLevelName quality = default, DeduplicationMode deduplication = default, WaitingStrategy waitingStrategy = default, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Submits a new email validation for processing through a file, with support for the following formats:
+        /// - plain text files (.txt), with one email address per line
+        /// - comma-separated values (.csv), tab-separated values (.tsv) and other delimiter-separated values files
+        /// - Microsoft Excel spreadsheets (.xls and .xlsx)
+        /// <remarks>
+        /// By default, this method does not wait for the completion of the email validation job: pass a <see cref="WaitingStrategy"/> to request
+        /// a different waiting behavior.
+        /// </remarks>
+        /// </summary>
+        /// <param name="fileInfo">A <see cref="FileInfo"/> instance pointing to the file to submit.</param>
+        /// <param name="contentType">The MIME content type of the file.
+        /// <remarks>If <see langword="null" /> (default value), the library attempts to guess the content type of the file based on its extension.</remarks>
+        /// </param>
+        /// <param name="quality">The desired results quality for this email validation.</param>
+        /// <param name="deduplication">The strategy to follow while determining which email addresses are duplicates.</param>
+        /// <param name="waitingStrategy">The strategy which rules out how to wait for the completion of the email validation.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>A <see cref="Validation"/> object representing the submitted email validation job.</returns>
+        Task<Validation> SubmitAsync(FileInfo fileInfo, MediaTypeHeaderValue contentType = default, QualityLevelName quality = default, DeduplicationMode deduplication = default, WaitingStrategy waitingStrategy = default, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Submits a new email validation for processing through a file, with support for the following formats:
+        /// - plain text files (.txt), with one email address per line
+        /// - comma-separated values (.csv), tab-separated values (.tsv) and other delimiter-separated values files
+        /// - Microsoft Excel spreadsheets (.xls and .xlsx)
+        /// <remarks>
+        /// By default, this method does not wait for the completion of the email validation job: pass a <see cref="WaitingStrategy"/> to request
+        /// a different waiting behavior.
+        /// </remarks>
+        /// </summary>
+        /// <param name="file">A <see cref="Stream"/> with the file content to submit.</param>
+        /// <param name="contentType">The MIME content type of the file.</param>
+        /// <param name="quality">The desired results quality for this email validation.</param>
+        /// <param name="deduplication">The strategy to follow while determining which email addresses are duplicates.</param>
+        /// <param name="waitingStrategy">The strategy which rules out how to wait for the completion of the email validation.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>A <see cref="Validation"/> object representing the submitted email validation job.</returns>
+        Task<Validation> SubmitAsync(Stream file, MediaTypeHeaderValue contentType, QualityLevelName quality = default, DeduplicationMode deduplication = default, WaitingStrategy waitingStrategy = default, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Submits a new email validation for processing through a file, with support for the following formats:
+        /// - plain text files (.txt), with one email address per line
+        /// - comma-separated values (.csv), tab-separated values (.tsv) and other delimiter-separated values files
+        /// - Microsoft Excel spreadsheets (.xls and .xlsx)
+        /// <remarks>
+        /// By default, this method does not wait for the completion of the email validation job: pass a <see cref="WaitingStrategy"/> to request
+        /// a different waiting behavior.
+        /// </remarks>
+        /// </summary>
+        /// <param name="request">A <see cref="FileValidationRequest"/> describing the validation request for a file.</param>
+        /// <param name="waitingStrategy">The strategy which rules out how to wait for the completion of the email validation.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>A <see cref="Validation"/> object representing the submitted email validation job.</returns>
+        Task<Validation> SubmitAsync(FileValidationRequest request, WaitingStrategy waitingStrategy = default, CancellationToken cancellationToken = default);
+        
         /// <summary>
         /// Returns an email validation job previously submitted for processing.
         /// <remarks>In the event retrieving the whole validation job data is not needed and getting just the <see cref="ValidationOverview"/>

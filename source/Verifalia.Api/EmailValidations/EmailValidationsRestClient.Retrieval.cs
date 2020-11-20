@@ -98,7 +98,11 @@ namespace Verifalia.Api.EmailValidations
 
                         var responseBody = await response
                             .Content
+#if NET5_0
+                            .ReadAsStringAsync(cancellationToken)
+#else
                             .ReadAsStringAsync()
+#endif
                             .ConfigureAwait(false);
 
                         throw new VerifaliaException(
@@ -190,7 +194,11 @@ namespace Verifalia.Api.EmailValidations
 
                 var responseBody = await response
                     .Content
+#if NET5_0
+                    .ReadAsStringAsync(cancellationToken)
+#else
                     .ReadAsStringAsync()
+#endif
                     .ConfigureAwait(false);
 
                 throw new VerifaliaException($"Unexpected HTTP response: {(int) response.StatusCode} {responseBody}");
@@ -204,12 +212,7 @@ namespace Verifalia.Api.EmailValidations
         {
             return AsyncEnumerableHelper
                 .ToAsyncEnumerable<ValidationEntryListSegment, ValidationEntry, ValidationEntryListingOptions>(
-                    (listingOptions, token) =>
-                    {
-#warning Rimuovere log una volta fatto debug
-
-                        return ListEntriesSegmentedAsync(validationId, listingOptions, token);
-                    },
+                    (listingOptions, token) => ListEntriesSegmentedAsync(validationId, listingOptions, token),
                     (cursor, token) => ListEntriesSegmentedAsync(validationId, cursor, token),
                     options,
                     cancellationToken);

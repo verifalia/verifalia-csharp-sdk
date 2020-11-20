@@ -31,9 +31,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -48,7 +50,7 @@ namespace Verifalia.Api.EmailValidations
         {
             if (emailAddress == null) throw new ArgumentNullException(nameof(emailAddress));
 
-            return SubmitAsync(new[] { emailAddress },
+            return SubmitAsync(new[] {emailAddress},
                 quality: quality,
                 waitingStrategy: waitingStrategy,
                 cancellationToken: cancellationToken);
@@ -67,7 +69,7 @@ namespace Verifalia.Api.EmailValidations
 
         public Task<Validation> SubmitAsync(ValidationRequestEntry entry, QualityLevelName quality = default, WaitingStrategy waitingStrategy = default, CancellationToken cancellationToken = default)
         {
-            return SubmitAsync(new[] { entry },
+            return SubmitAsync(new[] {entry},
                 quality: quality,
                 waitingStrategy: waitingStrategy,
                 cancellationToken: cancellationToken);
@@ -91,7 +93,6 @@ namespace Verifalia.Api.EmailValidations
             var content = restClient
                 .Serialize(new
                 {
-                    entries = validationRequest.Entries,
                     quality = validationRequest.Quality?.NameOrGuid,
                     deduplication = validationRequest.Deduplication?.NameOrGuid,
                     priority = validationRequest.Priority?.Value,
@@ -103,62 +104,164 @@ namespace Verifalia.Api.EmailValidations
                                 validationRequest.Retention.Value.Hours,
                                 validationRequest.Retention.Value.Minutes,
                                 validationRequest.Retention.Value.Seconds)
-                            .ToString()
+                            .ToString(),
+                    
+                    // Non-file specific
+
+                    entries = validationRequest.Entries,
                 });
 
             // Send the request to the Verifalia servers
 
             using (var postedContent = new StringContent(content, Encoding.UTF8, WellKnownMimeContentTypes.ApplicationJson))
+            {
+                return await SubmitAsync(restClient, postedContent, waitingStrategy, cancellationToken)
+                    .ConfigureAwait(false);
+            }
+        }
+        
+        public async Task<Validation> SubmitAsync(byte[] file, MediaTypeHeaderValue contentType, QualityLevelName quality = default, DeduplicationMode deduplication = default, WaitingStrategy waitingStrategy = default, CancellationToken cancellationToken = default)
+        {
+            if (file == null) throw new ArgumentNullException(nameof(file));
+            
+            using var stream = new MemoryStream(file);
+            return await SubmitAsync(stream,
+                    contentType,
+                    quality,
+                    deduplication,
+                    waitingStrategy,
+                    cancellationToken)
+                .ConfigureAwait(false);
+        }
+        
+        public async Task<Validation> SubmitAsync(FileInfo fileInfo, MediaTypeHeaderValue contentType = default, QualityLevelName quality = default, DeduplicationMode deduplication = default, WaitingStrategy waitingStrategy = default, CancellationToken cancellationToken = default)
+        {
+            if (fileInfo == null) throw new ArgumentNullException(nameof(fileInfo));
+            
+            using var request = new FileValidationRequest(fileInfo, contentType, quality, deduplication);
+            
+            return await SubmitAsync(request,
+                waitingStrategy,
+                cancellationToken)
+                .ConfigureAwait(false);
+        }
+
+        public async Task<Validation> SubmitAsync(Stream file, MediaTypeHeaderValue contentType, QualityLevelName quality = default, DeduplicationMode deduplication = default, WaitingStrategy waitingStrategy = default, CancellationToken cancellationToken = default)
+        {
+            if (file == null) throw new ArgumentNullException(nameof(file));
+            if (contentType == null) throw new ArgumentNullException(nameof(contentType));
+
+            using var request = new FileValidationRequest(file, contentType, quality, deduplication, leaveOpen: true);
+
+            return await SubmitAsync(request,
+                waitingStrategy,
+                cancellationToken)
+                .ConfigureAwait(false);
+        }
+        
+        public async Task<Validation> SubmitAsync(FileValidationRequest request, WaitingStrategy waitingStrategy = default, CancellationToken cancellationToken = default)
+        {
+            if (request == null) throw new ArgumentNullException(nameof(request));
+
+            var restClient = _restClientFactory.Build();
+
+            // Serialize the validation request (settings only) to JSON
+
+            var settingsContent = restClient
+                .Serialize(new
+                {
+                    quality = request.Quality?.NameOrGuid,
+                    deduplication = request.Deduplication?.NameOrGuid,
+                    priority = request.Priority?.Value,
+                    name = request.Name,
+                    // Strips the milliseconds portion from the specified retention period, if any
+                    retention = request.Retention == null
+                        ? null
+                        : new TimeSpan(request.Retention.Value.Days,
+                                request.Retention.Value.Hours,
+                                request.Retention.Value.Minutes,
+                                request.Retention.Value.Seconds)
+                            .ToString(),
+                    
+                    // File-specific
+                    
+                    startingRow = request.StartingRow,
+                    endingRow = request.EndingRow,
+                    column = request.Column,
+                    sheet = request.Sheet,
+                    lineEnding = request.LineEnding,
+                    delimiter = request.Delimiter,
+                });
+
+            // Send the request to the Verifalia servers
+
+            using (var postedContent = new MultipartFormDataContent())
+            using (var postedFileContent = new StreamContent(request.File))
+            using (var postedSettingsContent = new StringContent(settingsContent, Encoding.UTF8, WellKnownMimeContentTypes.ApplicationJson))
+            {
+                postedFileContent.Headers.ContentType = request.ContentType;
+                postedContent.Add(postedFileContent, "inputFile",
+                    // HACK: Must send a filename, as the backend expects one
+                    // see https://github.com/dotnet/aspnetcore/blob/425c196cba530b161b120a57af8f1dd513b96f67/src/Http/Headers/src/ContentDispositionHeaderValueIdentityExtensions.cs#L27
+                    "dummy");
+
+                postedSettingsContent.Headers.ContentType = new MediaTypeHeaderValue(WellKnownMimeContentTypes.ApplicationJson);
+                postedContent.Add(postedSettingsContent, "settings");
+
+                return await SubmitAsync(restClient, postedContent, waitingStrategy, cancellationToken)
+                    .ConfigureAwait(false);
+            }
+        }
+
+        private async Task<Validation> SubmitAsync(IRestClient restClient, HttpContent postedContent, WaitingStrategy waitingStrategy, CancellationToken cancellationToken)
+        {
             using (var response = await restClient.InvokeAsync(HttpMethod.Post,
                     "email-validations",
                     queryParams: null,
-                    headers: new Dictionary<string, object> { { "Accept", WellKnownMimeContentTypes.ApplicationJson } },
+                    headers: new Dictionary<string, object> {{"Accept", WellKnownMimeContentTypes.ApplicationJson}},
                     content: postedContent,
                     cancellationToken: cancellationToken)
                 .ConfigureAwait(false))
             {
-
                 switch (response.StatusCode)
                 {
                     case HttpStatusCode.OK:
                     case HttpStatusCode.Accepted:
+                    {
+                        var partialValidation = await response
+                            .Content
+                            .DeserializeAsync<PartialValidation>(restClient)
+                            .ConfigureAwait(false);
+
+                        // Returns immediately if the validation has been completed or if we should not wait for it
+
+                        if (waitingStrategy == null || !waitingStrategy.WaitForCompletion || partialValidation.Overview.Status == ValidationStatus.Completed)
                         {
-                            var partialValidation = await response
-                                .Content
-                                .DeserializeAsync<PartialValidation>(restClient)
+                            return await RetrieveValidationFromPartialValidationAsync(partialValidation, cancellationToken)
                                 .ConfigureAwait(false);
+                        }
 
-                            // Returns immediately if the validation has been completed or if we should not wait for it
-
-                            if (waitingStrategy == null || !waitingStrategy.WaitForCompletion || partialValidation.Overview.Status == ValidationStatus.Completed)
-                            {
-                                return await RetrieveValidationFromPartialValidationAsync(partialValidation, cancellationToken)
-                                    .ConfigureAwait(false);
-                            }
-
-                            return await WaitForCompletionAsync<Validation>(partialValidation.Overview, waitingStrategy,
+                        return await WaitForCompletionAsync<Validation>(partialValidation.Overview, waitingStrategy,
                                 cancellationToken)
                             .ConfigureAwait(false);
-                        }
-
-                    case HttpStatusCode.Gone:
-                    case HttpStatusCode.NotFound:
-                        {
-                            return null;
-                        }
+                    }
 
                     default:
-                        {
-                            // An unexpected HTTP status code has been received at this point
+                    {
+                        // An unexpected HTTP status code has been received at this point
 
-                            var responseBody = await response
-                                .Content
-                                .ReadAsStringAsync()
-                                .ConfigureAwait(false);
+                        var responseBody = await response
+                            .Content
+#if NET5_0
+                            .ReadAsStringAsync(cancellationToken)
+#else
+                            .ReadAsStringAsync()
+#endif
+                            .ConfigureAwait(false);
 
-                            throw new VerifaliaException(
-                                $"Unexpected HTTP response: {(int)response.StatusCode} {responseBody}");
-                        }
+                        throw new VerifaliaException(
+                            $"Unexpected HTTP response: {(int) response.StatusCode} {responseBody}");
+                    }
                 }
             }
         }

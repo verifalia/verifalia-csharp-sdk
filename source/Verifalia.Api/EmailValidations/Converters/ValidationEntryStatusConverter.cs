@@ -64,6 +64,7 @@ namespace Verifalia.Api.EmailValidations.Converters
             ["LocalSenderAddressRejected"] = ValidationEntryStatus.LocalSenderAddressRejected,
             ["MailboxConnectionFailure"] = ValidationEntryStatus.MailboxConnectionFailure,
             ["MailboxDoesNotExist"] = ValidationEntryStatus.MailboxDoesNotExist,
+            ["MailboxHasInsufficientStorage"] = ValidationEntryStatus.MailboxHasInsufficientStorage,
             ["MailboxIsDea"] = ValidationEntryStatus.MailboxIsDea,
             ["MailboxTemporarilyUnavailable"] = ValidationEntryStatus.MailboxTemporarilyUnavailable,
             ["MailboxValidationTimeout"] = ValidationEntryStatus.MailboxValidationTimeout,

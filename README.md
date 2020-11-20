@@ -176,6 +176,58 @@ var validation = await verifalia
 		new WaitingStrategy(true));
 ```
 
+### How to submit a file for validation
+
+This library includes support for submitting and validating files with email addresses, including:
+
+- plain text files (.txt), with one email address per line;
+- comma-separated values (.csv), tab-separated values (.tsv) and other delimiter-separated values files;
+- Microsoft Excel spreadsheets (.xls and .xlsx).
+
+To submit and validate files, one can still use the SubmitAsync() method mentioned
+above, passing either a `Stream` or a `FileInfo` instance or just a `byte[]` with the
+file content. Along with that, it is also possible to specify the eventual starting
+and ending rows to process, the column, the sheet index, the line ending and the
+delimiter - depending of course on the nature of the submitted file (see
+`FileValidationRequest` in the source to learn more).
+
+Here is how to submit an Excel file, for example (pass a `WaitingStrategy` to actually
+wait for its results - see the sections above for more details):
+
+```c#
+var validation = await verifalia
+    .EmailValidations
+    .SubmitAsync(new FileInfo("that-file.xslx"));
+```
+
+For more advanced options, just pass `FileValidationRequest` instance to the `SubmitAsync()`
+method:
+
+```c#
+var validation = await verifalia
+    .EmailValidations
+    .SubmitAsync(new FileValidationRequest(new FileInfo("that-file.xslx"))
+        {
+            Sheet = 3,
+            StartingRow = 1,
+            Column = 5
+        },
+        quality: QualityLevelName.High);
+```
+
+And here is another example, showing how to submit a `Stream` instance and specifying the
+MIME content type of the file, which is automatically determined from the file extension in
+the event you pass a `FileInfo` instance:
+
+```c#
+Stream inputStream = ...;
+
+var validation = await verifalia
+    .EmailValidations
+    .SubmitAsync(inputStream,
+        MediaTypeHeaderValue.Parse(WellKnownMimeContentTypes.TextPlain)); // text/plain
+```
+
 ### Don't forget to clean up, when you are done ###
 
 Verifalia automatically deletes completed jobs after 30 days since their completion: deleting completed jobs is a best practice, for privacy and security reasons. To do that, you can invoke the `DeleteAsync()` method passing the job Id you wish to get rid of:
@@ -280,6 +332,52 @@ await foreach (var dailyUsage in dailyUsages)
 ```
 
 > The `ListDailyUsagesAsync()` method uses the *C# 8.0 async enumerable* feature; for previous language support please check the `ListDailyUsagesSegmentedAsync()` methods group.
+
+## Changelog / What's new
+
+This section lists the changelog for the current major version of the library: for older versions,
+please see the [project releases](https://github.com/verifalia/verifalia-csharp-sdk/releases).
+
+### v2.4
+
+Released on November 20<sup>th</sup>, 2020
+
+- Added support for submitting files (plain text, CSV/TSV, Excel .xls / .xlsx) for validation
+- Improved .NET 5.0 support
+
+### v2.3
+
+Released on November 13<sup>th</sup>, 2020
+
+- Added support for .NET 5.0
+- Added support for API v2.2
+- Added a missing validation entry status
+
+### v2.2
+
+Released on February 21<sup>st</sup>, 2020
+
+- Added support for API v2.1:
+    - configurable data retention period
+    - new `Relaxed` deduplication algorithm
+    - new `DomainHasNullMx` status code
+    
+### v2.1
+
+Released on November 22<sup>nd</sup>, 2019
+
+- Added support for bearer authentication
+- Added support for TOTP multi-factor auth
+- Added specific package build for net48 
+- Improved code comments and documentation
+
+### v2.0
+
+Released on August 2<sup>nd</sup>, 2019
+
+- Added support for API v2.0
+- Improved documentation
+- Fixed an issue which may cause an unnecessary delay while querying for jobs results
 
 [0]: https://verifalia.com
 [1]: https://github.com/verifalia/verifalia-csharp-sdk/archive/master.zip
