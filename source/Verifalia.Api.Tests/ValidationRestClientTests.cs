@@ -3,7 +3,7 @@
 * https://verifalia.com/
 * support@verifalia.com
 *
-* Copyright (c) 2005-2020 Cobisi Research
+* Copyright (c) 2005-2021 Cobisi Research
 *
 * Cobisi Research
 * Via Della Costituzione, 31
@@ -68,7 +68,7 @@ namespace Verifalia.Api.Tests
                     overview = new
                     {
                         id = validationId,
-                        status = "in-progress"
+                        status = "InProgress"
                     }
                 }, 202);
 

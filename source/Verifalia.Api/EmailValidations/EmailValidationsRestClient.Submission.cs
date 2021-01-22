@@ -3,7 +3,7 @@
 * https://verifalia.com/
 * support@verifalia.com
 *
-* Copyright (c) 2005-2020 Cobisi Research
+* Copyright (c) 2005-2021 Cobisi Research
 *
 * Cobisi Research
 * Via Della Costituzione, 31
@@ -113,11 +113,11 @@ namespace Verifalia.Api.EmailValidations
 
             // Send the request to the Verifalia servers
 
-            using (var postedContent = new StringContent(content, Encoding.UTF8, WellKnownMimeContentTypes.ApplicationJson))
-            {
-                return await SubmitAsync(restClient, postedContent, waitingStrategy, cancellationToken)
-                    .ConfigureAwait(false);
-            }
+            return await SubmitAsync(restClient,
+                    contentFactory: _ => Task.FromResult<HttpContent>(new StringContent(content, Encoding.UTF8, WellKnownMimeContentTypes.ApplicationJson)),
+                    waitingStrategy,
+                    cancellationToken)
+                .ConfigureAwait(false);
         }
         
         public async Task<Validation> SubmitAsync(byte[] file, MediaTypeHeaderValue contentType, QualityLevelName quality = default, DeduplicationMode deduplication = default, WaitingStrategy waitingStrategy = default, CancellationToken cancellationToken = default)
@@ -195,31 +195,38 @@ namespace Verifalia.Api.EmailValidations
 
             // Send the request to the Verifalia servers
 
-            using (var postedContent = new MultipartFormDataContent())
             using (var postedFileContent = new StreamContent(request.File))
             using (var postedSettingsContent = new StringContent(settingsContent, Encoding.UTF8, WellKnownMimeContentTypes.ApplicationJson))
             {
                 postedFileContent.Headers.ContentType = request.ContentType;
-                postedContent.Add(postedFileContent, "inputFile",
-                    // HACK: Must send a filename, as the backend expects one
-                    // see https://github.com/dotnet/aspnetcore/blob/425c196cba530b161b120a57af8f1dd513b96f67/src/Http/Headers/src/ContentDispositionHeaderValueIdentityExtensions.cs#L27
-                    "dummy");
-
                 postedSettingsContent.Headers.ContentType = new MediaTypeHeaderValue(WellKnownMimeContentTypes.ApplicationJson);
-                postedContent.Add(postedSettingsContent, "settings");
 
-                return await SubmitAsync(restClient, postedContent, waitingStrategy, cancellationToken)
+                return await SubmitAsync(restClient,
+                        contentFactory: _ =>
+                        {
+                            var postedContent = new MultipartFormDataContent();
+
+                            postedContent.Add(postedFileContent, "inputFile",
+                                // HACK: Must send a filename, as the backend expects one
+                                // see https://github.com/dotnet/aspnetcore/blob/425c196cba530b161b120a57af8f1dd513b96f67/src/Http/Headers/src/ContentDispositionHeaderValueIdentityExtensions.cs#L27
+                                "dummy");
+                            postedContent.Add(postedSettingsContent, "settings");
+
+                            return Task.FromResult<HttpContent>(postedContent);
+                        },
+                        waitingStrategy,
+                        cancellationToken)
                     .ConfigureAwait(false);
             }
         }
 
-        private async Task<Validation> SubmitAsync(IRestClient restClient, HttpContent postedContent, WaitingStrategy waitingStrategy, CancellationToken cancellationToken)
+        private async Task<Validation> SubmitAsync(IRestClient restClient, Func<CancellationToken, Task<HttpContent>> contentFactory, WaitingStrategy waitingStrategy, CancellationToken cancellationToken)
         {
             using (var response = await restClient.InvokeAsync(HttpMethod.Post,
                     "email-validations",
                     queryParams: null,
                     headers: new Dictionary<string, object> {{"Accept", WellKnownMimeContentTypes.ApplicationJson}},
-                    content: postedContent,
+                    contentFactory: contentFactory,
                     cancellationToken: cancellationToken)
                 .ConfigureAwait(false))
             {

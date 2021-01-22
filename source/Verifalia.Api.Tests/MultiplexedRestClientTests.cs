@@ -3,7 +3,7 @@
 * https://verifalia.com/
 * support@verifalia.com
 *
-* Copyright (c) 2005-2020 Cobisi Research
+* Copyright (c) 2005-2021 Cobisi Research
 *
 * Cobisi Research
 * Via Della Costituzione, 31
@@ -32,6 +32,7 @@
 using System;
 using System.Net;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using Flurl.Http.Testing;
 using Verifalia.Api.Exceptions;
@@ -60,7 +61,22 @@ namespace Verifalia.Api.Tests
         }
 
         [Fact]
-        public async Task ShouldThrowServiceUnreachableExceptionWhenAllEndpointsTimeOut()
+        public async Task ShouldThrowServiceUnreachableExceptionWhenAllEndpointsFail()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                // Two subsequent calls should result in a server error 5xx
+
+                httpTest.RespondWith("Internal server error", 500);
+                httpTest.RespondWith("Internal server error", 500);
+
+                var client = new MultiplexedRestClient(_authenticator, "dummy", new[] { new Uri("https://dummy1"), new Uri("https://dummy2") });
+                await Assert.ThrowsAsync<ServiceUnreachableException>(async () => await client.InvokeAsync(HttpMethod.Get, "dummy"));
+            }
+        }
+
+        [Fact]
+        public async Task ShouldThrowServiceUnreachableExceptionWhenAllEndpointsTimeout()
         {
             using (var httpTest = new HttpTest())
             {
@@ -75,7 +91,18 @@ namespace Verifalia.Api.Tests
         }
 
         [Fact]
-        public async Task ShouldSucceedWhenAtLeastOneEndpointDoesNotReturnServerError()
+        public async Task ShouldThrowOperationCanceledExceptionWhenCanceledWithCancellationToken()
+        {
+            using (var httpTest = new HttpTest())
+            {
+                var ct = new CancellationToken(true);
+                var client = new MultiplexedRestClient(_authenticator, "dummy", new[] { new Uri("https://dummy1"), new Uri("https://dummy2") });
+                await Assert.ThrowsAsync<OperationCanceledException>(async () => await client.InvokeAsync(HttpMethod.Get, "dummy", cancellationToken: ct));
+            }
+        }
+        
+        [Fact]
+        public async Task ShouldSucceedWhenAtLeastOneEndpointDoesNotFail()
         {
             using (var httpTest = new HttpTest())
             {
@@ -91,7 +118,7 @@ namespace Verifalia.Api.Tests
         }
 
         [Fact]
-        public async Task ShouldSucceedWhenAtLeastOneEndpointDoesNotTimeOut()
+        public async Task ShouldSucceedWhenAtLeastOneEndpointDoesNotTimeout()
         {
             using (var httpTest = new HttpTest())
             {
@@ -105,8 +132,7 @@ namespace Verifalia.Api.Tests
                 Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             }
         }
-
-
+        
         [Fact]
         public async Task ShouldImmediatelyFailOnForbiddenError()
         {

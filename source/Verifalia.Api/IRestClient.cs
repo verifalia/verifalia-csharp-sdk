@@ -3,7 +3,7 @@
 * https://verifalia.com/
 * support@verifalia.com
 *
-* Copyright (c) 2005-2020 Cobisi Research
+* Copyright (c) 2005-2021 Cobisi Research
 *
 * Cobisi Research
 * Via Della Costituzione, 31
@@ -47,7 +47,7 @@ namespace Verifalia.Api
             string resource,
             Dictionary<string, string> queryParams = null,
             Dictionary<string, object> headers = null,
-            HttpContent content = null,
+            Func<CancellationToken, Task<HttpContent>> contentFactory = null,
             bool bufferResponseContent = true,
             bool skipAuthentication = false,
             CancellationToken cancellationToken = default);

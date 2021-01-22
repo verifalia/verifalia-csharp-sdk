@@ -3,7 +3,7 @@
 * https://verifalia.com/
 * support@verifalia.com
 *
-* Copyright (c) 2005-2020 Cobisi Research
+* Copyright (c) 2005-2021 Cobisi Research
 *
 * Cobisi Research
 * Via Della Costituzione, 31
@@ -96,12 +96,12 @@ namespace Verifalia.Api
 
 
         public async Task<HttpResponseMessage> InvokeAsync(HttpMethod verb, string resource, Dictionary<string, string> queryParams = null,
-            Dictionary<string, object> headers = null, HttpContent content = null, bool bufferResponseContent = true, bool skipAuthentication = false,
-            CancellationToken cancellationToken = default)
+            Dictionary<string, object> headers = null, Func<CancellationToken, Task<HttpContent>> contentFactory = null,
+            bool bufferResponseContent = true, bool skipAuthentication = false, CancellationToken cancellationToken = default)
         {
             if (verb == null) throw new ArgumentNullException(nameof(verb));
             if (resource == null) throw new ArgumentNullException(nameof(resource));
-
+            
             // Performs a maximum of as many attempts as the number of configured base API endpoints, keeping track
             // of the last used endpoint after each call, in order to try to distribute the load evenly across the
             // available endpoints.
@@ -110,6 +110,8 @@ namespace Verifalia.Api
 
             for (var idxAttempt = 0; idxAttempt < _baseUrls.Length; idxAttempt++, _currentBaseUrlIdx++)
             {
+                cancellationToken.ThrowIfCancellationRequested();
+
                 // Authenticates the underlying flurl client, if needed
 
                 if (!skipAuthentication)
@@ -148,30 +150,53 @@ namespace Verifalia.Api
 
                 try
                 {
-                    var response = await request
-                        .SendAsync(verb,
-                            content,
-                            cancellationToken,
-                            bufferResponseContent
-                                ? HttpCompletionOption.ResponseContentRead
-                                : HttpCompletionOption.ResponseHeadersRead)
-                        .ConfigureAwait(false);
+                    // HttpClient.SendAsync() disposed the passed content automatically: https://github.com/dotnet/runtime/issues/14612
+                    // A fix was made (https://github.com/dotnet/corefx/pull/19082) but Flurl still targets .NET Standard and not .NET Core,
+                    // so we can't take advantage of it: because of that, we are using a factory to build the actual content.
+
+                    HttpContent content = null;
+                    HttpResponseMessage response;
+
+                    try
+                    {
+                        if (contentFactory != null)
+                        {
+                            content = await contentFactory(cancellationToken)
+                                .ConfigureAwait(false);
+                        }
+
+                        response = await request
+                            .SendAsync(verb,
+                                content,
+                                cancellationToken,
+                                bufferResponseContent
+                                    ? HttpCompletionOption.ResponseContentRead
+                                    : HttpCompletionOption.ResponseHeadersRead)
+                            .ConfigureAwait(false);
+                    }
+                    finally
+                    {
+                        // Dispose the eventual content - that should make sense whenever .NET Standard will receive the fix mentioned above
+                        // or whenever Flurl will target .NET Core.
+
+                        content?.Dispose();
+                    }
 
                     // Automatically retry with another host on HTTP 5xx status codes
 
-                    if ((int)response.StatusCode >= 500 && (int)response.StatusCode <= 599)
+                    if ((int) response.StatusCode >= 500 && (int) response.StatusCode <= 599)
                     {
                         errors.Add(finalUrl, new EndpointServerErrorException($"The API endpoint {baseUrl} returned a server error HTTP status code {response.StatusCode}."));
                         continue;
                     }
-                    
+
                     // If the request is unauthorized, give the authentication provider a chance to remediate (on a subsequent attempt)
 
                     if (response.StatusCode == HttpStatusCode.Unauthorized)
                     {
                         await _authenticator.HandleUnauthorizedRequestAsync(this, cancellationToken)
                             .ConfigureAwait(false);
-                        
+
                         errors.Add(finalUrl, new AuthorizationException("Can't authenticate to Verifalia using the provided credentials (will retry in the next attempt)."));
                         continue;
                     }
@@ -201,13 +226,19 @@ namespace Verifalia.Api
                         errors.Add(finalUrl, innerException);
                     }
                 }
+                catch (FlurlHttpTimeoutException httpException)
+                {
+                    // A single Flurl request timed out - we take note of it and proceed with the next endpoint, if any
+                    
+                    errors.Add(finalUrl, httpException);
+                }
                 catch (FlurlHttpException httpException)
                 {
-                    if (httpException.InnerException is OperationCanceledException)
+                    if (httpException.InnerException is OperationCanceledException && cancellationToken.IsCancellationRequested)
                     {
                         throw httpException.InnerException;
                     }
-                
+
                     errors.Add(finalUrl, httpException);
                 }
             }

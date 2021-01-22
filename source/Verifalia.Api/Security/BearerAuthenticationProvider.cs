@@ -3,7 +3,7 @@
 * https://verifalia.com/
 * support@verifalia.com
 *
-* Copyright (c) 2005-2020 Cobisi Research
+* Copyright (c) 2005-2021 Cobisi Research
 *
 * Cobisi Research
 * Via Della Costituzione, 31
@@ -108,11 +108,9 @@ namespace Verifalia.Api.Security
                     password = _password
                 });
 
-                using var postedContent =
-                    new StringContent(content, Encoding.UTF8, WellKnownMimeContentTypes.ApplicationJson);
                 using var authResponse = await restClient.InvokeAsync(HttpMethod.Post,
                         "/auth/tokens",
-                        content: postedContent,
+                        contentFactory: _ => Task.FromResult<HttpContent>(new StringContent(content, Encoding.UTF8, WellKnownMimeContentTypes.ApplicationJson)),
                         // Avoid using the configured authentication provider - as auth tokens must be retrieved using HTTP basic auth
                         skipAuthentication: true,
                         cancellationToken: cancellationToken)
@@ -171,6 +169,8 @@ namespace Verifalia.Api.Security
 
             for (var idxAttempt = 0; idxAttempt < MaxNoOfMfaAttempts; idxAttempt++)
             {
+                cancellationToken.ThrowIfCancellationRequested();
+                
                 // Retrieve the one-time token from the configured device
 
                 var totp = await _totpTokenProvider
@@ -179,11 +179,6 @@ namespace Verifalia.Api.Security
                 
                 // Validates the provided token against the Verifalia API
 
-                using var postedContent = new StringContent(restClient.Serialize(new
-                {
-                    passCode = totp
-                }), Encoding.UTF8, WellKnownMimeContentTypes.ApplicationJson);
-
                 try
                 {
                     AddBearerAuth(restClient);
@@ -191,7 +186,10 @@ namespace Verifalia.Api.Security
                     using var authResponse = await restClient
                         .InvokeAsync(HttpMethod.Post,
                             "/auth/totp/verifications",
-                            content: postedContent,
+                            contentFactory: _ => Task.FromResult<HttpContent>(new StringContent(restClient.Serialize(new
+                            {
+                                passCode = totp
+                            }), Encoding.UTF8, WellKnownMimeContentTypes.ApplicationJson)),
                             // Avoid using the configured authentication provider - as auth tokens must be retrieved using HTTP basic auth
                             skipAuthentication: true,
                             cancellationToken: cancellationToken)
