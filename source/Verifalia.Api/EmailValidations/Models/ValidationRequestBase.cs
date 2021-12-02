@@ -3,8 +3,13 @@ using System.Threading;
 
 namespace Verifalia.Api.EmailValidations.Models
 {
+    /// <summary>
+    /// Base class for email validation requests.
+    /// </summary>
     public abstract class ValidationRequestBase
     {
+        private Uri _completionCallback;
+
         /// <summary>
         /// A reference to the expected results quality level for this request. Quality levels determine how Verifalia validates
         /// email addresses, including whether and how the automatic reprocessing logic occurs (for transient statuses) and the
@@ -44,5 +49,25 @@ namespace Verifalia.Api.EmailValidations.Models
         /// on subsequent API calls and shown on the Verifalia clients area.
         /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// An optional URL which Verifalia will invoke once the results for this job are ready.
+        /// </summary>
+        public Uri CompletionCallback
+        {
+            get => _completionCallback;
+            set
+            {
+                if (value != null)
+                {
+                    if (!value.IsAbsoluteUri || !(value.Scheme == "https" || value.Scheme == "http"))
+                    {
+                        throw new ArgumentOutOfRangeException(nameof(value), "Callback must be an absolute https (or http) URI.");
+                    }
+                }
+                
+                _completionCallback = value;
+            }
+        }
     }
 }

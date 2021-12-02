@@ -82,9 +82,9 @@ namespace Verifalia.Api.EmailValidations
                 cancellationToken: cancellationToken);
         }
 
-        public async Task<Validation> SubmitAsync(ValidationRequest validationRequest, WaitingStrategy waitingStrategy = default, CancellationToken cancellationToken = default)
+        public async Task<Validation> SubmitAsync(ValidationRequest request, WaitingStrategy waitingStrategy = default, CancellationToken cancellationToken = default)
         {
-            if (validationRequest == null) throw new ArgumentNullException(nameof(validationRequest));
+            if (request == null) throw new ArgumentNullException(nameof(request));
 
             var restClient = _restClientFactory.Build();
 
@@ -93,22 +93,28 @@ namespace Verifalia.Api.EmailValidations
             var content = restClient
                 .Serialize(new
                 {
-                    quality = validationRequest.Quality?.NameOrGuid,
-                    deduplication = validationRequest.Deduplication?.NameOrGuid,
-                    priority = validationRequest.Priority?.Value,
-                    name = validationRequest.Name,
+                    quality = request.Quality?.NameOrGuid,
+                    deduplication = request.Deduplication?.NameOrGuid,
+                    priority = request.Priority?.Value,
+                    name = request.Name,
                     // Strips the milliseconds portion from the specified retention period, if any
-                    retention = validationRequest.Retention == null
+                    retention = request.Retention == null
                         ? null
-                        : new TimeSpan(validationRequest.Retention.Value.Days,
-                                validationRequest.Retention.Value.Hours,
-                                validationRequest.Retention.Value.Minutes,
-                                validationRequest.Retention.Value.Seconds)
+                        : new TimeSpan(request.Retention.Value.Days,
+                                request.Retention.Value.Hours,
+                                request.Retention.Value.Minutes,
+                                request.Retention.Value.Seconds)
                             .ToString(),
+                    callback = request.CompletionCallback == null
+                        ? null
+                        : new
+                        {
+                            url = request.CompletionCallback.ToString()
+                        },
                     
                     // Non-file specific
 
-                    entries = validationRequest.Entries,
+                    entries = request.Entries,
                 });
 
             // Send the request to the Verifalia servers
@@ -182,7 +188,13 @@ namespace Verifalia.Api.EmailValidations
                                 request.Retention.Value.Minutes,
                                 request.Retention.Value.Seconds)
                             .ToString(),
-                    
+                    callback = request.CompletionCallback == null
+                        ? null
+                        : new
+                        {
+                            url = request.CompletionCallback.ToString()
+                        },                    
+
                     // File-specific
                     
                     startingRow = request.StartingRow,
@@ -259,7 +271,7 @@ namespace Verifalia.Api.EmailValidations
 
                         var responseBody = await response
                             .Content
-#if NET5_0
+#if NET5_0_OR_GREATER
                             .ReadAsStringAsync(cancellationToken)
 #else
                             .ReadAsStringAsync()

@@ -148,11 +148,11 @@ namespace Verifalia.Api.EmailValidations
         /// var validation = await SubmitAsync(new ValidationRequest(new[] { "batman@gmail.com" }, waitingStrategy: new WaitingStrategy { waitForCompletion: true });
         /// </code>
         /// </example>
-        /// <param name="validationRequest">A <see cref="ValidationRequest"/> to submit for validation.</param>
+        /// <param name="request">A <see cref="ValidationRequest"/> to submit for validation.</param>
         /// <param name="waitingStrategy">The strategy which rules out how to wait for the completion of the email validation.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>A <see cref="Validation"/> object representing the submitted email validation job.</returns>
-        Task<Validation> SubmitAsync(ValidationRequest validationRequest, WaitingStrategy waitingStrategy = default, CancellationToken cancellationToken = default);
+        Task<Validation> SubmitAsync(ValidationRequest request, WaitingStrategy waitingStrategy = default, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Submits a new email validation for processing through a file, with support for the following formats:
@@ -397,5 +397,15 @@ namespace Verifalia.Api.EmailValidations
         /// <returns>An enumerable collection of <see cref="ValidationEntry"/> of the requested validation.</returns>
         IAsyncEnumerable<ValidationEntry> ListEntriesAsync(Guid validationId, ValidationEntryListingOptions options = default, CancellationToken cancellationToken = default);
 #endif
+
+        /// <summary>
+        /// Exports the validated entries for a given validation using the specified output format. 
+        /// </summary>
+        /// <param name="validationId">The unique ID of the validation to list the entries for.</param>
+        /// <param name="format"></param>
+        /// <param name="options">The options for the listing operation.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>A stream with the data exported in the requested format.</returns>
+        Task<Stream> ExportEntriesAsync(Guid validationId, ExportedEntriesFormat format, ValidationEntryListingOptions options = default, CancellationToken cancellationToken = default);
     }
 }

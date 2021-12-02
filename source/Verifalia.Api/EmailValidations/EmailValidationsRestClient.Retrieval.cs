@@ -98,7 +98,7 @@ namespace Verifalia.Api.EmailValidations
 
                         var responseBody = await response
                             .Content
-#if NET5_0
+#if NET5_0_OR_GREATER
                             .ReadAsStringAsync(cancellationToken)
 #else
                             .ReadAsStringAsync()
@@ -194,7 +194,7 @@ namespace Verifalia.Api.EmailValidations
 
                 var responseBody = await response
                     .Content
-#if NET5_0
+#if NET5_0_OR_GREATER
                     .ReadAsStringAsync(cancellationToken)
 #else
                     .ReadAsStringAsync()
@@ -324,6 +324,57 @@ namespace Verifalia.Api.EmailValidations
                         throw new VerifaliaException($"Unexpected HTTP response: {(int)response.StatusCode} {responseBody}");
                     }
             }
+        }
+        
+        public async Task<Stream> ExportEntriesAsync(Guid validationId, ExportedEntriesFormat format, ValidationEntryListingOptions options = default, CancellationToken cancellationToken = default)
+        {
+            // Determines the acceptable MIME content type
+
+            var acceptableMimeContentType = format switch
+            {
+                ExportedEntriesFormat.Csv => WellKnownMimeContentTypes.TextCsv,
+                ExportedEntriesFormat.ExcelXls => WellKnownMimeContentTypes.ExcelXls,
+                ExportedEntriesFormat.ExcelXlsx => WellKnownMimeContentTypes.ExcelXlsx,
+                _ => throw new ArgumentOutOfRangeException(nameof(format), format, null)
+            };
+
+            // Sends the request to the Verifalia servers
+
+            var restClient = _restClientFactory.Build();
+
+            var response = await restClient
+                .InvokeAsync(HttpMethod.Get,
+                    $"email-validations/{validationId:D}/entries",
+                    headers: new Dictionary<string, object> { { "Accept", acceptableMimeContentType } },
+                    cancellationToken: cancellationToken)
+                .ConfigureAwait(false);
+            
+            // On success, returns the response body (which is formatted according to the requested export format)
+
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                return await response
+                    .Content
+#if NET5_0_OR_GREATER
+                    .ReadAsStreamAsync(cancellationToken)
+#else
+                    .ReadAsStreamAsync()
+#endif
+                    .ConfigureAwait(false);
+            }
+
+            // An unexpected HTTP status code has been received at this point
+
+            var responseBody = await response
+                .Content
+#if NET5_0_OR_GREATER
+                .ReadAsStringAsync(cancellationToken)
+#else
+                    .ReadAsStringAsync()
+#endif
+                .ConfigureAwait(false);
+
+            throw new VerifaliaException($"Unexpected HTTP response: {(int)response.StatusCode} {responseBody}");
         }
     }
 }

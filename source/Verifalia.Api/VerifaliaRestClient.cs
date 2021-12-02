@@ -47,7 +47,8 @@ namespace Verifalia.Api
         /// <summary>
         /// The default API version used by this SDK.
         /// </summary>
-        public const string DefaultApiVersion = "v2.2";
+        // ReSharper disable once MemberCanBePrivate.Global
+        public const string DefaultApiVersion = "v2.3";
 
         private readonly Random _uriShuffler;
         private readonly IAuthenticationProvider _authenticator;
@@ -57,6 +58,7 @@ namespace Verifalia.Api
         private IEmailValidationsRestClient _emailValidations;
         private ICreditsRestClient _accountBalance;
 
+        // ReSharper disable once MemberCanBePrivate.Global
         internal MultiplexedRestClient CachedRestClient; // Marked as internal for unit testing purposes
 
         /// <inheritdoc cref="IVerifaliaRestClient.ApiVersion"/>
@@ -192,8 +194,9 @@ namespace Verifalia.Api
                 "netcoreapp3.0",
 #elif NETCOREAPP3_1
                 "netcoreapp3.1",
+#elif NET6_0 // Note: starting .NET 5.0, TFM compilation constants mean "version X or greater", see: https://github.com/dotnet/sdk/issues/13377
+                "net6.0",
 #elif NET5_0
-                // Note: starting .NET 5.0, TFM compilation constants mean "version X or greater", see: https://github.com/dotnet/sdk/issues/13377   
                 "net5.0",
 #else
 #error Unsupported platform.
@@ -222,6 +225,7 @@ namespace Verifalia.Api
             }
         }
 
+        /// <inheritdoc />
         public void Dispose()
         {
             Dispose(true);

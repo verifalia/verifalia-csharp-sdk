@@ -6,7 +6,7 @@ Verifalia RESTful API - .NET SDK and helper library
 
 [Verifalia][0] provides a simple HTTPS-based API for validating email addresses in real-time and checking whether they are deliverable or not; this SDK library integrates with Verifalia and allows to [verify email addresses][0] under the following platforms:
 
-- .NET 5.0 ![new](https://img.shields.io/badge/new-green)
+- .NET 5.0 and higher, including .NET 6.0 ![new](https://img.shields.io/badge/new-green)
 - .NET Core 1.0 (and higher)
 - .NET Framework 4.5 (and higher)
 - .NET Standard 1.3 (and higher)
@@ -135,10 +135,10 @@ Here is how to do that:
 var validation = await verifalia
     .EmailValidations
     .SubmitAsync(new[] {
-		"batman@gmail.com",
-		"steve.vai@best.music",
-		"samantha42@yahoo.de"
-	});
+      "batman@gmail.com",
+      "steve.vai@best.music",
+      "samantha42@yahoo.de"
+    });
 
 Console.WriteLine("Job Id: {validation.Overview.Id}");
 Console.WriteLine("Status: {validation.Overview.Status}");
@@ -173,18 +173,18 @@ And here is how to request the same job, asking the SDK to automatically wait fo
 var validation = await verifalia
     .EmailValidations
     .GetAsync(Guid.Parse("290b5146-eeac-4a2b-a9c1-61c7e715f2e9"),
-		new WaitingStrategy(true));
+        new WaitingStrategy(true));
 ```
 
-### How to submit a file for validation
+### How to import and submit a file for validation
 
 This library includes support for submitting and validating files with email addresses, including:
 
-- plain text files (.txt), with one email address per line;
-- comma-separated values (.csv), tab-separated values (.tsv) and other delimiter-separated values files;
-- Microsoft Excel spreadsheets (.xls and .xlsx).
+- **plain text files** (.txt), with one email address per line;
+- **comma-separated values** (.csv), **tab-separated values** (.tsv) and other delimiter-separated values files;
+- **Microsoft Excel spreadsheets** (.xls and .xlsx).
 
-To submit and validate files, one can still use the SubmitAsync() method mentioned
+To submit and validate files, one can still use the `SubmitAsync()` method mentioned
 above, passing either a `Stream` or a `FileInfo` instance or just a `byte[]` with the
 file content. Along with that, it is also possible to specify the eventual starting
 and ending rows to process, the column, the sheet index, the line ending and the
@@ -220,7 +220,7 @@ MIME content type of the file, which is automatically determined from the file e
 the event you pass a `FileInfo` instance:
 
 ```c#
-Stream inputStream = ...;
+Stream inputStream = ...; // TODO: Acquire the input data somehow
 
 var validation = await verifalia
     .EmailValidations
@@ -228,9 +228,64 @@ var validation = await verifalia
         MediaTypeHeaderValue.Parse(WellKnownMimeContentTypes.TextPlain)); // text/plain
 ```
 
+### Completion callbacks ###
+
+Along with each email validation job, it is possible to specify an URL which
+Verifalia will invoke (POST) once the job completes: this URL must use the HTTPS or HTTP
+scheme and be publicly accessible over the Internet.
+To learn more about completion callbacks, please see https://verifalia.com/developers#email-validations-completion-callback
+
+To specify a completion callback URL, pass either a `ValidationRequest` or a `FileValidationRequest`
+to the `SubmitAsync()` method and set its `CompletionCallback` property accordingly, as shown
+in the example below:
+
+```c#
+await verifalia
+    .EmailValidations
+    .SubmitAsync(new ValidationRequest(new[] { "batman@gmail.com" })
+    {
+        CompletionCallback = new Uri("https://your-website-here/foo/bar"),
+        // TODO: Other settings, if needed
+    });
+```
+
+Note that completion callbacks are invoked asynchronously and it could take up to
+several seconds for your callback URL to get invoked.
+
+### How to export validated entries in different output formats ###
+
+This library also allows to export the entries of a completed email validation
+job in different output formats through the `ExportEntriesAsync()` method, with the goal of generating a human-readable representation
+of the verification results.
+
+> **WARNING**: While the output schema (columns / labels / data format) is fairly
+> complete, you should always consider it as subject to change: use the `GetAsync()` / `GetEntriesAsync()`
+> methods instead if you need to rely on a stable output schema.
+
+Here is an example showing how to export a given email verification job as a comma-separated values (CSV) file:
+
+```c#
+// Exports the validated entries for the job in the CSV format
+
+var exportedStream = await verifalia
+    .EmailValidations
+    .ExportEntriesAsync(new Guid("722c2fd8-8837-449f-ad24-0330c597c993"),
+        ExportedEntriesFormat.Csv);
+
+// Creates the output file stream
+
+var fileStream = new FileStream("my-list.csv", FileMode.Create);
+
+// Copies the exported stream into the output file stream
+
+await exportedStream.CopyToAsync(fileStream);
+```
+
 ### Don't forget to clean up, when you are done ###
 
-Verifalia automatically deletes completed jobs after 30 days since their completion: deleting completed jobs is a best practice, for privacy and security reasons. To do that, you can invoke the `DeleteAsync()` method passing the job Id you wish to get rid of:
+Verifalia automatically deletes completed jobs after a configurable
+data-retention period (minimum 5 minutes, maximum 30 days) but it is strongly advisable that
+you delete your completed jobs as soon as possible, for privacy and security reasons. To do that, you can invoke the `DeleteAsync()` method passing the job Id you wish to get rid of:
 
 ```c#
 await verifalia
@@ -238,7 +293,7 @@ await verifalia
     .DeleteAsync(validation.Id);
 ```
 
-Once deleted, a job is gone and there is no way to retrieve its email validation(s).
+Once deleted, a job is gone and there is no way to retrieve its email validation results.
 
 ### Iterating over your email validation jobs ###
 
@@ -337,6 +392,26 @@ await foreach (var dailyUsage in dailyUsages)
 
 This section lists the changelog for the current major version of the library: for older versions,
 please see the [project releases](https://github.com/verifalia/verifalia-csharp-sdk/releases).
+
+### v3.1
+
+Released on December 2<sup>nd</sup>, 2021
+
+- Added support for API v2.3, including the ability to specify a completion callback URL
+and support for exporting validated entries in multiple output formats
+- Added support for .NET 6.0
+- Improved documentation in code 
+
+### v3.0
+
+Released on January 22<sup>nd</sup>, 2021
+
+- Breaking change: IRestClient.InvokeAsync() now accepts a factory of HttpContent, which allows to work-around an issue with certain versions of .NET Standard and .NET Framework. The issue has been fixed in .NET Core since then, but one of our dependencies targets .NET Standard.
+If you don't implement or use IRestClient directly in your code (which should be super rare) then you will not be affected by this change.
+- Fixed an issue which prevented MultiplexedRestClient to properly retry HTTP invocations on failures.
+- Fixed an issue with IAsyncEnumerable support on .NET Core 3.1 (was mistakenly disabled in previous releases).
+- Improved the way we throw OperationCanceledExceptions in several code paths.
+- Improved unit tests.
 
 ### v2.4
 

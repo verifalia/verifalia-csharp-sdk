@@ -157,7 +157,7 @@ namespace Verifalia.Api.EmailValidations
                     {
                         var responseBody = await response
                             .Content
-#if NET5_0
+#if NET5_0_OR_GREATER
                             .ReadAsStringAsync(cancellationToken)
 #else
                             .ReadAsStringAsync()
