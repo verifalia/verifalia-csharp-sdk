@@ -29,6 +29,8 @@
 * THE SOFTWARE.
 */
 
+#nullable enable
+
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -37,36 +39,49 @@ using Verifalia.Api.EmailValidations.Models;
 namespace Verifalia.Api.EmailValidations
 {
     /// <summary>
-    /// A strategy to use while waiting for the completion of an email validation job.
+    /// Provides optional configuration settings for waiting on the completion of an email validation job.
     /// </summary>
-    public class WaitingStrategy
+    public class WaitOptions
     {
         /// <summary>
-        /// Gets a value that controls whether to wait for the completion of an email validation job.
+        /// Indicates that the library should automatically wait for the email validation to complete, using the default
+        /// wait times.
         /// </summary>
-        public bool WaitForCompletion { get; }
+        public static readonly WaitOptions Default = new();
 
+        /// <summary>
+        /// Indicates that the library should not wait for the email validation to complete.
+        /// </summary>
+        public static readonly WaitOptions NoWait = new()
+        {
+            SubmissionWaitTime = TimeSpan.Zero,
+            PollWaitTime = TimeSpan.Zero
+        };
+    
         /// <summary>
         /// Gets an <see cref="IProgress{ValidationOverview}"/> instance which eventually receives completion
         /// progress updates for an email validation job.
         /// </summary>
-        public IProgress<ValidationOverview> Progress { get; }
+        public IProgress<ValidationOverview>? Progress { get; set; }
 
         /// <summary>
-        /// Initializes a <see cref="WaitingStrategy"/>.
+        /// Defines how much time to ask the Verifalia API to wait for the completion of the job on the server side,
+        /// during the initial job submission request.
         /// </summary>
-        public WaitingStrategy(bool waitForCompletion, IProgress<ValidationOverview> progress = null)
-        {
-            WaitForCompletion = waitForCompletion;
-            Progress = progress;
-        }
+        public TimeSpan SubmissionWaitTime { get; set; } = TimeSpan.FromSeconds(30);
+        
+        /// <summary>
+        /// Defines how much time to ask the Verifalia API to wait for the completion of the job on the server side,
+        /// during any of the polling requests.
+        /// </summary>
+        public TimeSpan PollWaitTime { get; set; } = TimeSpan.FromSeconds(30);
 
         /// <summary>
         /// Waits for the next polling interval of the specified <see cref="ValidationOverview"/>.
         /// </summary>
         /// <param name="validationOverview">The <see cref="ValidationOverview"/> for which to wait for the next polling interval.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        public virtual Task WaitForNextPoll(ValidationOverview validationOverview, CancellationToken cancellationToken)
+        public virtual Task WaitForNextPollAsync(ValidationOverview validationOverview, CancellationToken cancellationToken)
         {
             if (validationOverview == null) throw new ArgumentNullException(nameof(validationOverview));
 

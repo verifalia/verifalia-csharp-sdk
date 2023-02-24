@@ -29,6 +29,8 @@
 * THE SOFTWARE.
 */
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -53,12 +55,15 @@ namespace Verifalia.Api
         public IFlurlClient UnderlyingClient { get; }
 
         public MultiplexedRestClient(IAuthenticationProvider authenticator, string userAgent, IEnumerable<Uri> baseUris)
-            : this(baseUris)
         {
             if (userAgent == null) throw new ArgumentNullException(nameof(userAgent));
+            if (baseUris == null) throw new ArgumentNullException(nameof(baseUris));
             
             _authenticator = authenticator ?? throw new ArgumentNullException(nameof(authenticator));
-
+            _baseUrls = baseUris
+                .Select(uri => new Url(uri.AbsoluteUri))
+                .ToArray();
+            
             // Setup the underlying Flurl instance
 
             UnderlyingClient = new FlurlClient()
@@ -79,24 +84,8 @@ namespace Verifalia.Api
                 .TryAddWithoutValidation("User-Agent", userAgent);
         }
 
-        public MultiplexedRestClient(IFlurlClient underlyingClient, IEnumerable<Uri> baseUris)
-            : this(baseUris)
-        {
-            UnderlyingClient = underlyingClient ?? throw new ArgumentNullException(nameof(underlyingClient));
-        }
-
-        private MultiplexedRestClient(IEnumerable<Uri> baseUris)
-        {
-            if (baseUris == null) throw new ArgumentNullException(nameof(baseUris));
-
-            _baseUrls = baseUris
-                .Select(uri => new Url(uri.AbsoluteUri))
-                .ToArray();
-        }
-
-
-        public async Task<HttpResponseMessage> InvokeAsync(HttpMethod verb, string resource, Dictionary<string, string> queryParams = null,
-            Dictionary<string, object> headers = null, Func<CancellationToken, Task<HttpContent>> contentFactory = null,
+        public async Task<HttpResponseMessage> InvokeAsync(HttpMethod verb, string resource, Dictionary<string, string>? queryParams = null,
+            Dictionary<string, object>? headers = null, Func<CancellationToken, Task<HttpContent>>? contentFactory = null,
             bool bufferResponseContent = true, bool skipAuthentication = false, CancellationToken cancellationToken = default)
         {
             if (verb == null) throw new ArgumentNullException(nameof(verb));
@@ -154,7 +143,7 @@ namespace Verifalia.Api
                     // A fix was made (https://github.com/dotnet/corefx/pull/19082) but Flurl still targets .NET Standard and not .NET Core,
                     // so we can't take advantage of it: because of that, we are using a factory to build the actual content.
 
-                    HttpContent content = null;
+                    HttpContent? content = null;
                     HttpResponseMessage response;
 
                     try

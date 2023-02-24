@@ -29,6 +29,8 @@
 * THE SOFTWARE.
 */
 
+#nullable enable
+
 #if HAS_CLIENT_CERTIFICATES_SUPPORT
 
 using System.Threading;
@@ -49,7 +51,7 @@ namespace Verifalia.Api.Security
     {
         private readonly X509Certificate2 _certificate;
 
-        internal class X509HttpFactory : DefaultHttpClientFactory
+        private sealed class X509HttpFactory : DefaultHttpClientFactory
         {
             private readonly X509Certificate2 _certificate;
 
@@ -60,7 +62,7 @@ namespace Verifalia.Api.Security
 
             public override HttpMessageHandler CreateMessageHandler()
             {
-                var handler = (HttpClientHandler)base.CreateMessageHandler();
+                var handler = (HttpClientHandler) base.CreateMessageHandler();
 
                 handler.ClientCertificates.Clear();
                 handler.ClientCertificates.Add(_certificate);
@@ -96,6 +98,8 @@ namespace Verifalia.Api.Security
         /// <inheritdoc cref="IAuthenticationProvider.HandleUnauthorizedRequestAsync(IRestClient, CancellationToken)"/>
         public Task HandleUnauthorizedRequestAsync(IRestClient restClient, CancellationToken cancellationToken)
         {
+            if (restClient == null) throw new ArgumentNullException(nameof(restClient));
+            
             throw new AuthorizationException("Can't authenticate to Verifalia using the provided X509 certificate: please check your credentials and retry.");
         }
     }

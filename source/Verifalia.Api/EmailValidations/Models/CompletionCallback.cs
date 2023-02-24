@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Verifalia - Email list cleaning and real-time email verification service
 * https://verifalia.com/
 * support@verifalia.com
@@ -33,32 +33,53 @@
 
 using System;
 
-namespace Verifalia.Api.Filters
+namespace Verifalia.Api.EmailValidations.Models
 {
-    /// <summary>
-    /// A raw key-value pair predicate fragment, to be passed to the Verifalia API for filtering data.
-    /// </summary>
-    public class FilterPredicateFragment
+    public sealed class CompletionCallback
     {
-        /// <summary>
-        /// The key for the predicate fragment.
-        /// </summary>
-        public string Key { get; set; }
+        private Uri _uri;
 
         /// <summary>
-        /// The value for the predicate fragment.
+        /// An URL which Verifalia will invoke once the results for the email verification job are ready.
         /// </summary>
-        public string Value { get; set; }
-
-        /// <summary>
-        /// Initializes a key-value pair <see cref="FilterPredicateFragment"/>.
-        /// </summary>
-        /// <param name="key">The key for the predicate fragment.</param>
-        /// <param name="value">The value for the predicate fragment.</param>
-        public FilterPredicateFragment(string key, string value)
+        public Uri Uri
         {
-            Key = key ?? throw new ArgumentNullException(nameof(key));
-            Value = value ?? throw new ArgumentNullException(nameof(value));
+            get => _uri;
+            set
+            {
+                EnsureValidCallbackUri(value);
+                
+                _uri = value;
+            }
+        }
+        
+        /// <summary>
+        /// If set, allows to set a specific schema version which Verifalia will obey while invoking the callback. If
+        /// unset, will use the default callback schema version available to the target API version.
+        /// </summary>
+        public string? Version { get; set; }
+
+        /// <summary>
+        /// If true, skips the server certificate validation for the external callback server, useful for testing purposes
+        /// at development time when the callback server is using a self-signed certificate.
+        /// </summary>
+        public bool SkipServerCertificateValidation { get; set; }
+
+        public CompletionCallback(Uri uri)
+        {
+            EnsureValidCallbackUri(uri);
+
+            Uri = uri;
+        }
+
+        private static void EnsureValidCallbackUri(Uri uri)
+        {
+            if (uri == null) throw new ArgumentNullException(nameof(uri));
+
+            if (!uri.IsAbsoluteUri || uri.Scheme is not ("https" or "http"))
+            {
+                throw new ArgumentOutOfRangeException(nameof(uri), "Callback must be an absolute https (or http) URI.");
+            }
         }
     }
 }

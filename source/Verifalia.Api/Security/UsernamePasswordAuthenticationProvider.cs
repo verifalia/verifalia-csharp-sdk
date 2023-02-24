@@ -29,6 +29,8 @@
 * THE SOFTWARE.
 */
 
+#nullable enable
+
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -80,6 +82,8 @@ namespace Verifalia.Api.Security
         /// <inheritdoc cref="IAuthenticationProvider.HandleUnauthorizedRequestAsync(IRestClient, CancellationToken)"/>
         public Task HandleUnauthorizedRequestAsync(IRestClient restClient, CancellationToken cancellationToken)
         {
+            if (restClient == null) throw new ArgumentNullException(nameof(restClient));
+            
             throw new AuthorizationException("Can't authenticate to Verifalia using the provided username and password: please check your credentials and retry.");
         }
     }

@@ -29,6 +29,8 @@
 * THE SOFTWARE.
 */
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -42,7 +44,7 @@ namespace Verifalia.Api.EmailValidations.Models
     /// Represents an email validation request of a file to be submitted against the Verifalia API.
     /// </summary>
     /// <remarks>Once initialized, pass the instance of <see cref="FileValidationRequest"/> to the
-    /// <see cref="IEmailValidationsRestClient.SubmitAsync(FileValidationRequest,WaitingStrategy,CancellationToken)"/> method or one of its
+    /// <see cref="IEmailValidationsRestClient.SubmitAsync(FileValidationRequest,WaitOptions,CancellationToken)"/> method or one of its
     /// overloads.</remarks>
     public sealed class FileValidationRequest : ValidationRequestBase, IDisposable
     {
@@ -94,7 +96,7 @@ namespace Verifalia.Api.EmailValidations.Models
         /// tab-separated (.tsv) and other delimiter-separated values files. If not specified, Verifalia will use the ,
         /// (comma) symbol for CSV files and the \t (tab) symbol for TSV files.
         /// </summary>
-        public string Delimiter { get; set; }
+        public string? Delimiter { get; set; }
 
         /// <summary>
         /// Initializes a <see cref="FileValidationRequest"/> to be submitted to the Verifalia email validation engine.
@@ -108,7 +110,7 @@ namespace Verifalia.Api.EmailValidations.Models
         /// account and the current request should be treated differently than the others, with regards to the processing speed.</remarks>
         /// </param>
         /// <param name="leaveOpen">True to leave the file object open after FileValidationRequest is disposed, false otherwise.</param>
-        public FileValidationRequest(Stream file, MediaTypeHeaderValue contentType, QualityLevelName quality = default, DeduplicationMode deduplication = default, ValidationPriority priority = default, bool leaveOpen = default)
+        public FileValidationRequest(Stream file, MediaTypeHeaderValue contentType, QualityLevelName? quality = default, DeduplicationMode? deduplication = default, ValidationPriority? priority = default, bool leaveOpen = default)
         {
             File = file ?? throw new ArgumentNullException(nameof(file));
             ContentType = contentType ?? throw new ArgumentNullException(nameof(contentType));
@@ -131,7 +133,7 @@ namespace Verifalia.Api.EmailValidations.Models
         /// <remarks>Setting this value is useful only in the event there are multiple active concurrent validation jobs for the calling Verifalia
         /// account and the current request should be treated differently than the others, with regards to the processing speed.</remarks>
         /// </param>
-        public FileValidationRequest(string path, MediaTypeHeaderValue contentType = default, QualityLevelName quality = default, DeduplicationMode deduplication = default, ValidationPriority priority = default)
+        public FileValidationRequest(string path, MediaTypeHeaderValue? contentType = default, QualityLevelName? quality = default, DeduplicationMode? deduplication = default, ValidationPriority? priority = default)
             : this(new FileInfo(path),
                 contentType,
                 quality,
@@ -153,7 +155,7 @@ namespace Verifalia.Api.EmailValidations.Models
         /// <remarks>Setting this value is useful only in the event there are multiple active concurrent validation jobs for the calling Verifalia
         /// account and the current request should be treated differently than the others, with regards to the processing speed.</remarks>
         /// </param>
-        public FileValidationRequest(FileInfo fileInfo, MediaTypeHeaderValue contentType = default, QualityLevelName quality = default, DeduplicationMode deduplication = default, ValidationPriority priority = default)
+        public FileValidationRequest(FileInfo fileInfo, MediaTypeHeaderValue? contentType = default, QualityLevelName? quality = default, DeduplicationMode? deduplication = default, ValidationPriority? priority = default)
         {
             if (fileInfo == null) throw new ArgumentNullException(nameof(fileInfo));
 
@@ -169,7 +171,7 @@ namespace Verifalia.Api.EmailValidations.Models
             _leaveOpen = false;
         }
         
-        private MediaTypeHeaderValue TryGuessContentTypeFromFileExtension(string extension)
+        private MediaTypeHeaderValue? TryGuessContentTypeFromFileExtension(string extension)
         {
             // TODO: Cache the following MediaTypeHeaderValue instances
 
@@ -177,7 +179,7 @@ namespace Verifalia.Api.EmailValidations.Models
             {
                 case ".txt": return MediaTypeHeaderValue.Parse(WellKnownMimeContentTypes.TextPlain);
                 case ".csv": return MediaTypeHeaderValue.Parse(WellKnownMimeContentTypes.TextCsv);
-                case ".tsv": return MediaTypeHeaderValue.Parse(WellKnownMimeContentTypes.TextTsv);
+                case ".tsv":
                 case ".tab": return MediaTypeHeaderValue.Parse(WellKnownMimeContentTypes.TextTsv);
                 case ".xls": return MediaTypeHeaderValue.Parse(WellKnownMimeContentTypes.ExcelXls);
                 case ".xlsx": return MediaTypeHeaderValue.Parse(WellKnownMimeContentTypes.ExcelXlsx);

@@ -29,6 +29,8 @@
 * THE SOFTWARE.
 */
 
+#nullable enable
+
 #if HAS_ASYNC_ENUMERABLE_SUPPORT
 
 using System;
@@ -45,14 +47,16 @@ namespace Verifalia.Api.Common
     /// </summary>
     internal static class AsyncEnumerableHelper
     {
-        internal static async IAsyncEnumerable<TItem> ToAsyncEnumerable<TList, TItem, TOptions>(
-            Func<TOptions, CancellationToken, Task<TList>> fetchFirstSegment,
-            Func<ListingCursor, CancellationToken, Task<TList>> fetchNextSegment, TOptions options = null,
+#pragma warning disable VSTHRD200
+        internal static async IAsyncEnumerable<TItem> ToAsyncEnumerableAsync<TList, TItem, TOptions>(
+            Func<TOptions?, CancellationToken, Task<TList>> fetchFirstSegment,
+            Func<ListingCursor, CancellationToken, Task<TList>> fetchNextSegment, TOptions? options = null,
             [EnumeratorCancellation] CancellationToken cancellationToken = default)
             where TOptions : ListingOptions
             where TList : ListSegment<TItem>
+#pragma warning restore VSTHRD200
         {
-            ListingCursor cursor = null;
+            ListingCursor? cursor = null;
 
             while (true)
             {

@@ -29,6 +29,8 @@
 * THE SOFTWARE.
 */
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -49,10 +51,10 @@ namespace Verifalia.Api.EmailValidations
 
 #if HAS_ASYNC_ENUMERABLE_SUPPORT
 
-        public IAsyncEnumerable<ValidationOverview> ListAsync(ValidationOverviewListingOptions options = null, CancellationToken cancellationToken = default)
+        public IAsyncEnumerable<ValidationOverview> ListAsync(ValidationOverviewListingOptions? options = null, CancellationToken cancellationToken = default)
         {
             return AsyncEnumerableHelper
-                .ToAsyncEnumerable<ValidationOverviewListSegment, ValidationOverview, ValidationOverviewListingOptions>(
+                .ToAsyncEnumerableAsync<ValidationOverviewListSegment, ValidationOverview, ValidationOverviewListingOptions>(
                     ListSegmentedAsync,
                     ListSegmentedAsync,
                     options,
@@ -61,7 +63,7 @@ namespace Verifalia.Api.EmailValidations
 
 #endif
 
-        public async Task<ValidationOverviewListSegment> ListSegmentedAsync(ValidationOverviewListingOptions options = default, CancellationToken cancellationToken = default)
+        public async Task<ValidationOverviewListSegment> ListSegmentedAsync(ValidationOverviewListingOptions? options = default, CancellationToken cancellationToken = default)
         {
             // Generate the additional parameters, where needed
 
@@ -69,7 +71,7 @@ namespace Verifalia.Api.EmailValidations
 
             // Send the request to the Verifalia servers
 
-            Dictionary<string, string> queryParams = null;
+            Dictionary<string, string>? queryParams = null;
 
             if (options != null)
             {
@@ -91,17 +93,16 @@ namespace Verifalia.Api.EmailValidations
                 }
             }
 
-            using (var response = await restClient
+            using var response = await restClient
                 .InvokeAsync(HttpMethod.Get,
                     "email-validations",
                     queryParams: queryParams,
                     headers: new Dictionary<string, object> {{"Accept", WellKnownMimeContentTypes.ApplicationJson}},
                     cancellationToken: cancellationToken)
-                .ConfigureAwait(false))
-            {
-                return await ListSegmentedImplAsync(restClient, response, cancellationToken)
-                    .ConfigureAwait(false);
-            }
+                .ConfigureAwait(false);
+            
+            return await ListSegmentedImplAsync(restClient, response, cancellationToken)
+                .ConfigureAwait(false);
         }
 
         public async Task<ValidationOverviewListSegment> ListSegmentedAsync(ListingCursor cursor, CancellationToken cancellationToken = default)
@@ -128,17 +129,16 @@ namespace Verifalia.Api.EmailValidations
                 queryParams["limit"] = cursor.Limit.ToString(CultureInfo.InvariantCulture);
             }
 
-            using (var response = await restClient
+            using var response = await restClient
                 .InvokeAsync(HttpMethod.Get,
                     "email-validations",
                     queryParams,
                     headers: new Dictionary<string, object> {{"Accept", WellKnownMimeContentTypes.ApplicationJson}},
                     cancellationToken: cancellationToken)
-                .ConfigureAwait(false))
-            {
-                return await ListSegmentedImplAsync(restClient, response, cancellationToken)
-                    .ConfigureAwait(false);
-            }
+                .ConfigureAwait(false);
+            
+            return await ListSegmentedImplAsync(restClient, response, cancellationToken)
+                .ConfigureAwait(false);
         }
 
         private async Task<ValidationOverviewListSegment> ListSegmentedImplAsync(IRestClient restClient, HttpResponseMessage response, CancellationToken cancellationToken)

@@ -29,6 +29,8 @@
 * THE SOFTWARE.
 */
 
+#nullable enable
+
 using System;
 using Newtonsoft.Json;
 
@@ -41,7 +43,7 @@ namespace Verifalia.Api.EmailValidations.Models
     public class ValidationRequestEntry
     {
         private const int MaxCustomLength = 50;
-        private string _custom;
+        private string? _custom;
 
         /// <summary>
         /// The input string to validate, which should represent an email address.
@@ -56,7 +58,7 @@ namespace Verifalia.Api.EmailValidations.Models
         /// <remarks>This value accepts a string with a maximum length of 50 characters.</remarks>
         /// </summary>
         [JsonProperty("custom", DefaultValueHandling = DefaultValueHandling.Ignore, NullValueHandling = NullValueHandling.Ignore)]
-        public string Custom
+        public string? Custom
         {
             get => _custom;
             set
@@ -78,7 +80,7 @@ namespace Verifalia.Api.EmailValidations.Models
         /// </summary>
         /// <param name="inputData">The input data string (which should be an email address) to validate.</param>
         /// <param name="custom">An optional, custom string which is passed back upon completing the validation job.</param>
-        public ValidationRequestEntry(string inputData, string custom = null)
+        public ValidationRequestEntry(string inputData, string? custom = null)
         {
             InputData = inputData ?? throw new ArgumentNullException(nameof(inputData));
             Custom = custom;

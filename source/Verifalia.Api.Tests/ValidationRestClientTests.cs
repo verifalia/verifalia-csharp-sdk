@@ -117,7 +117,7 @@ namespace Verifalia.Api.Tests
                 // Fetch the job and poll until it's done
 
                 var validationRestClient = new EmailValidationsRestClient(new DummyRestClientFactory());
-                var validation = await validationRestClient.GetAsync(fakeValidationId, new WaitingStrategy(true));
+                var validation = await validationRestClient.GetAsync(fakeValidationId, WaitOptions.NoWait);
 
                 // Did we make the expected number of requests?
 

@@ -29,6 +29,8 @@
 * THE SOFTWARE.
 */
 
+#nullable enable
+
 using System;
 using System.Globalization;
 using System.Linq;
@@ -48,18 +50,16 @@ namespace Verifalia.Api
         /// The default API version used by this SDK.
         /// </summary>
         // ReSharper disable once MemberCanBePrivate.Global
-        public const string DefaultApiVersion = "v2.3";
+        public const string DefaultApiVersion = "v2.4";
 
         private readonly Random _uriShuffler;
         private readonly IAuthenticationProvider _authenticator;
         private readonly BaseUrisProvider _baseUrisProvider;
 
         private string _apiVersion;
-        private IEmailValidationsRestClient _emailValidations;
-        private ICreditsRestClient _accountBalance;
 
         // ReSharper disable once MemberCanBePrivate.Global
-        internal MultiplexedRestClient CachedRestClient; // Marked as internal for unit testing purposes
+        internal MultiplexedRestClient? CachedRestClient; // Marked as internal for unit testing purposes
 
         /// <inheritdoc cref="IVerifaliaRestClient.ApiVersion"/>
         public string ApiVersion
@@ -76,10 +76,16 @@ namespace Verifalia.Api
         }
 
         /// <inheritdoc cref="IVerifaliaRestClient.EmailValidations"/>
-        public IEmailValidationsRestClient EmailValidations => _emailValidations ??= new EmailValidationsRestClient(this);
+        public IEmailValidationsRestClient EmailValidations
+        {
+            get;
+        }
 
         /// <inheritdoc cref="IVerifaliaRestClient.Credits"/>
-        public ICreditsRestClient Credits => _accountBalance ??= new CreditsRestClient(this);
+        public ICreditsRestClient Credits
+        {
+            get;
+        }
 
         /// <summary>
         /// Initializes a new HTTPS-based REST client for Verifalia with the specified username and password.
@@ -87,7 +93,7 @@ namespace Verifalia.Api
         /// to create one or more users (formerly known as sub-accounts) with just the required permissions, for improved
         /// security. To create a new user or manage existing ones, please visit https://verifalia.com/client-area#/users </remarks>
         /// </summary>
-        public VerifaliaRestClient(string username, string password, Uri[] baseUris = default)
+        public VerifaliaRestClient(string username, string password, Uri[]? baseUris = default)
             : this(new UsernamePasswordAuthenticationProvider(username, password), baseUris)
         {
         }
@@ -103,7 +109,7 @@ namespace Verifalia.Api
         /// for improved security. To create a new user or manage existing ones, please visit https://verifalia.com/client-area#/users
         /// </remarks>
         /// </summary>
-        public VerifaliaRestClient(X509Certificate2 clientCertificate, Uri[] baseUris = default)
+        public VerifaliaRestClient(X509Certificate2 clientCertificate, Uri[]? baseUris = default)
             : this(new ClientCertificateAuthenticationProvider(clientCertificate), baseUris == default(Uri[]) ? new ClientCertificateBaseUrisProvider() : new BaseUrisProvider(baseUris))
         {
         }
@@ -116,7 +122,7 @@ namespace Verifalia.Api
         /// to create one or more users (formerly known as sub-accounts) with just the required permissions, for improved
         /// security. To create a new user or manage existing ones, please visit https://verifalia.com/client-area#/users </remarks>
         /// </summary>
-        public VerifaliaRestClient(IAuthenticationProvider authenticationProvider, Uri[] baseUris = default)
+        public VerifaliaRestClient(IAuthenticationProvider authenticationProvider, Uri[]? baseUris = default)
             : this(authenticationProvider, baseUris == default(Uri[]) ? new DefaultBaseUrisProvider() : new BaseUrisProvider(baseUris))
         {
         }
@@ -130,6 +136,9 @@ namespace Verifalia.Api
 
             _uriShuffler = new Random();
             _apiVersion = DefaultApiVersion;
+
+            EmailValidations = new EmailValidationsRestClient(this);
+            Credits = new CreditsRestClient(this);
         }
 
         /// <summary>
@@ -194,7 +203,10 @@ namespace Verifalia.Api
                 "netcoreapp3.0",
 #elif NETCOREAPP3_1
                 "netcoreapp3.1",
-#elif NET6_0 // Note: starting .NET 5.0, TFM compilation constants mean "version X or greater", see: https://github.com/dotnet/sdk/issues/13377
+// Note: starting .NET 5.0, TFM compilation constants mean "version X or greater", see: https://github.com/dotnet/sdk/issues/13377
+#elif NET7_0
+                "net7.0",
+#elif NET6_0
                 "net6.0",
 #elif NET5_0
                 "net5.0",

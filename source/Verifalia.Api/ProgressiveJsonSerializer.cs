@@ -29,6 +29,8 @@
 * THE SOFTWARE.
 */
 
+#nullable enable
+
 using System.IO;
 using System.Text;
 using Flurl.Http.Configuration;
@@ -44,7 +46,7 @@ namespace Verifalia.Api
     /// Progressive json serializer / deserializer using Newtonsoft Json.
     /// Code partially adapted from: http://bytefish.de/blog/restsharp_custom_json_serializer/
     /// </summary>
-    internal class ProgressiveJsonSerializer : ISerializer
+    internal sealed class ProgressiveJsonSerializer : ISerializer
     {
         private readonly JsonSerializer _serializer;
 
@@ -73,34 +75,27 @@ namespace Verifalia.Api
 
         public string Serialize(object obj)
         {
-            using (var stringWriter = new StringWriter())
-            {
-                using (var jsonTextWriter = new JsonTextWriter(stringWriter))
-                {
-                    _serializer.Serialize(jsonTextWriter, obj);
+            using var stringWriter = new StringWriter();
+            using var jsonTextWriter = new JsonTextWriter(stringWriter);
+            
+            _serializer.Serialize(jsonTextWriter, obj);
 
-                    return stringWriter.ToString();
-                }
-            }
+            return stringWriter.ToString();
         }
 
-        public T Deserialize<T>(string s)
+        public T? Deserialize<T>(string s)
         {
-            using (var textReader = new StringReader(s))
-            {
-                using (var jsonReader = new JsonTextReader(textReader))
-                {
-                    return _serializer.Deserialize<T>(jsonReader);
-                }
-            }
+            using var textReader = new StringReader(s);
+            using var jsonReader = new JsonTextReader(textReader);
+            
+            return _serializer.Deserialize<T>(jsonReader);
         }
 
-        public T Deserialize<T>(Stream stream)
+        public T? Deserialize<T>(Stream stream)
         {
-            using (var streamReader = new StreamReader(stream, Encoding.UTF8))
-            {
-                return Deserialize<T>(streamReader.ReadToEnd());
-            }
+            using var streamReader = new StreamReader(stream, Encoding.UTF8);
+            
+            return Deserialize<T>(streamReader.ReadToEnd());
         }
     }
 }

@@ -29,6 +29,8 @@
 * THE SOFTWARE.
 */
 
+#nullable enable
+
 using System;
 
 namespace Verifalia.Api.EmailValidations.Models
@@ -39,7 +41,7 @@ namespace Verifalia.Api.EmailValidations.Models
     /// </summary>
     /// <remarks>Use one of <see cref="Standard"/>, <see cref="High"/> or <see cref="Extreme"/> values or a custom quality level ID
     /// if you have one (custom quality levels are available to premium plans only).</remarks>
-    public class QualityLevelName
+    public class QualityLevelName : IEquatable<QualityLevelName>
     {
         internal string NameOrGuid { get; }
 
@@ -48,19 +50,19 @@ namespace Verifalia.Api.EmailValidations.Models
         /// features a single validation pass and 5 second anti-tarpit time; less suitable for validating email addresses with temporary
         /// issues (mailbox over quota, greylisting, etc.) and slower mail exchangers.
         /// </summary>
-        public static QualityLevelName Standard => new QualityLevelName("Standard");
+        public static QualityLevelName Standard => new("Standard");
 
         /// <summary>
         /// The High quality level. Much higher quality, featuring 3 validation passes and 50 seconds of anti-tarpit time, so you can
         /// even validate most addresses with temporary issues, or slower mail exchangers.
         /// </summary>
-        public static QualityLevelName High => new QualityLevelName("High");
+        public static QualityLevelName High => new("High");
 
         /// <summary>
         /// The Extreme quality level. Unbeatable, top-notch quality for professionals who need the best results the industry can offer:
         /// performs email validations at the highest level, with 9 validation passes and 2 minutes of anti-tarpit time.
         /// </summary>
-        public static QualityLevelName Extreme => new QualityLevelName("Extreme");
+        public static QualityLevelName Extreme => new("Extreme");
 
         private QualityLevelName()
         {
@@ -86,31 +88,32 @@ namespace Verifalia.Api.EmailValidations.Models
             NameOrGuid = qualityGuid.ToString("B");
         }
 
-        protected bool Equals(QualityLevelName other)
+        public bool Equals(QualityLevelName? other)
         {
-            if (other == null) throw new ArgumentNullException(nameof(other));
-            return string.Equals(NameOrGuid, other.NameOrGuid, StringComparison.OrdinalIgnoreCase);
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return NameOrGuid == other.NameOrGuid;
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != GetType()) return false;
-            return Equals((QualityLevelName)obj);
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((QualityLevelName) obj);
         }
 
         public override int GetHashCode()
         {
-            return (NameOrGuid != null ? NameOrGuid.GetHashCode() : 0);
+            return NameOrGuid.GetHashCode();
         }
 
-        public static bool operator ==(QualityLevelName left, QualityLevelName right)
+        public static bool operator ==(QualityLevelName? left, QualityLevelName? right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(QualityLevelName left, QualityLevelName right)
+        public static bool operator !=(QualityLevelName? left, QualityLevelName? right)
         {
             return !Equals(left, right);
         }

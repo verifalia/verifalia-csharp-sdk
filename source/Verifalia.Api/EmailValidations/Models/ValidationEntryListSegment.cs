@@ -29,6 +29,8 @@
 * THE SOFTWARE.
 */
 
+#nullable enable
+
 using Verifalia.Api.Common.Models;
 
 namespace Verifalia.Api.EmailValidations.Models

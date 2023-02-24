@@ -29,6 +29,8 @@
 * THE SOFTWARE.
 */
 
+#nullable enable
+
 namespace Verifalia.Api
 {
     /// <summary>

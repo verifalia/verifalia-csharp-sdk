@@ -3,9 +3,9 @@
         <TargetFrameworks>netstandard1.3;netstandard1.4;netstandard1.5;netstandard1.6;netstandard2.0;netstandard2.1;
             net45;net451;net452;net46;net461;net462;net47;net471;net472;net48;
             netcoreapp1.0;netcoreapp1.1;netcoreapp2.0;netcoreapp2.1;netcoreapp2.2;netcoreapp3.0;netcoreapp3.1;
-            net5.0;net6.0</TargetFrameworks>
+            net5.0;net6.0;net7.0</TargetFrameworks>
         <PackageId>Verifalia</PackageId>
-        <Version>3.1.0</Version>
+        <Version>4.0.0-alpha</Version>
         <Company>Cobisi Research</Company>
         <Copyright>Copyright © Cobisi Research 2005-2021 - https://verifalia.com</Copyright>
         <Authors>Verifalia</Authors>
@@ -13,13 +13,14 @@
         <PackageIconUrl>https://verifalia.com/favicon.ico</PackageIconUrl>
         <Description>Verifalia provides a simple HTTPS-based API for validating email addresses and checking whether they are deliverable or not. This library allows to easily integrate with Verifalia and validate email addresses in real-time.</Description>
         <Product>Verifalia SDK</Product>
-        <LangVersion>8</LangVersion>
+        <LangVersion>latest</LangVersion>
         <RunCodeAnalysis>false</RunCodeAnalysis>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <RepositoryUrl>https://github.com/verifalia/verifalia-csharp-sdk</RepositoryUrl>
         <PackageProjectUrl>https://github.com/verifalia/verifalia-csharp-sdk</PackageProjectUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <DocumentationFile>bin\$(Configuration)\Verifalia.Api.xml</DocumentationFile>
+        <WarningsAsErrors>ASYNC0001;ASYNC0004;VSTHRD200</WarningsAsErrors>
     </PropertyGroup>
 
     <PropertyGroup Condition="!('$(TargetFramework)' == 'net45' or '$(TargetFramework)' == 'net451' or '$(TargetFramework)' == 'net452')">
@@ -29,10 +30,10 @@
     <PropertyGroup Condition="!('$(TargetFramework)' == 'net45' or '$(TargetFramework)' == 'net451' or '$(TargetFramework)' == 'net452' or '$(TargetFramework)' == 'net46' or '$(TargetFramework)' == 'net461' or '$(TargetFramework)' == 'net462' or '$(TargetFramework)' == 'net47')">
         <DefineConstants>$(DefineConstants);HAS_CLIENT_CERTIFICATES_SUPPORT;</DefineConstants>
     </PropertyGroup>
-    <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0' or '$(TargetFramework)' == 'netcoreapp3.1' or '$(TargetFramework)' == 'net5.0' or '$(TargetFramework)' == 'net6.0'">
+    <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0' or '$(TargetFramework)' == 'netcoreapp3.1' or '$(TargetFramework)' == 'net5.0' or '$(TargetFramework)' == 'net6.0' or '$(TargetFramework)' == 'net7.0'">
         <DefineConstants>$(DefineConstants);HAS_ASYNC_ENUMERABLE_SUPPORT;</DefineConstants>
     </PropertyGroup>
-    <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0' or '$(TargetFramework)' == 'netstandard2.1' or $(TargetFramework.StartsWith('netcoreapp')) or '$(TargetFramework)' == 'net45' or '$(TargetFramework)' == 'net451' or '$(TargetFramework)' == 'net46' or '$(TargetFramework)' == 'net461' or '$(TargetFramework)' == 'net462' or '$(TargetFramework)' == 'net47' or '$(TargetFramework)' == 'net471' or '$(TargetFramework)' == 'net472' or '$(TargetFramework)' == 'net48' or '$(TargetFramework)' == 'net5.0' or '$(TargetFramework)' == 'net6.0'">
+    <PropertyGroup Condition="$(DefineConstants.Contains('NETSTANDARD2_0_OR_GREATER')) or $(DefineConstants.Contains('NETCOREAPP2_0_OR_GREATER')) or $(DefineConstants.Contains('NET45_OR_GREATER'))">
         <DefineConstants>$(DefineConstants);HAS_JWT_SUPPORT;</DefineConstants>
     </PropertyGroup>
 
@@ -52,8 +53,20 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" />
-        <PackageReference Include="Flurl.Http" Version="2.4.2" />
         <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.6.0" Condition="$(DefineConstants.Contains(';HAS_JWT_SUPPORT;'))" />
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.27.0" Condition="$(DefineConstants.Contains(';HAS_JWT_SUPPORT;'))" />
+        <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.2.32">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Roslyn.Analyzers" Version="1.0.3.4" />
+    </ItemGroup>
+
+    <ItemGroup Condition="$(DefineConstants.Contains('NET461_OR_GREATER')) or $(DefineConstants.Contains('NETSTANDARD2_0_OR_GREATER')) or $(DefineConstants.Contains('NETCOREAPP2_0_OR_GREATER'))">
+        <PackageReference Include="Flurl.Http" Version="3.2.4" />
+    </ItemGroup>
+
+    <ItemGroup Condition="!($(DefineConstants.Contains('NET461_OR_GREATER')) or $(DefineConstants.Contains('NETSTANDARD2_0_OR_GREATER')) or $(DefineConstants.Contains('NETCOREAPP2_0_OR_GREATER')))">
+        <PackageReference Include="Flurl.Http" Version="2.4.2" />
     </ItemGroup>
 </Project>

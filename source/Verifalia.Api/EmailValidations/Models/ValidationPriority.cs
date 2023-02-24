@@ -29,6 +29,8 @@
 * THE SOFTWARE.
 */
 
+#nullable enable
+
 using System;
 using System.Globalization;
 
@@ -41,42 +43,43 @@ namespace Verifalia.Api.EmailValidations.Models
     /// (255 - highest priority), where the midway value  <see cref="Normal"/> (127) means normal priority; if not specified,
     /// Verifalia processes all the concurrent validation jobs for an account using the same speed.</remarks>
     /// </summary>
-    public class ValidationPriority
+    public class ValidationPriority : IEquatable<ValidationPriority>
     {
         internal byte Value { get; }
 
         /// <summary>
         /// The lowest possible processing priority (speed) for a validation job.
         /// </summary>
-        public static ValidationPriority Lowest = new ValidationPriority(0);
+        public static ValidationPriority Lowest = new(0);
 
         /// <summary>
         /// Normal processing priority (speed) for a validation job.
         /// </summary>
-        public static ValidationPriority Normal = new ValidationPriority(127);
+        public static ValidationPriority Normal = new(127);
 
         /// <summary>
         /// The highest possible processing priority (speed) for a validation job.
         /// </summary>
-        public static ValidationPriority Highest = new ValidationPriority(255);
+        public static ValidationPriority Highest = new(255);
 
         public ValidationPriority(byte value)
         {
             Value = value;
         }
 
-        protected bool Equals(ValidationPriority other)
+        public bool Equals(ValidationPriority? other)
         {
-            if (other == null) throw new ArgumentNullException(nameof(other));
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
             return Value == other.Value;
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != GetType()) return false;
-            return Equals((ValidationPriority)obj);
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((ValidationPriority) obj);
         }
 
         public override int GetHashCode()
@@ -84,12 +87,12 @@ namespace Verifalia.Api.EmailValidations.Models
             return Value.GetHashCode();
         }
 
-        public static bool operator ==(ValidationPriority left, ValidationPriority right)
+        public static bool operator ==(ValidationPriority? left, ValidationPriority? right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(ValidationPriority left, ValidationPriority right)
+        public static bool operator !=(ValidationPriority? left, ValidationPriority? right)
         {
             return !Equals(left, right);
         }

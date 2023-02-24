@@ -29,6 +29,8 @@
 * THE SOFTWARE.
 */
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,8 +42,8 @@ namespace Verifalia.Api.EmailValidations.Filters
 {
     public class ValidationEntryStatusMatchPredicate : FilterPredicate
     {
-        public ValidationEntryStatus[] IncludedValues { get; set; }
-        public ValidationEntryStatus[] ExcludedValues { get; set; }
+        public ValidationEntryStatus[]? IncludedValues { get; set; }
+        public ValidationEntryStatus[]? ExcludedValues { get; set; }
 
         public override IEnumerable<FilterPredicateFragment> Serialize(string fieldName)
         {

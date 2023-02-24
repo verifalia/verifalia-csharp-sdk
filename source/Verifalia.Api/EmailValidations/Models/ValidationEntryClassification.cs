@@ -29,6 +29,8 @@
 * THE SOFTWARE.
 */
 
+#nullable enable
+
 using System;
 
 namespace Verifalia.Api.EmailValidations.Models
@@ -38,7 +40,7 @@ namespace Verifalia.Api.EmailValidations.Models
     /// </summary>
     /// <remarks>Use one of <see cref="Deliverable"/>, <see cref="Risky"/>, <see cref="Undeliverable"/> or <see cref="Unknown"/>
     /// values if you don't have a custom classification.</remarks>
-    public class ValidationEntryClassification
+    public class ValidationEntryClassification : IEquatable<ValidationEntryClassification>
     {
         /// <summary>
         /// Gets the name of the <see cref="ValidationEntryClassification"/>.
@@ -50,23 +52,23 @@ namespace Verifalia.Api.EmailValidations.Models
         /// <summary>
         /// A <see cref="ValidationEntry" /> marked as <see cref="Deliverable"/> refers to an <see cref="ValidationEntry.EmailAddress"/> which is deliverable.
         /// </summary>
-        public static ValidationEntryClassification Deliverable => new ValidationEntryClassification("Deliverable");
+        public static ValidationEntryClassification Deliverable => new("Deliverable");
 
         /// <summary>
         /// A <see cref="ValidationEntry" /> marked as <see cref="Risky"/> refers to an <see cref="ValidationEntry.EmailAddress"/> which could be no longer valid.
         /// </summary>
-        public static ValidationEntryClassification Risky => new ValidationEntryClassification("Risky");
+        public static ValidationEntryClassification Risky => new("Risky");
 
         /// <summary>
         /// A <see cref="ValidationEntry" /> marked as <see cref="Undeliverable"/> refers to an <see cref="ValidationEntry.EmailAddress"/>
         /// which is either invalid or no longer deliverable.
         /// </summary>
-        public static ValidationEntryClassification Undeliverable => new ValidationEntryClassification("Undeliverable");
+        public static ValidationEntryClassification Undeliverable => new("Undeliverable");
 
         /// <summary>
         /// A <see cref="ValidationEntry" /> marked as <see cref="Unknown"/> contains an email address whose deliverability is unknown.
         /// </summary>
-        public static ValidationEntryClassification Unknown => new ValidationEntryClassification("Unknown");
+        public static ValidationEntryClassification Unknown => new("Unknown");
 
         private ValidationEntryClassification()
         {
@@ -83,31 +85,32 @@ namespace Verifalia.Api.EmailValidations.Models
             Name = name ?? throw new ArgumentNullException(nameof(name));
         }
 
-        protected bool Equals(ValidationEntryClassification other)
+        public bool Equals(ValidationEntryClassification? other)
         {
-            if (other == null) throw new ArgumentNullException(nameof(other));
-            return string.Equals(Name, other.Name, StringComparison.OrdinalIgnoreCase);
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return Name == other.Name;
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != GetType()) return false;
-            return Equals((ValidationEntryClassification)obj);
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((ValidationEntryClassification) obj);
         }
 
         public override int GetHashCode()
         {
-            return (Name != null ? Name.GetHashCode() : 0);
+            return Name.GetHashCode();
         }
 
-        public static bool operator ==(ValidationEntryClassification left, ValidationEntryClassification right)
+        public static bool operator ==(ValidationEntryClassification? left, ValidationEntryClassification? right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(ValidationEntryClassification left, ValidationEntryClassification right)
+        public static bool operator !=(ValidationEntryClassification? left, ValidationEntryClassification? right)
         {
             return !Equals(left, right);
         }

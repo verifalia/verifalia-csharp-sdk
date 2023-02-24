@@ -29,6 +29,8 @@
 * THE SOFTWARE.
 */
 
+#nullable enable
+
 #if HAS_JWT_SUPPORT
 
 using System.Linq;
@@ -61,9 +63,9 @@ namespace Verifalia.Api.Security
 
         private readonly string _username;
         private readonly string _password;
-        private readonly ITotpTokenProvider _totpTokenProvider;
+        private readonly ITotpTokenProvider? _totpTokenProvider;
 
-        private JwtSecurityToken _securityToken = null;
+        private JwtSecurityToken? _securityToken;
 
         /// <summary>
         /// Initializes a new bearer authentication provider for the Verifalia API, with the specified username and password.
@@ -71,7 +73,7 @@ namespace Verifalia.Api.Security
         /// <param name="username">The username of the user.</param>
         /// <param name="password">The password of the user.</param>
         /// <param name="totpTokenProvider">An optional provider of TOTP tokens (needed if the user has multi-factor authentication enabled).</param>
-        public BearerAuthenticationProvider(string username, string password, ITotpTokenProvider totpTokenProvider = default)
+        public BearerAuthenticationProvider(string username, string password, ITotpTokenProvider? totpTokenProvider = default)
         {
             if (String.IsNullOrEmpty(username))
             {
@@ -156,10 +158,7 @@ namespace Verifalia.Api.Security
         /// <inheritdoc cref="IAuthenticationProvider.AuthenticateAsync(IRestClient, CancellationToken)"/>
         private async Task<BearerAuthenticationResponseModel> ProvideAdditionalAuthFactorAsync(IRestClient restClient, CancellationToken cancellationToken)
         {
-            if (restClient is null)
-            {
-                throw new ArgumentNullException(nameof(restClient));
-            }
+            if (restClient == null) throw new ArgumentNullException(nameof(restClient));
 
             if (_totpTokenProvider == null)
             {
@@ -216,6 +215,8 @@ namespace Verifalia.Api.Security
         /// <inheritdoc cref="IAuthenticationProvider.HandleUnauthorizedRequestAsync(IRestClient, CancellationToken)"/>
         public Task HandleUnauthorizedRequestAsync(IRestClient restClient, CancellationToken cancellationToken)
         {
+            if (restClient == null) throw new ArgumentNullException(nameof(restClient));
+            
             // Invalidates the stored security token, which will be acquired again in the next AuthenticateAsync() invocation
             
             _securityToken = null;

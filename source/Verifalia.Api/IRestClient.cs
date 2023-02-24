@@ -29,6 +29,8 @@
 * THE SOFTWARE.
 */
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -41,13 +43,14 @@ namespace Verifalia.Api
 {
     public interface IRestClient : IDisposable
     {
+        [CLSCompliant(false)]
         IFlurlClient UnderlyingClient { get; }
 
         Task<HttpResponseMessage> InvokeAsync(HttpMethod verb,
             string resource,
-            Dictionary<string, string> queryParams = null,
-            Dictionary<string, object> headers = null,
-            Func<CancellationToken, Task<HttpContent>> contentFactory = null,
+            Dictionary<string, string>? queryParams = null,
+            Dictionary<string, object>? headers = null,
+            Func<CancellationToken, Task<HttpContent>>? contentFactory = null,
             bool bufferResponseContent = true,
             bool skipAuthentication = false,
             CancellationToken cancellationToken = default);

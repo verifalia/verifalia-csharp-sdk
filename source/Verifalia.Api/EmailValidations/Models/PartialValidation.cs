@@ -29,6 +29,8 @@
 * THE SOFTWARE.
 */
 
+#nullable enable
+
 using Newtonsoft.Json;
 
 namespace Verifalia.Api.EmailValidations.Models
@@ -39,6 +41,6 @@ namespace Verifalia.Api.EmailValidations.Models
         public ValidationOverview Overview { get; set; }
 
         [JsonProperty("entries")]
-        public ValidationEntryListSegment Entries { get; set; }
+        public ValidationEntryListSegment? Entries { get; set; }
     }
 }

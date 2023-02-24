@@ -29,6 +29,8 @@
 * THE SOFTWARE.
 */
 
+#nullable enable
+
 using Verifalia.Api.Filters;
 using Verifalia.Api.Common.Models;
 
@@ -43,6 +45,6 @@ namespace Verifalia.Api.Credits.Models
         /// If set, apply a filter against the daily usage dates, before returning their usage records. Use  either <see cref="DateEqualityPredicate"/>
         /// to specify an exact date to match or <see cref="DateBetweenPredicate"/> to set a range of dates.
         /// </summary>
-        public DateFilterPredicate DateFilter { get; set; }
+        public DateFilterPredicate? DateFilter { get; set; }
     }
 }

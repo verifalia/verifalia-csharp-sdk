@@ -29,6 +29,8 @@
 * THE SOFTWARE.
 */
 
+#nullable enable
+
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -38,10 +40,10 @@ namespace Verifalia.Api.EmailValidations
 {
     internal partial class EmailValidationsRestClient
     {
-        private async Task<TResult> WaitForCompletionAsync<TResult>(ValidationOverview validationOverview, WaitingStrategy waitingStrategy, CancellationToken cancellationToken) where TResult : class
+        private async Task<TResult?> WaitForCompletionAsync<TResult>(ValidationOverview validationOverview, WaitOptions waitOptions, CancellationToken cancellationToken) where TResult : class
         {
             if (validationOverview == null) throw new ArgumentNullException(nameof(validationOverview));
-            if (waitingStrategy == null) throw new ArgumentNullException(nameof(waitingStrategy));
+            if (waitOptions == null) throw new ArgumentNullException(nameof(waitOptions));
 
             var resultOverview = validationOverview;
 
@@ -49,17 +51,17 @@ namespace Verifalia.Api.EmailValidations
             {
                 // Fires a progress, since we are not yet completed
 
-                waitingStrategy.Progress?.Report(resultOverview);
+                waitOptions.Progress?.Report(resultOverview);
 
                 // Wait for the next polling schedule
 
-                await waitingStrategy
-                    .WaitForNextPoll(resultOverview, cancellationToken)
+                await waitOptions
+                    .WaitForNextPollAsync(resultOverview, cancellationToken)
                     .ConfigureAwait(false);
 
                 // Fetch the job from the API
 
-                TResult result;
+                TResult? result;
 
                 if (typeof(TResult) == typeof(Validation))
                 {
@@ -67,7 +69,7 @@ namespace Verifalia.Api.EmailValidations
                             cancellationToken: cancellationToken)
                         .ConfigureAwait(false);
 
-                    result = (TResult)(object)validationResult;
+                    result = (TResult) (object) validationResult;
 
                     if (result == null)
                     {

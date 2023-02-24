@@ -29,6 +29,8 @@
 * THE SOFTWARE.
 */
 
+#nullable enable
+
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Verifalia.Api.Common.Models;

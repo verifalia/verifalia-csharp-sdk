@@ -29,6 +29,8 @@
 * THE SOFTWARE.
 */
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -49,65 +51,77 @@ namespace Verifalia.Api.EmailValidations
     /// <inheritdoc />
     internal partial class EmailValidationsRestClient
     {
-        public async Task<Validation> GetAsync(Guid id, WaitingStrategy waitingStrategy = default, CancellationToken cancellationToken = default)
+        public async Task<Validation?> GetAsync(Guid id, WaitOptions? waitOptions = default, CancellationToken cancellationToken = default)
         {
+            var waitOptionsOrDefault = waitOptions ?? WaitOptions.Default;
+            
             // Sends the request to the Verifalia servers
 
             var restClient = _restClientFactory.Build();
 
-            using (var response = await restClient
+            using var response = await restClient
                 .InvokeAsync(HttpMethod.Get,
                     $"email-validations/{id:D}",
-                    headers: new Dictionary<string, object> {{"Accept", WellKnownMimeContentTypes.ApplicationJson}},
-                    cancellationToken: cancellationToken)
-                .ConfigureAwait(false))
-            {
-
-                switch (response.StatusCode)
-                {
-                    case HttpStatusCode.OK:
-                    case HttpStatusCode.Accepted:
+                    queryParams: new Dictionary<string, string>
                     {
-                        var partialValidation = await response
-                            .Content
-                            .DeserializeAsync<PartialValidation>(restClient)
-                            .ConfigureAwait(false);
-
-                        // Returns immediately if the validation has been completed or if we should not wait for it
-
-                        if (waitingStrategy == null || !waitingStrategy.WaitForCompletion || partialValidation.Overview.Status == ValidationStatus.Completed)
                         {
-                            return await RetrieveValidationFromPartialValidationAsync(partialValidation, cancellationToken)
-                                .ConfigureAwait(false);
+                            "waitTime", ((int) waitOptionsOrDefault.PollWaitTime.TotalMilliseconds).ToString(CultureInfo.InvariantCulture)
                         }
+                    },
+                    headers: new Dictionary<string, object>
+                    {
+                        {
+                            "Accept", WellKnownMimeContentTypes.ApplicationJson
+                        }
+                    },
+                    cancellationToken: cancellationToken)
+                .ConfigureAwait(false);
+            
+            switch (response.StatusCode)
+            {
+                case HttpStatusCode.OK:
+                case HttpStatusCode.Accepted:
+                {
+                    var partialValidation = await response
+                        .Content
+                        .DeserializeAsync<PartialValidation>(restClient)
+                        .ConfigureAwait(false);
 
-                        return await WaitForCompletionAsync<Validation>(partialValidation.Overview, waitingStrategy,
-                                cancellationToken)
+                    // Returns immediately if the validation has been completed or if we should not wait for it
+
+                    if (waitOptionsOrDefault == WaitOptions.NoWait || partialValidation.Overview.Status == ValidationStatus.Completed)
+                    {
+                        return await RetrieveValidationFromPartialValidationAsync(partialValidation, cancellationToken)
                             .ConfigureAwait(false);
                     }
 
-                    case HttpStatusCode.Gone:
-                    case HttpStatusCode.NotFound:
-                    {
-                        return null;
-                    }
+                    return await WaitForCompletionAsync<Validation>(partialValidation.Overview,
+                            waitOptionsOrDefault,
+                            cancellationToken)
+                        .ConfigureAwait(false);
+                }
 
-                    default:
-                    {
-                        // An unexpected HTTP status code has been received at this point
+                case HttpStatusCode.Gone:
+                case HttpStatusCode.NotFound:
+                {
+                    return null;
+                }
 
-                        var responseBody = await response
-                            .Content
+                default:
+                {
+                    // An unexpected HTTP status code has been received at this point
+
+                    var responseBody = await response
+                        .Content
 #if NET5_0_OR_GREATER
-                            .ReadAsStringAsync(cancellationToken)
+                        .ReadAsStringAsync(cancellationToken)
 #else
                             .ReadAsStringAsync()
 #endif
-                            .ConfigureAwait(false);
+                        .ConfigureAwait(false);
 
-                        throw new VerifaliaException(
-                            $"Unexpected HTTP response: {(int) response.StatusCode} {responseBody}");
-                    }
+                    throw new VerifaliaException(
+                        $"Unexpected HTTP response: {(int) response.StatusCode} {responseBody}");
                 }
             }
         }
@@ -143,75 +157,87 @@ namespace Verifalia.Api.EmailValidations
             };
         }
 
-        public async Task<ValidationOverview> GetOverviewAsync(Guid id, WaitingStrategy waitingStrategy = default, CancellationToken cancellationToken = default)
+        public async Task<ValidationOverview?> GetOverviewAsync(Guid id, WaitOptions? waitOptions = default, CancellationToken cancellationToken = default)
         {
+            var waitOptionsOrDefault = waitOptions ?? WaitOptions.Default;
+            
             // Sends the request to the Verifalia servers
 
             var restClient = _restClientFactory.Build();
 
-            using (var response = await restClient
+            using var response = await restClient
                 .InvokeAsync(HttpMethod.Get,
                     $"email-validations/{id:D}/overview",
-                    headers: new Dictionary<string, object> {{"Accept", WellKnownMimeContentTypes.ApplicationJson}},
-                    cancellationToken: cancellationToken)
-                .ConfigureAwait(false))
-            {
-
-                switch (response.StatusCode)
-                {
-                    case HttpStatusCode.OK:
-                    case HttpStatusCode.Accepted:
+                    queryParams: new Dictionary<string, string>
                     {
-                        var validationOverview = await response
-                            .Content
-                            .DeserializeAsync<ValidationOverview>(restClient)
-                            .ConfigureAwait(false);
-
-                        validationOverview.Status = response.StatusCode == HttpStatusCode.Accepted
-                            ? ValidationStatus.InProgress
-                            : ValidationStatus.Completed;
-
-                        // Returns immediately if the validation has been completed or if we should not wait for it
-
-                        if (waitingStrategy == null || !waitingStrategy.WaitForCompletion || validationOverview.Status == ValidationStatus.Completed)
                         {
-                            return validationOverview;
+                            "waitTime", ((int) waitOptionsOrDefault.PollWaitTime.TotalMilliseconds).ToString(CultureInfo.InvariantCulture)
                         }
-
-                        return await WaitForCompletionAsync<ValidationOverview>(validationOverview, waitingStrategy,
-                                cancellationToken)
-                            .ConfigureAwait(false);
-                    }
-
-                    case HttpStatusCode.Gone:
-                    case HttpStatusCode.NotFound:
+                    },
+                    headers: new Dictionary<string, object>
                     {
-                        return null;
+                        {
+                            "Accept", WellKnownMimeContentTypes.ApplicationJson
+                        }
+                    },
+                    cancellationToken: cancellationToken)
+                .ConfigureAwait(false);
+            
+            switch (response.StatusCode)
+            {
+                case HttpStatusCode.OK:
+                case HttpStatusCode.Accepted:
+                {
+                    var validationOverview = await response
+                        .Content
+                        .DeserializeAsync<ValidationOverview>(restClient)
+                        .ConfigureAwait(false);
+
+                    validationOverview.Status = response.StatusCode == HttpStatusCode.Accepted
+                        ? ValidationStatus.InProgress
+                        : ValidationStatus.Completed;
+
+                    // Returns immediately if the validation has been completed or if we should not wait for it
+
+                    if (waitOptions == WaitOptions.NoWait || validationOverview.Status == ValidationStatus.Completed)
+                    {
+                        return validationOverview;
                     }
+
+                    return await WaitForCompletionAsync<ValidationOverview>(validationOverview,
+                            waitOptionsOrDefault,
+                            cancellationToken)
+                        .ConfigureAwait(false);
                 }
 
-                // An unexpected HTTP status code has been received at this point
+                case HttpStatusCode.Gone:
+                case HttpStatusCode.NotFound:
+                {
+                    return null;
+                }
+            }
 
-                var responseBody = await response
-                    .Content
+            // An unexpected HTTP status code has been received at this point
+
+            var responseBody = await response
+                .Content
 #if NET5_0_OR_GREATER
-                    .ReadAsStringAsync(cancellationToken)
+                .ReadAsStringAsync(cancellationToken)
 #else
                     .ReadAsStringAsync()
 #endif
-                    .ConfigureAwait(false);
+                .ConfigureAwait(false);
 
-                throw new VerifaliaException($"Unexpected HTTP response: {(int) response.StatusCode} {responseBody}");
-            }
+            throw new VerifaliaException($"Unexpected HTTP response: {(int) response.StatusCode} {responseBody}");
         }
 
 
 #if HAS_ASYNC_ENUMERABLE_SUPPORT
 
-        public IAsyncEnumerable<ValidationEntry> ListEntriesAsync(Guid validationId, ValidationEntryListingOptions options = default, CancellationToken cancellationToken = default)
+        public IAsyncEnumerable<ValidationEntry> ListEntriesAsync(Guid validationId, ValidationEntryListingOptions? options = default, CancellationToken cancellationToken = default)
         {
             return AsyncEnumerableHelper
-                .ToAsyncEnumerable<ValidationEntryListSegment, ValidationEntry, ValidationEntryListingOptions>(
+                .ToAsyncEnumerableAsync<ValidationEntryListSegment, ValidationEntry, ValidationEntryListingOptions>(
                     (listingOptions, token) => ListEntriesSegmentedAsync(validationId, listingOptions, token),
                     (cursor, token) => ListEntriesSegmentedAsync(validationId, cursor, token),
                     options,
@@ -220,7 +246,7 @@ namespace Verifalia.Api.EmailValidations
 
 #endif
 
-        public async Task<ValidationEntryListSegment> ListEntriesSegmentedAsync(Guid validationId, ValidationEntryListingOptions options = default, CancellationToken cancellationToken = default)
+        public async Task<ValidationEntryListSegment> ListEntriesSegmentedAsync(Guid validationId, ValidationEntryListingOptions? options = default, CancellationToken cancellationToken = default)
         {
             // Generate the additional parameters, where needed
 
@@ -228,7 +254,7 @@ namespace Verifalia.Api.EmailValidations
 
             // Send the request to the Verifalia servers
 
-            Dictionary<string, string> queryParams = null;
+            Dictionary<string, string>? queryParams = null;
 
             if (options != null)
             {
@@ -250,17 +276,16 @@ namespace Verifalia.Api.EmailValidations
                 }
             }
 
-            using (var response = await restClient
+            using var response = await restClient
                 .InvokeAsync(HttpMethod.Get,
                     $"email-validations/{validationId:D}/entries",
                     queryParams: queryParams,
                     headers: new Dictionary<string, object> { { "Accept", WellKnownMimeContentTypes.ApplicationJson } },
                     cancellationToken: cancellationToken)
-                .ConfigureAwait(false))
-            {
-                return await ListEntriesSegmentedImplAsync(restClient, response)
-                    .ConfigureAwait(false);
-            }
+                .ConfigureAwait(false);
+            
+            return await ListEntriesSegmentedImplAsync(restClient, response)
+                .ConfigureAwait(false);
         }
 
         public async Task<ValidationEntryListSegment> ListEntriesSegmentedAsync(Guid validationId, ListingCursor cursor, CancellationToken cancellationToken = default)
@@ -287,17 +312,16 @@ namespace Verifalia.Api.EmailValidations
                 queryParams["limit"] = cursor.Limit.ToString(CultureInfo.InvariantCulture);
             }
 
-            using (var response = await restClient
+            using var response = await restClient
                 .InvokeAsync(HttpMethod.Get,
                     $"email-validations/{validationId:D}/entries",
                     queryParams,
                     headers: new Dictionary<string, object> { { "Accept", WellKnownMimeContentTypes.ApplicationJson } },
                     cancellationToken: cancellationToken)
-                .ConfigureAwait(false))
-            {
-                return await ListEntriesSegmentedImplAsync(restClient, response)
-                    .ConfigureAwait(false);
-            }
+                .ConfigureAwait(false);
+            
+            return await ListEntriesSegmentedImplAsync(restClient, response)
+                .ConfigureAwait(false);
         }
 
         private async Task<ValidationEntryListSegment> ListEntriesSegmentedImplAsync(IRestClient restClient, HttpResponseMessage response)
@@ -326,7 +350,7 @@ namespace Verifalia.Api.EmailValidations
             }
         }
         
-        public async Task<Stream> ExportEntriesAsync(Guid validationId, ExportedEntriesFormat format, ValidationEntryListingOptions options = default, CancellationToken cancellationToken = default)
+        public async Task<Stream> ExportEntriesAsync(Guid validationId, ExportedEntriesFormat format, ValidationEntryListingOptions? options = default, CancellationToken cancellationToken = default)
         {
             // Determines the acceptable MIME content type
 

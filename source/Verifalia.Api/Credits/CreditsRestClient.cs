@@ -29,6 +29,8 @@
 * THE SOFTWARE.
 */
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -87,10 +89,10 @@ namespace Verifalia.Api.Credits
 
 #if HAS_ASYNC_ENUMERABLE_SUPPORT
 
-        public IAsyncEnumerable<DailyUsage> ListDailyUsagesAsync(DailyUsageListingOptions options = null, CancellationToken cancellationToken = default)
+        public IAsyncEnumerable<DailyUsage> ListDailyUsagesAsync(DailyUsageListingOptions? options = null, CancellationToken cancellationToken = default)
         {
             return AsyncEnumerableHelper
-                .ToAsyncEnumerable<DailyUsageListSegment, DailyUsage, DailyUsageListingOptions>(
+                .ToAsyncEnumerableAsync<DailyUsageListSegment, DailyUsage, DailyUsageListingOptions>(
                     ListDailyUsagesSegmentedAsync,
                     ListDailyUsagesSegmentedAsync,
                     options,
@@ -99,7 +101,7 @@ namespace Verifalia.Api.Credits
 
 #endif
 
-        public async Task<DailyUsageListSegment> ListDailyUsagesSegmentedAsync(DailyUsageListingOptions options = null, CancellationToken cancellationToken = default)
+        public async Task<DailyUsageListSegment> ListDailyUsagesSegmentedAsync(DailyUsageListingOptions? options = null, CancellationToken cancellationToken = default)
         {
             // Generate the additional parameters, where needed
 
@@ -107,7 +109,7 @@ namespace Verifalia.Api.Credits
 
             // Send the request to the Verifalia servers
 
-            Dictionary<string, string> queryParams = null;
+            Dictionary<string, string>? queryParams = null;
 
             if (options != null)
             {
@@ -163,42 +165,47 @@ namespace Verifalia.Api.Credits
                 .ConfigureAwait(false);
         }
 
-        private async Task<DailyUsageListSegment> ListDailyUsageSegmentedImplAsync(IRestClient restClient, Dictionary<string, string> queryParams, CancellationToken cancellationToken)
+        private async Task<DailyUsageListSegment> ListDailyUsageSegmentedImplAsync(IRestClient restClient, Dictionary<string, string>? queryParams, CancellationToken cancellationToken)
         {
-            using (var response = await restClient
+            using var response = await restClient
                 .InvokeAsync(HttpMethod.Get,
                     "credits/daily-usage",
                     queryParams,
-                    headers: new Dictionary<string, object> { { "Accept", WellKnownMimeContentTypes.ApplicationJson } },
-                    cancellationToken: cancellationToken)
-                .ConfigureAwait(false))
-
-                switch (response.StatusCode)
-                {
-                    case HttpStatusCode.OK:
+                    headers: new Dictionary<string, object>
+                    {
                         {
-                            return await response
-                                .Content
-                                .DeserializeAsync<DailyUsageListSegment>(restClient)
-                                .ConfigureAwait(false);
+                            "Accept", WellKnownMimeContentTypes.ApplicationJson
                         }
+                    },
+                    cancellationToken: cancellationToken)
+                .ConfigureAwait(false);
+            
+            switch (response.StatusCode)
+            {
+                case HttpStatusCode.OK:
+                {
+                    return await response
+                        .Content
+                        .DeserializeAsync<DailyUsageListSegment>(restClient)
+                        .ConfigureAwait(false);
+                }
 
-                    default:
-                        {
-                            var responseBody = await response
-                                .Content
+                default:
+                {
+                    var responseBody = await response
+                        .Content
 #if NET5_0_OR_GREATER
                                 .ReadAsStringAsync(cancellationToken)
 #else
-                                .ReadAsStringAsync()
+                        .ReadAsStringAsync()
 #endif
-                                .ConfigureAwait(false);
+                        .ConfigureAwait(false);
 
-                            // An unexpected HTTP status code has been received at this point
+                    // An unexpected HTTP status code has been received at this point
 
-                            throw new VerifaliaException($"Unexpected HTTP response: {(int)response.StatusCode} {responseBody}");
-                        }
+                    throw new VerifaliaException($"Unexpected HTTP response: {(int)response.StatusCode} {responseBody}");
                 }
+            }
         }
     }
 }

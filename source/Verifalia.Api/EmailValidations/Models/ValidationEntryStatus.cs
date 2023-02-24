@@ -284,6 +284,11 @@ namespace Verifalia.Api.EmailValidations.Models
         /// </summary>
         /// <remarks>To find out the entry this item is a duplicate of, check the <see cref="ValidationEntry.DuplicateOf"/> property for the <see cref="ValidationEntry"/>
         /// instance which exposes this status code</remarks>
-        Duplicate
+        Duplicate,
+        
+        /// <summary>
+        /// The mail exchanger responsible for the email address is parked / inactive.
+        /// </summary>
+        MailExchangerIsParked,
     }
 }

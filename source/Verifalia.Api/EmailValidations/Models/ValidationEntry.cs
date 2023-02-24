@@ -29,6 +29,8 @@
 * THE SOFTWARE.
 */
 
+#nullable enable
+
 using System;
 using Newtonsoft.Json;
 
@@ -57,7 +59,7 @@ namespace Verifalia.Api.EmailValidations.Models
         /// use the <see cref="ValidationRequestEntry.Custom"/> property of <see cref="ValidationRequestEntry"/>.
         /// </summary>
         [JsonProperty("custom")]
-        public string Custom { get; set; }
+        public string? Custom { get; set; }
 
         /// <summary>
         /// The date this entry has been completed, if available.
@@ -66,10 +68,11 @@ namespace Verifalia.Api.EmailValidations.Models
         public DateTime? CompletedOn { get; set; }
 
         /// <summary>
-        /// Gets the email address, without any eventual comment or folding white space.
+        /// Gets the email address, without any eventual comment or folding white space. Returns null if the input data
+        /// is not a syntactically invalid e-mail address.
         /// </summary>
         [JsonProperty("emailAddress")]
-        public string EmailAddress { get; set; }
+        public string? EmailAddress { get; set; }
 
         /// <summary>
         /// Gets the domain part of the email address, converted to ASCII if needed and with comments and folding
@@ -78,20 +81,20 @@ namespace Verifalia.Api.EmailValidations.Models
         /// <remarks>The ASCII encoding is performed using the standard <see cref="http://en.wikipedia.org/wiki/Punycode">punycode algorithm</see>.</remarks>
         /// <remarks>To get the domain part without any ASCII encoding, use <see cref="EmailAddressDomainPart"/>.</remarks>
         [JsonProperty("asciiEmailAddressDomainPart")]
-        public string AsciiEmailAddressDomainPart { get; set; }
+        public string? AsciiEmailAddressDomainPart { get; set; }
 
         /// <summary>
         /// Gets the local part of the email address, without comments and folding white spaces.
         /// </summary>
         [JsonProperty("emailAddressLocalPart")]
-        public string EmailAddressLocalPart { get; set; }
+        public string? EmailAddressLocalPart { get; set; }
 
         /// <summary>
         /// Gets the domain part of the email address, without comments and folding white spaces.
         /// </summary>
         /// <remarks>If the ASCII-only (punycode) version of the domain part is needed, use <see cref="AsciiEmailAddressDomainPart"/>.</remarks>
         [JsonProperty("emailAddressDomainPart")]
-        public string EmailAddressDomainPart { get; set; }
+        public string? EmailAddressDomainPart { get; set; }
 
         /// <summary>
         /// If true, the email address has an international domain name.

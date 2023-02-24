@@ -29,6 +29,8 @@
 * THE SOFTWARE.
 */
 
+#nullable enable
+
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -55,7 +57,7 @@ namespace Verifalia.Api.Credits
         /// Lists the daily usages of the credits for the Verifalia account.
         /// </summary>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        IAsyncEnumerable<DailyUsage> ListDailyUsagesAsync(DailyUsageListingOptions options = null, CancellationToken cancellationToken = default);
+        IAsyncEnumerable<DailyUsage> ListDailyUsagesAsync(DailyUsageListingOptions? options = null, CancellationToken cancellationToken = default);
 #endif
 
         /// <summary>
@@ -67,7 +69,7 @@ namespace Verifalia.Api.Credits
         [Obsolete("ListDailyUsageAsync() is preferred in .NET Core 3.0+ because of its simpler syntax, thanks to the async enumerable support.")]
         [EditorBrowsable(EditorBrowsableState.Advanced)]
 #endif
-        Task<DailyUsageListSegment> ListDailyUsagesSegmentedAsync(DailyUsageListingOptions options = null, CancellationToken cancellationToken = default);
+        Task<DailyUsageListSegment> ListDailyUsagesSegmentedAsync(DailyUsageListingOptions? options = null, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Continues listing the daily usages of the credits for the Verifalia account.

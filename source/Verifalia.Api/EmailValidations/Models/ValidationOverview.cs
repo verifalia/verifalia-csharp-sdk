@@ -29,6 +29,8 @@
 * THE SOFTWARE.
 */
 
+#nullable enable
+
 using System;
 using System.Net;
 using System.Threading;
@@ -74,7 +76,7 @@ namespace Verifalia.Api.EmailValidations.Models
         /// An optional user-defined name for the validation job, for your own reference.
         /// </summary>
         [JsonProperty("name")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         /// <summary>
         /// The unique ID of the Verifalia user who submitted the validation job.
@@ -132,6 +134,6 @@ namespace Verifalia.Api.EmailValidations.Models
         /// The eventual completion progress for the validation job.
         /// </summary>
         [JsonProperty("progress")]
-        public ValidationProgress Progress { get; set; }
+        public ValidationProgress? Progress { get; set; }
     }
 }

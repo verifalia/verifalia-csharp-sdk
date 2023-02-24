@@ -29,6 +29,8 @@
 * THE SOFTWARE.
 */
 
+#nullable enable
+
 using System;
 using System.Net;
 using System.Net.Http;
@@ -49,35 +51,33 @@ namespace Verifalia.Api.EmailValidations
 
             var restClient = _restClientFactory.Build();
 
-            using (var response = await restClient
+            using var response = await restClient
                 .InvokeAsync(HttpMethod.Delete, resource, cancellationToken: cancellationToken)
-                .ConfigureAwait(false))
+                .ConfigureAwait(false);
+            
+            switch (response.StatusCode)
             {
-
-                switch (response.StatusCode)
+                case HttpStatusCode.OK:
+                case HttpStatusCode.Gone:
                 {
-                    case HttpStatusCode.OK:
-                    case HttpStatusCode.Gone:
-                    {
-                        // The batch has been correctly deleted
+                    // The batch has been correctly deleted
 
-                        return;
-                    }
+                    return;
                 }
+            }
 
-                // An unexpected HTTP status code has been received at this point
+            // An unexpected HTTP status code has been received at this point
 
-                var responseBody = await response
-                    .Content
+            var responseBody = await response
+                .Content
 #if NET5_0_OR_GREATER
-                    .ReadAsStringAsync(cancellationToken)
+                .ReadAsStringAsync(cancellationToken)
 #else
                     .ReadAsStringAsync()
 #endif
-                    .ConfigureAwait(false);
+                .ConfigureAwait(false);
 
-                throw new VerifaliaException($"Unexpected HTTP response: {(int) response.StatusCode} {responseBody}");
-            }
+            throw new VerifaliaException($"Unexpected HTTP response: {(int) response.StatusCode} {responseBody}");
         }
     }
 }

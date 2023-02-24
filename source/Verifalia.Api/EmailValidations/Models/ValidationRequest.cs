@@ -29,6 +29,8 @@
 * THE SOFTWARE.
 */
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -40,7 +42,7 @@ namespace Verifalia.Api.EmailValidations.Models
     /// Represents an email validation request to be submitted against the Verifalia API.
     /// </summary>
     /// <remarks>Once initialized, pass the instance of <see cref="ValidationRequest"/> to the
-    /// <see cref="IEmailValidationsRestClient.SubmitAsync(ValidationRequest,WaitingStrategy,CancellationToken)"/> method or one of its
+    /// <see cref="IEmailValidationsRestClient.SubmitAsync(ValidationRequest,WaitOptions,CancellationToken)"/> method or one of its
     /// overloads.</remarks>
     public class ValidationRequest : ValidationRequestBase
     {
@@ -60,7 +62,7 @@ namespace Verifalia.Api.EmailValidations.Models
         /// <remarks>Setting this value is useful only in the event there are multiple active concurrent validation jobs for the calling Verifalia
         /// account and the current request should be treated differently than the others, with regards to the processing speed.</remarks>
         /// </param>
-        public ValidationRequest(IEnumerable<string> emailAddresses, QualityLevelName quality = default, DeduplicationMode deduplication = default, ValidationPriority priority = default)
+        public ValidationRequest(IEnumerable<string> emailAddresses, QualityLevelName? quality = default, DeduplicationMode? deduplication = default, ValidationPriority? priority = default)
             : this(emailAddresses.Select(emailAddress => new ValidationRequestEntry(emailAddress)), quality, deduplication, priority)
         {
         }
@@ -75,7 +77,7 @@ namespace Verifalia.Api.EmailValidations.Models
         /// <remarks>Setting this value is useful only in the event there are multiple active concurrent validation jobs for the calling Verifalia
         /// account and the current request should be treated differently than the others, with regards to the processing speed.</remarks>
         /// </param>
-        public ValidationRequest(IEnumerable<ValidationRequestEntry> entries, QualityLevelName quality = default, DeduplicationMode deduplication = default, ValidationPriority priority = default)
+        public ValidationRequest(IEnumerable<ValidationRequestEntry> entries, QualityLevelName? quality = default, DeduplicationMode? deduplication = default, ValidationPriority? priority = default)
         {
             var enumeratedEntries = entries.ToArray();
 

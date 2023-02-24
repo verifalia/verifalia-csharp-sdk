@@ -29,6 +29,8 @@
 * THE SOFTWARE.
 */
 
+#nullable enable
+
 using System;
 
 namespace Verifalia.Api.EmailValidations.Models
@@ -37,25 +39,25 @@ namespace Verifalia.Api.EmailValidations.Models
     /// A strategy Verifalia follows while determining which email addresses are duplicates, within a multiple items validation.
     /// <remarks>Duplicated items (after the first occurrence) will have the <see cref="ValidationEntryStatus.Duplicate"/> status.</remarks>
     /// </summary>
-    public class DeduplicationMode
+    public class DeduplicationMode : IEquatable<DeduplicationMode>
     {
         internal string NameOrGuid { get; }
 
         /// <summary>
         /// Duplicates detection is turned off.
         /// </summary>
-        public static DeduplicationMode Off => new DeduplicationMode("Off");
+        public static DeduplicationMode Off => new("Off");
 
         /// <summary>
         /// Identifies duplicates using an algorithm with safe rules-only, which guarantee no false duplicates.
         /// </summary>
-        public static DeduplicationMode Safe => new DeduplicationMode("Safe");
+        public static DeduplicationMode Safe => new("Safe");
 
         /// <summary>
         /// Identifies duplicates using a set of relaxed rules which assume the target email service providers
         /// are configured with modern settings only (instead of the broader options the RFCs from the '80s allow).
         /// </summary>
-        public static DeduplicationMode Relaxed => new DeduplicationMode("Relaxed");
+        public static DeduplicationMode Relaxed => new("Relaxed");
 
         private DeduplicationMode()
         {
@@ -81,31 +83,32 @@ namespace Verifalia.Api.EmailValidations.Models
             NameOrGuid = modeGuid.ToString("B");
         }
 
-        protected bool Equals(DeduplicationMode other)
+        public bool Equals(DeduplicationMode? other)
         {
-            if (other == null) throw new ArgumentNullException(nameof(other));
-            return string.Equals(NameOrGuid, other.NameOrGuid, StringComparison.OrdinalIgnoreCase);
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return NameOrGuid == other.NameOrGuid;
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != GetType()) return false;
-            return Equals((DeduplicationMode)obj);
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((DeduplicationMode) obj);
         }
 
         public override int GetHashCode()
         {
-            return (NameOrGuid != null ? NameOrGuid.GetHashCode() : 0);
+            return NameOrGuid.GetHashCode();
         }
 
-        public static bool operator ==(DeduplicationMode left, DeduplicationMode right)
+        public static bool operator ==(DeduplicationMode? left, DeduplicationMode? right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(DeduplicationMode left, DeduplicationMode right)
+        public static bool operator !=(DeduplicationMode? left, DeduplicationMode? right)
         {
             return !Equals(left, right);
         }

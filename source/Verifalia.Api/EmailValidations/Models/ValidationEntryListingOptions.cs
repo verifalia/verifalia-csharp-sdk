@@ -29,6 +29,8 @@
 * THE SOFTWARE.
 */
 
+#nullable enable
+
 using Verifalia.Api.Common.Models;
 using Verifalia.Api.EmailValidations.Filters;
 
@@ -39,6 +41,6 @@ namespace Verifalia.Api.EmailValidations.Models
     /// </summary>
     public class ValidationEntryListingOptions : ListingOptions
     {
-        public ValidationEntryStatusMatchPredicate StatusFilter { get; set; }
+        public ValidationEntryStatusMatchPredicate? StatusFilter { get; set; }
     }
 }

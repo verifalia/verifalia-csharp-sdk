@@ -29,6 +29,8 @@
 * THE SOFTWARE.
 */
 
+#nullable enable
+
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
@@ -44,7 +46,7 @@ namespace Verifalia.Api.Common.Models
         /// The meta-data for this list segment.
         /// </summary>
         [JsonProperty("meta")]
-        public ListSegmentMeta Meta { get; set; }
+        public ListSegmentMeta? Meta { get; set; }
 
         /// <summary>
         /// The items of type <see cref="TItem"/> included in this segment.

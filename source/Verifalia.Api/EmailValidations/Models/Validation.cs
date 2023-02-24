@@ -29,6 +29,8 @@
 * THE SOFTWARE.
 */
 
+#nullable enable
+
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
@@ -49,6 +51,6 @@ namespace Verifalia.Api.EmailValidations.Models
         /// The eventual validated items for this email validation job.
         /// </summary>
         [JsonProperty("entries")]
-        public IReadOnlyList<ValidationEntry> Entries { get; set; }
+        public IReadOnlyList<ValidationEntry>? Entries { get; set; }
     }
 }

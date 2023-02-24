@@ -29,6 +29,8 @@
 * THE SOFTWARE.
 */
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -51,108 +53,108 @@ namespace Verifalia.Api.EmailValidations
         /// <summary>
         /// Submits a new email validation for processing.
         /// <remarks>
-        /// By default, this method does not wait for the completion of the email validation job: pass a <see cref="WaitingStrategy"/> to request
+        /// By default, this method does not wait for the completion of the email validation job: pass a <see cref="WaitOptions"/> to request
         /// a different waiting behavior.
         /// </remarks>
         /// </summary>
         /// <example>
-        /// This sample shows how to call the <see cref="SubmitAsync(string,QualityLevelName,WaitingStrategy,CancellationToken)"/> method and wait
+        /// This sample shows how to call the <see cref="SubmitAsync(string,QualityLevelName,WaitOptions,CancellationToken)"/> method and wait
         /// for the completion of the submitted job.
         /// <code>
-        /// var validation = await SubmitAsync("batman@gmail.com", waitingStrategy: new WaitingStrategy { waitForCompletion: true });
+        /// var validation = await SubmitAsync("batman@gmail.com", waitOptions: new WaitOptions { waitForCompletion: true });
         /// </code>
         /// </example>
         /// <param name="emailAddress">An email addresses to validate.</param>
         /// <param name="quality">The desired results quality for this email validation.</param>
-        /// <param name="waitingStrategy">The strategy which rules out how to wait for the completion of the email validation.</param>
+        /// <param name="waitOptions">The strategy which rules out how to wait for the completion of the email validation.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>A <see cref="Validation"/> object representing the submitted email validation job.</returns>
-        Task<Validation> SubmitAsync(string emailAddress, QualityLevelName quality = default, WaitingStrategy waitingStrategy = default, CancellationToken cancellationToken = default);
+        Task<Validation> SubmitAsync(string emailAddress, QualityLevelName? quality = default, WaitOptions? waitOptions = default, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Submits a new email validation for processing.
         /// <remarks>
-        /// By default, this method does not wait for the completion of the email validation job: pass a <see cref="WaitingStrategy"/> to request
+        /// By default, this method does not wait for the completion of the email validation job: pass a <see cref="WaitOptions"/> to request
         /// a different waiting behavior.
         /// </remarks>
         /// </summary>
         /// <example>
-        /// This sample shows how to call the <see cref="SubmitAsync(IEnumerable{string},QualityLevelName,DeduplicationMode,WaitingStrategy,CancellationToken)"/> method and wait
+        /// This sample shows how to call the <see cref="SubmitAsync(IEnumerable{string},QualityLevelName,DeduplicationMode,WaitOptions,CancellationToken)"/> method and wait
         /// for the completion of the submitted job.
         /// <code>
-        /// var validation = await SubmitAsync(new [] { "batman@gmail.com", "dash.kappei@hotmail.com" }, waitingStrategy: new WaitingStrategy { waitForCompletion: true });
+        /// var validation = await SubmitAsync(new [] { "batman@gmail.com", "dash.kappei@hotmail.com" }, waitOptions: new WaitOptions { waitForCompletion: true });
         /// </code>
         /// </example>
         /// <param name="emailAddresses">An enumerable collection of email addresses to validate.</param>
         /// <param name="quality">The desired results quality for this email validation.</param>
         /// <param name="deduplication">The strategy to follow while determining which email addresses are duplicates.</param>
-        /// <param name="waitingStrategy">The strategy which rules out how to wait for the completion of the email validation.</param>
+        /// <param name="waitOptions">The strategy which rules out how to wait for the completion of the email validation.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>A <see cref="Validation"/> object representing the submitted email validation job.</returns>
-        Task<Validation> SubmitAsync(IEnumerable<string> emailAddresses, QualityLevelName quality = default, DeduplicationMode deduplication = default, WaitingStrategy waitingStrategy = default, CancellationToken cancellationToken = default);
+        Task<Validation> SubmitAsync(IEnumerable<string> emailAddresses, QualityLevelName? quality = default, DeduplicationMode? deduplication = default, WaitOptions? waitOptions = default, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Submits a new email validation for processing.
         /// <remarks>
-        /// By default, this method does not wait for the completion of the email validation job: pass a <see cref="WaitingStrategy"/> to request
+        /// By default, this method does not wait for the completion of the email validation job: pass a <see cref="WaitOptions"/> to request
         /// a different waiting behavior.
         /// </remarks>
         /// </summary>
         /// <example>
-        /// This sample shows how to call the <see cref="SubmitAsync(ValidationRequestEntry,QualityLevelName,WaitingStrategy,CancellationToken)"/> method and wait
+        /// This sample shows how to call the <see cref="SubmitAsync(ValidationRequestEntry,QualityLevelName,WaitOptions,CancellationToken)"/> method and wait
         /// for the completion of the submitted job.
         /// <code>
-        /// var validation = await SubmitAsync(new ValidationRequestEntry("batman@gmail.com"), waitingStrategy: new WaitingStrategy { waitForCompletion: true });
+        /// var validation = await SubmitAsync(new ValidationRequestEntry("batman@gmail.com"), waitOptions: new WaitOptions { waitForCompletion: true });
         /// </code>
         /// </example>
         /// <param name="entry">A <see cref="ValidationRequestEntry"/> to validate.</param>
         /// <param name="quality">The desired results quality for this email validation.</param>
-        /// <param name="waitingStrategy">The strategy which rules out how to wait for the completion of the email validation.</param>
+        /// <param name="waitOptions">The strategy which rules out how to wait for the completion of the email validation.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>A <see cref="Validation"/> object representing the submitted email validation job.</returns>
-        Task<Validation> SubmitAsync(ValidationRequestEntry entry, QualityLevelName quality = default, WaitingStrategy waitingStrategy = default, CancellationToken cancellationToken = default);
+        Task<Validation> SubmitAsync(ValidationRequestEntry entry, QualityLevelName? quality = default, WaitOptions? waitOptions = default, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Submits a new email validation for processing.
         /// <remarks>
-        /// By default, this method does not wait for the completion of the email validation job: pass a <see cref="WaitingStrategy"/> to request
+        /// By default, this method does not wait for the completion of the email validation job: pass a <see cref="WaitOptions"/> to request
         /// a different waiting behavior.
         /// </remarks>
         /// </summary>
         /// <example>
-        /// This sample shows how to call the <see cref="SubmitAsync(IEnumerable{ValidationRequestEntry},QualityLevelName,DeduplicationMode,WaitingStrategy,CancellationToken)"/> method and wait
+        /// This sample shows how to call the <see cref="SubmitAsync(IEnumerable{ValidationRequestEntry},QualityLevelName,DeduplicationMode,WaitOptions,CancellationToken)"/> method and wait
         /// for the completion of the submitted job.
         /// <code>
-        /// var validation = await SubmitAsync(new[] { new ValidationRequestEntry("batman@gmail.com") }, waitingStrategy: new WaitingStrategy { waitForCompletion: true });
+        /// var validation = await SubmitAsync(new[] { new ValidationRequestEntry("batman@gmail.com") }, waitOptions: new WaitOptions { waitForCompletion: true });
         /// </code>
         /// </example>
         /// <param name="entries">An enumerable collection of <see cref="ValidationRequestEntry"/> to validate.</param>
         /// <param name="quality">The desired results quality for this email validation.</param>
         /// <param name="deduplication">The strategy to follow while determining which email addresses are duplicates.</param>
-        /// <param name="waitingStrategy">The strategy which rules out how to wait for the completion of the email validation.</param>
+        /// <param name="waitOptions">The strategy which rules out how to wait for the completion of the email validation.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>A <see cref="Validation"/> object representing the submitted email validation job.</returns>
-        Task<Validation> SubmitAsync(IEnumerable<ValidationRequestEntry> entries, QualityLevelName quality = default, DeduplicationMode deduplication = default, WaitingStrategy waitingStrategy = default, CancellationToken cancellationToken = default);
+        Task<Validation> SubmitAsync(IEnumerable<ValidationRequestEntry> entries, QualityLevelName? quality = default, DeduplicationMode? deduplication = default, WaitOptions? waitOptions = default, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Submits a new email validation for processing.
         /// <remarks>
-        /// By default, this method does not wait for the completion of the email validation job: pass a <see cref="WaitingStrategy"/> to request
+        /// By default, this method does not wait for the completion of the email validation job: pass a <see cref="WaitOptions"/> to request
         /// a different waiting behavior.
         /// </remarks>
         /// </summary>
         /// <example>
-        /// This sample shows how to call the <see cref="SubmitAsync(ValidationRequest,WaitingStrategy,CancellationToken)"/> method and wait
+        /// This sample shows how to call the <see cref="SubmitAsync(ValidationRequest,WaitOptions,CancellationToken)"/> method and wait
         /// for the completion of the submitted job.
         /// <code>
-        /// var validation = await SubmitAsync(new ValidationRequest(new[] { "batman@gmail.com" }, waitingStrategy: new WaitingStrategy { waitForCompletion: true });
+        /// var validation = await SubmitAsync(new ValidationRequest(new[] { "batman@gmail.com" }, waitOptions: new WaitOptions { waitForCompletion: true });
         /// </code>
         /// </example>
         /// <param name="request">A <see cref="ValidationRequest"/> to submit for validation.</param>
-        /// <param name="waitingStrategy">The strategy which rules out how to wait for the completion of the email validation.</param>
+        /// <param name="waitOptions">The strategy which rules out how to wait for the completion of the email validation.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>A <see cref="Validation"/> object representing the submitted email validation job.</returns>
-        Task<Validation> SubmitAsync(ValidationRequest request, WaitingStrategy waitingStrategy = default, CancellationToken cancellationToken = default);
+        Task<Validation> SubmitAsync(ValidationRequest request, WaitOptions? waitOptions = default, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Submits a new email validation for processing through a file, with support for the following formats:
@@ -160,7 +162,7 @@ namespace Verifalia.Api.EmailValidations
         /// - comma-separated values (.csv), tab-separated values (.tsv) and other delimiter-separated values files
         /// - Microsoft Excel spreadsheets (.xls and .xlsx)
         /// <remarks>
-        /// By default, this method does not wait for the completion of the email validation job: pass a <see cref="WaitingStrategy"/> to request
+        /// By default, this method does not wait for the completion of the email validation job: pass a <see cref="WaitOptions"/> to request
         /// a different waiting behavior.
         /// </remarks>
         /// </summary>
@@ -168,10 +170,10 @@ namespace Verifalia.Api.EmailValidations
         /// <param name="contentType">The MIME content type of the file.</param>
         /// <param name="quality">The desired results quality for this email validation.</param>
         /// <param name="deduplication">The strategy to follow while determining which email addresses are duplicates.</param>
-        /// <param name="waitingStrategy">The strategy which rules out how to wait for the completion of the email validation.</param>
+        /// <param name="waitOptions">The strategy which rules out how to wait for the completion of the email validation.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>A <see cref="Validation"/> object representing the submitted email validation job.</returns>
-        Task<Validation> SubmitAsync(byte[] file, MediaTypeHeaderValue contentType, QualityLevelName quality = default, DeduplicationMode deduplication = default, WaitingStrategy waitingStrategy = default, CancellationToken cancellationToken = default);
+        Task<Validation> SubmitAsync(byte[] file, MediaTypeHeaderValue contentType, QualityLevelName? quality = default, DeduplicationMode? deduplication = default, WaitOptions? waitOptions = default, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Submits a new email validation for processing through a file, with support for the following formats:
@@ -179,7 +181,7 @@ namespace Verifalia.Api.EmailValidations
         /// - comma-separated values (.csv), tab-separated values (.tsv) and other delimiter-separated values files
         /// - Microsoft Excel spreadsheets (.xls and .xlsx)
         /// <remarks>
-        /// By default, this method does not wait for the completion of the email validation job: pass a <see cref="WaitingStrategy"/> to request
+        /// By default, this method does not wait for the completion of the email validation job: pass a <see cref="WaitOptions"/> to request
         /// a different waiting behavior.
         /// </remarks>
         /// </summary>
@@ -189,10 +191,10 @@ namespace Verifalia.Api.EmailValidations
         /// </param>
         /// <param name="quality">The desired results quality for this email validation.</param>
         /// <param name="deduplication">The strategy to follow while determining which email addresses are duplicates.</param>
-        /// <param name="waitingStrategy">The strategy which rules out how to wait for the completion of the email validation.</param>
+        /// <param name="waitOptions">The strategy which rules out how to wait for the completion of the email validation.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>A <see cref="Validation"/> object representing the submitted email validation job.</returns>
-        Task<Validation> SubmitAsync(FileInfo fileInfo, MediaTypeHeaderValue contentType = default, QualityLevelName quality = default, DeduplicationMode deduplication = default, WaitingStrategy waitingStrategy = default, CancellationToken cancellationToken = default);
+        Task<Validation> SubmitAsync(FileInfo fileInfo, MediaTypeHeaderValue? contentType = default, QualityLevelName? quality = default, DeduplicationMode? deduplication = default, WaitOptions? waitOptions = default, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Submits a new email validation for processing through a file, with support for the following formats:
@@ -200,7 +202,7 @@ namespace Verifalia.Api.EmailValidations
         /// - comma-separated values (.csv), tab-separated values (.tsv) and other delimiter-separated values files
         /// - Microsoft Excel spreadsheets (.xls and .xlsx)
         /// <remarks>
-        /// By default, this method does not wait for the completion of the email validation job: pass a <see cref="WaitingStrategy"/> to request
+        /// By default, this method does not wait for the completion of the email validation job: pass a <see cref="WaitOptions"/> to request
         /// a different waiting behavior.
         /// </remarks>
         /// </summary>
@@ -208,10 +210,10 @@ namespace Verifalia.Api.EmailValidations
         /// <param name="contentType">The MIME content type of the file.</param>
         /// <param name="quality">The desired results quality for this email validation.</param>
         /// <param name="deduplication">The strategy to follow while determining which email addresses are duplicates.</param>
-        /// <param name="waitingStrategy">The strategy which rules out how to wait for the completion of the email validation.</param>
+        /// <param name="waitOptions">The strategy which rules out how to wait for the completion of the email validation.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>A <see cref="Validation"/> object representing the submitted email validation job.</returns>
-        Task<Validation> SubmitAsync(Stream file, MediaTypeHeaderValue contentType, QualityLevelName quality = default, DeduplicationMode deduplication = default, WaitingStrategy waitingStrategy = default, CancellationToken cancellationToken = default);
+        Task<Validation> SubmitAsync(Stream file, MediaTypeHeaderValue contentType, QualityLevelName? quality = default, DeduplicationMode? deduplication = default, WaitOptions? waitOptions = default, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Submits a new email validation for processing through a file, with support for the following formats:
@@ -219,15 +221,15 @@ namespace Verifalia.Api.EmailValidations
         /// - comma-separated values (.csv), tab-separated values (.tsv) and other delimiter-separated values files
         /// - Microsoft Excel spreadsheets (.xls and .xlsx)
         /// <remarks>
-        /// By default, this method does not wait for the completion of the email validation job: pass a <see cref="WaitingStrategy"/> to request
+        /// By default, this method does not wait for the completion of the email validation job: pass a <see cref="WaitOptions"/> to request
         /// a different waiting behavior.
         /// </remarks>
         /// </summary>
         /// <param name="request">A <see cref="FileValidationRequest"/> describing the validation request for a file.</param>
-        /// <param name="waitingStrategy">The strategy which rules out how to wait for the completion of the email validation.</param>
+        /// <param name="waitOptions">The strategy which rules out how to wait for the completion of the email validation.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>A <see cref="Validation"/> object representing the submitted email validation job.</returns>
-        Task<Validation> SubmitAsync(FileValidationRequest request, WaitingStrategy waitingStrategy = default, CancellationToken cancellationToken = default);
+        Task<Validation> SubmitAsync(FileValidationRequest request, WaitOptions? waitOptions = default, CancellationToken cancellationToken = default);
         
         /// <summary>
         /// Returns an email validation job previously submitted for processing.
@@ -236,21 +238,21 @@ namespace Verifalia.Api.EmailValidations
         /// </summary>
         /// <remarks>
         /// By default, this method does not wait for the eventual completion of the email validation job: pass a
-        /// <see cref="WaitingStrategy"/> to request a different waiting behavior.
+        /// <see cref="WaitOptions"/> to request a different waiting behavior.
         /// </remarks>
         /// <example>
         /// This sample shows how to call the <see cref="GetAsync"/> method and wait for the completion of the submitted job.
         /// <code>
-        /// var validation = await GetAsync(Guid.Parse("c93e972a-7632-4493-aaf8-7523a605a78d"), new WaitingStrategy { waitForCompletion: true });
+        /// var validation = await GetAsync(Guid.Parse("c93e972a-7632-4493-aaf8-7523a605a78d"), new WaitOptions { waitForCompletion: true });
         /// </code>
         /// </example>
         /// <param name="id">The ID of the email validation job to retrieve.
         /// <remarks>This value is available by way of the <see cref="ValidationOverview.Id"/> property of <see cref="Validation.Overview"/>.</remarks>
         /// </param>
-        /// <param name="waitingStrategy">The strategy which rules out how to wait for the completion of the email validation.</param>
+        /// <param name="waitOptions">The strategy which rules out how to wait for the completion of the email validation.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>A <see cref="Validation"/> object representing the requested email validation job.</returns>
-        Task<Validation> GetAsync(Guid id, WaitingStrategy waitingStrategy = default, CancellationToken cancellationToken = default);
+        Task<Validation?> GetAsync(Guid id, WaitOptions? waitOptions = default, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Returns a lightweight <see cref="ValidationOverview"/> of an email validation job previously submitted for processing.
@@ -258,21 +260,21 @@ namespace Verifalia.Api.EmailValidations
         /// </summary>
         /// <remarks>
         /// By default, this method does not wait for the eventual completion of the email validation job: pass a
-        /// <see cref="WaitingStrategy"/> to request a different waiting behavior.
+        /// <see cref="WaitOptions"/> to request a different waiting behavior.
         /// </remarks>
         /// <example>
         /// This sample shows how to call the <see cref="GetOverviewAsync"/> method and wait for the completion of the submitted job.
         /// <code>
-        /// var validation = await GetOverviewAsync(Guid.Parse("c93e972a-7632-4493-aaf8-7523a605a78d"), new WaitingStrategy { waitForCompletion: true });
+        /// var validation = await GetOverviewAsync(Guid.Parse("c93e972a-7632-4493-aaf8-7523a605a78d"), new WaitOptions { waitForCompletion: true });
         /// </code>
         /// </example>
         /// <param name="id">The ID of the email validation job to retrieve the overview for.
         /// <remarks>This value is available by way of the <see cref="ValidationOverview.Id"/> property of <see cref="Validation.Overview"/>.</remarks>
         /// </param>
-        /// <param name="waitingStrategy">The strategy which rules out how to wait for the completion of the email validation.</param>
+        /// <param name="waitOptions">The strategy which rules out how to wait for the completion of the email validation.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>A <see cref="ValidationOverview"/> object representing the overview for the requested email validation job.</returns>
-        Task<ValidationOverview> GetOverviewAsync(Guid id, WaitingStrategy waitingStrategy = default, CancellationToken cancellationToken = default);
+        Task<ValidationOverview?> GetOverviewAsync(Guid id, WaitOptions? waitOptions = default, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Deletes an email validation job previously submitted for processing.
@@ -295,7 +297,7 @@ namespace Verifalia.Api.EmailValidations
         [Obsolete("ListAsync() is preferred in .NET Core 3.0+ because of its simpler syntax, thanks to the async enumerable support.")]
         [EditorBrowsable(EditorBrowsableState.Advanced)]
 #endif
-        Task<ValidationOverviewListSegment> ListSegmentedAsync(ValidationOverviewListingOptions options = null, CancellationToken cancellationToken = default);
+        Task<ValidationOverviewListSegment> ListSegmentedAsync(ValidationOverviewListingOptions? options = null, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Continues listing validation jobs.
@@ -318,7 +320,7 @@ namespace Verifalia.Api.EmailValidations
         /// <param name="options">The options for the listing operation.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>An enumerable collection of <see cref="ValidationOverview"/> of the requested data.</returns>
-        IAsyncEnumerable<ValidationOverview> ListAsync(ValidationOverviewListingOptions options = null, CancellationToken cancellationToken = default);
+        IAsyncEnumerable<ValidationOverview> ListAsync(ValidationOverviewListingOptions? options = null, CancellationToken cancellationToken = default);
 #endif
 
         /// <summary>
@@ -333,7 +335,7 @@ namespace Verifalia.Api.EmailValidations
         [Obsolete("ListQualityLevelsAsync() is preferred in .NET Core 3.0+ because of its simpler syntax, thanks to the async enumerable support.")]
         [EditorBrowsable(EditorBrowsableState.Advanced)]
 #endif
-        Task<QualityLevelListSegment> ListQualityLevelsSegmentedAsync(ListingOptions options = default, CancellationToken cancellationToken = default);
+        Task<QualityLevelListSegment> ListQualityLevelsSegmentedAsync(ListingOptions? options = default, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Continues listing the available quality levels.
@@ -356,7 +358,7 @@ namespace Verifalia.Api.EmailValidations
         /// <param name="options">The options for the listing operation.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>An enumerable collection of <see cref="QualityLevel"/> of the requested data.</returns>
-        IAsyncEnumerable<QualityLevel> ListQualityLevelsAsync(ListingOptions options = null, CancellationToken cancellationToken = default);
+        IAsyncEnumerable<QualityLevel> ListQualityLevelsAsync(ListingOptions? options = null, CancellationToken cancellationToken = default);
 #endif
 
         /// <summary>
@@ -371,7 +373,7 @@ namespace Verifalia.Api.EmailValidations
         [Obsolete("ListEntriesAsync() is preferred in .NET Core 3.0+ because of its simpler syntax, thanks to the async enumerable support.")]
         [EditorBrowsable(EditorBrowsableState.Advanced)]
 #endif
-        Task<ValidationEntryListSegment> ListEntriesSegmentedAsync(Guid validationId, ValidationEntryListingOptions options = default, CancellationToken cancellationToken = default);
+        Task<ValidationEntryListSegment> ListEntriesSegmentedAsync(Guid validationId, ValidationEntryListingOptions? options = default, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Continues listing the validated entries for a given validation.
@@ -395,7 +397,7 @@ namespace Verifalia.Api.EmailValidations
         /// <param name="options">The options for the listing operation.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>An enumerable collection of <see cref="ValidationEntry"/> of the requested validation.</returns>
-        IAsyncEnumerable<ValidationEntry> ListEntriesAsync(Guid validationId, ValidationEntryListingOptions options = default, CancellationToken cancellationToken = default);
+        IAsyncEnumerable<ValidationEntry> ListEntriesAsync(Guid validationId, ValidationEntryListingOptions? options = default, CancellationToken cancellationToken = default);
 #endif
 
         /// <summary>
@@ -406,6 +408,6 @@ namespace Verifalia.Api.EmailValidations
         /// <param name="options">The options for the listing operation.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>A stream with the data exported in the requested format.</returns>
-        Task<Stream> ExportEntriesAsync(Guid validationId, ExportedEntriesFormat format, ValidationEntryListingOptions options = default, CancellationToken cancellationToken = default);
+        Task<Stream> ExportEntriesAsync(Guid validationId, ExportedEntriesFormat format, ValidationEntryListingOptions? options = default, CancellationToken cancellationToken = default);
     }
 }

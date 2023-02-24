@@ -29,6 +29,8 @@
 * THE SOFTWARE.
 */
 
+#nullable enable
+
 using Verifalia.Api.Credits;
 using Verifalia.Api.EmailValidations;
 
