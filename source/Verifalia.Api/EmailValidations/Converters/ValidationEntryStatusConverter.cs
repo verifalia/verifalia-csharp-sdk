@@ -3,7 +3,7 @@
 * https://verifalia.com/
 * support@verifalia.com
 *
-* Copyright (c) 2005-2021 Cobisi Research
+* Copyright (c) 2005-2023 Cobisi Research
 *
 * Cobisi Research
 * Via Della Costituzione, 31
@@ -39,7 +39,7 @@ namespace Verifalia.Api.EmailValidations.Converters
 {
     internal class ValidationEntryStatusConverter : JsonConverter
     {
-        internal static readonly Dictionary<string, ValidationEntryStatus> Mappings = new Dictionary<string, ValidationEntryStatus>(StringComparer.OrdinalIgnoreCase)
+        internal static readonly Dictionary<string, ValidationEntryStatus> Mappings = new(StringComparer.OrdinalIgnoreCase)
         {
             ["AtSignNotFound"] = ValidationEntryStatus.AtSignNotFound,
             ["CatchAllConnectionFailure"] = ValidationEntryStatus.CatchAllConnectionFailure,
@@ -47,6 +47,7 @@ namespace Verifalia.Api.EmailValidations.Converters
             ["DnsConnectionFailure"] = ValidationEntryStatus.DnsConnectionFailure,
             ["DnsQueryTimeout"] = ValidationEntryStatus.DnsQueryTimeout,
             ["DomainDoesNotExist"] = ValidationEntryStatus.DomainDoesNotExist,
+            ["DomainHasNullMx"] = ValidationEntryStatus.DomainHasNullMx,
             ["DomainIsMisconfigured"] = ValidationEntryStatus.DomainIsMisconfigured,
             ["DomainIsWellKnownDea"] = ValidationEntryStatus.DomainIsWellKnownDea,
             ["DomainPartCompliancyFailure"] = ValidationEntryStatus.DomainPartCompliancyFailure,
@@ -69,6 +70,7 @@ namespace Verifalia.Api.EmailValidations.Converters
             ["MailboxTemporarilyUnavailable"] = ValidationEntryStatus.MailboxTemporarilyUnavailable,
             ["MailboxValidationTimeout"] = ValidationEntryStatus.MailboxValidationTimeout,
             ["MailExchangerIsHoneypot"] = ValidationEntryStatus.MailExchangerIsHoneypot,
+            ["MailExchangerIsParked"] = ValidationEntryStatus.MailExchangerIsParked,
             ["MailExchangerIsWellKnownDea"] = ValidationEntryStatus.MailExchangerIsWellKnownDea,
             ["ServerDoesNotSupportInternationalMailboxes"] = ValidationEntryStatus.ServerDoesNotSupportInternationalMailboxes,
             ["ServerIsCatchAll"] = ValidationEntryStatus.ServerIsCatchAll,

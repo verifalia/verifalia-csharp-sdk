@@ -3,7 +3,7 @@
         <TargetFrameworks>netstandard1.3;netstandard1.4;netstandard1.5;netstandard1.6;netstandard2.0;netstandard2.1;
             net45;net451;net452;net46;net461;net462;net47;net471;net472;net48;
             netcoreapp1.0;netcoreapp1.1;netcoreapp2.0;netcoreapp2.1;netcoreapp2.2;netcoreapp3.0;netcoreapp3.1;
-            net5.0;net6.0;net7.0</TargetFrameworks>
+            net5.0;net6.0;net7.0;</TargetFrameworks>
         <PackageId>Verifalia</PackageId>
         <Version>4.0.0-alpha</Version>
         <Company>Cobisi Research</Company>
@@ -59,7 +59,7 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" />
-        <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
         <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.27.0" Condition="$(DefineConstants.Contains(';HAS_JWT_SUPPORT;'))" />
         <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.2.32">
             <PrivateAssets>all</PrivateAssets>

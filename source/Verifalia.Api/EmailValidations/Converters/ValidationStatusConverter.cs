@@ -3,7 +3,7 @@
 * https://verifalia.com/
 * support@verifalia.com
 *
-* Copyright (c) 2005-2021 Cobisi Research
+* Copyright (c) 2005-2023 Cobisi Research
 *
 * Cobisi Research
 * Via Della Costituzione, 31
@@ -39,12 +39,12 @@ namespace Verifalia.Api.EmailValidations.Converters
 {
     internal class ValidationStatusConverter : JsonConverter
     {
-        private static readonly Dictionary<string, ValidationStatus> Mappings = new Dictionary<string, ValidationStatus>(StringComparer.OrdinalIgnoreCase)
+        private static readonly Dictionary<string, ValidationStatus> Mappings = new(StringComparer.OrdinalIgnoreCase)
         {
-            ["InProgress"] = ValidationStatus.InProgress,
             ["Completed"] = ValidationStatus.Completed,
             ["Deleted"] = ValidationStatus.Deleted,
             ["Expired"] = ValidationStatus.Expired,
+            ["InProgress"] = ValidationStatus.InProgress,
         };
 
         public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)

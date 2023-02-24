@@ -3,7 +3,7 @@
 * https://verifalia.com/
 * support@verifalia.com
 *
-* Copyright (c) 2005-2021 Cobisi Research
+* Copyright (c) 2005-2023 Cobisi Research
 *
 * Cobisi Research
 * Via Della Costituzione, 31
@@ -37,15 +37,9 @@ namespace Verifalia.Api.EmailValidations.Models
     public enum ValidationStatus
     {
         /// <summary>
-        /// Unknown status, due to a value reported by the API which is missing in this SDK.
+        /// Special unknown status, due to a value reported by the API which is missing in this SDK.
         /// </summary>
-        Unknown,
-
-        /// <summary>
-        /// The email validation job is being processed by Verifalia.
-        /// <remarks>The completion progress, if any, is available through the <see cref="ValidationOverview.Progress"/> property.</remarks>
-        /// </summary>
-        InProgress,
+        Unknown = 0,
 
         /// <summary>
         /// The email validation job has been completed and its results are available.
@@ -61,5 +55,11 @@ namespace Verifalia.Api.EmailValidations.Models
         /// The email validation job is expired.
         /// </summary>
         Expired,
+        
+        /// <summary>
+        /// The email validation job is being processed by Verifalia.
+        /// <remarks>The completion progress, if any, is available through the <see cref="ValidationOverview.Progress"/> property.</remarks>
+        /// </summary>
+        InProgress,
     }
 }
