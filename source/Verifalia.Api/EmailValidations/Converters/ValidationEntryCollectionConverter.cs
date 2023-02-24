@@ -38,12 +38,12 @@ namespace Verifalia.Api.EmailValidations.Converters
 {
     internal class ValidationEntryCollectionConverter : JsonConverter
     {
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
         {
             throw new NotImplementedException();
         }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        public override object ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
         {
             var rootObject = JObject.Load(reader);
             var validationEntryCollection = new ValidationEntryCollection();

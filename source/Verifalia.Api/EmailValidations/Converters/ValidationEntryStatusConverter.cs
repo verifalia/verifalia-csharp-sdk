@@ -84,7 +84,7 @@ namespace Verifalia.Api.EmailValidations.Converters
             ["UnmatchedQuotedPair"] = ValidationEntryStatus.UnmatchedQuotedPair
         };
 
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
         {
             foreach (var mapping in Mappings)
             {
@@ -98,7 +98,7 @@ namespace Verifalia.Api.EmailValidations.Converters
             throw new ArgumentOutOfRangeException(nameof(value), value, "Unsupported validation entry status.");
         }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        public override object ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
         {
             var value = Convert.ToString(reader.Value, CultureInfo.InvariantCulture);
 

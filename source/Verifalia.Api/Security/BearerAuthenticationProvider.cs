@@ -29,8 +29,6 @@
 * THE SOFTWARE.
 */
 
-#nullable enable
-
 #if HAS_JWT_SUPPORT
 
 using System.Linq;

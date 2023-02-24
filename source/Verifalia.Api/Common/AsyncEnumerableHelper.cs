@@ -29,8 +29,6 @@
 * THE SOFTWARE.
 */
 
-#nullable enable
-
 #if HAS_ASYNC_ENUMERABLE_SUPPORT
 
 using System;

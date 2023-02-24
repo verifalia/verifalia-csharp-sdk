@@ -29,8 +29,6 @@
 * THE SOFTWARE.
 */
 
-#nullable enable
-
 #if HAS_CLIENT_CERTIFICATES_SUPPORT
 
 using System.Threading;

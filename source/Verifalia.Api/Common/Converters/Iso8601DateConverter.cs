@@ -40,12 +40,12 @@ namespace Verifalia.Api.Common.Converters
     {
         private const string DateFormat = "yyyy-MM-dd";
 
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
         {
             writer.WriteValue(((DateTime)value).ToString(DateFormat, CultureInfo.InvariantCulture));
         }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        public override object ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
         {
             var valueAsString = Convert.ToString(reader.Value, CultureInfo.InvariantCulture);
             return DateTime.ParseExact(valueAsString, DateFormat, null);

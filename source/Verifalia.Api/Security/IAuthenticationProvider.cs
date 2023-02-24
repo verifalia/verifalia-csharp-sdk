@@ -29,8 +29,6 @@
 * THE SOFTWARE.
 */
 
-#nullable enable
-
 using System.Threading;
 using System.Threading.Tasks;
 

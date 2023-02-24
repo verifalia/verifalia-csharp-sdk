@@ -34,8 +34,8 @@ using System;
 namespace Verifalia.Api.BaseUrisProviders
 {
     /// <summary>
-    /// Provides base URIs for the Verifalia API endpoints which support mutual TLS authentication (a feature available
-    /// to premium plans only).
+    /// Provides base URIs for the Verifalia API endpoints which support mutual TLS authentication - a feature available
+    /// to premium plans only, see https://verifalia.com/pricing
     /// </summary>
     internal class ClientCertificateBaseUrisProvider : BaseUrisProvider
     {

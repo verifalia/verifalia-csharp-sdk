@@ -29,8 +29,6 @@
 * THE SOFTWARE.
 */
 
-#nullable enable
-
 using System.Collections.Generic;
 
 namespace Verifalia.Api.Filters

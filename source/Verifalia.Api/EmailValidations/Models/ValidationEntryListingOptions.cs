@@ -29,8 +29,6 @@
 * THE SOFTWARE.
 */
 
-#nullable enable
-
 using Verifalia.Api.Common.Models;
 using Verifalia.Api.EmailValidations.Filters;
 

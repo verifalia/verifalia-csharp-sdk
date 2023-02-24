@@ -29,8 +29,6 @@
 * THE SOFTWARE.
 */
 
-#nullable enable
-
 using System;
 using Verifalia.Api.Credits;
 

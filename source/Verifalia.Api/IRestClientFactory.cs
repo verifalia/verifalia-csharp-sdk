@@ -29,8 +29,6 @@
 * THE SOFTWARE.
 */
 
-#nullable enable
-
 namespace Verifalia.Api
 {
     public interface IRestClientFactory

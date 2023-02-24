@@ -7,11 +7,11 @@
         <PackageId>Verifalia</PackageId>
         <Version>4.0.0-alpha</Version>
         <Company>Cobisi Research</Company>
-        <Copyright>Copyright © Cobisi Research 2005-2021 - https://verifalia.com</Copyright>
+        <Copyright>Copyright © Cobisi Research 2005-2023 - https://verifalia.com</Copyright>
         <Authors>Verifalia</Authors>
         <PackageTags>email validation verification real-time verifalia api sdk</PackageTags>
         <PackageIconUrl>https://verifalia.com/favicon.ico</PackageIconUrl>
-        <Description>Verifalia provides a simple HTTPS-based API for validating email addresses and checking whether they are deliverable or not. This library allows to easily integrate with Verifalia and validate email addresses in real-time.</Description>
+        <Description>Verifalia provides a simple HTTPS-based API for validating email addresses and checking whether they are deliverable or not. This library allows to easily integrate with Verifalia and verify email addresses in real-time.</Description>
         <Product>Verifalia SDK</Product>
         <LangVersion>latest</LangVersion>
         <RunCodeAnalysis>false</RunCodeAnalysis>
@@ -20,6 +20,7 @@
         <PackageProjectUrl>https://github.com/verifalia/verifalia-csharp-sdk</PackageProjectUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <DocumentationFile>bin\$(Configuration)\Verifalia.Api.xml</DocumentationFile>
+        <Nullable>enable</Nullable>
         <WarningsAsErrors>ASYNC0001;ASYNC0004;VSTHRD200</WarningsAsErrors>
     </PropertyGroup>
 
@@ -33,10 +34,15 @@
     <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0' or '$(TargetFramework)' == 'netcoreapp3.1' or '$(TargetFramework)' == 'net5.0' or '$(TargetFramework)' == 'net6.0' or '$(TargetFramework)' == 'net7.0'">
         <DefineConstants>$(DefineConstants);HAS_ASYNC_ENUMERABLE_SUPPORT;</DefineConstants>
     </PropertyGroup>
-    <PropertyGroup Condition="$(DefineConstants.Contains('NETSTANDARD2_0_OR_GREATER')) or $(DefineConstants.Contains('NETCOREAPP2_0_OR_GREATER')) or $(DefineConstants.Contains('NET45_OR_GREATER'))">
+    
+    <PropertyGroup Condition="!('$(TargetFramework)' == 'netstandard1.3' or '$(TargetFramework)' == 'netstandard1.4' or '$(TargetFramework)' == 'netstandard1.5' or '$(TargetFramework)' == 'netstandard1.6' or '$(TargetFramework)' == 'netcoreapp1.0' or '$(TargetFramework)' == 'netcoreapp1.1')">
         <DefineConstants>$(DefineConstants);HAS_JWT_SUPPORT;</DefineConstants>
     </PropertyGroup>
 
+    <PropertyGroup Condition="!('$(TargetFramework)' == 'netstandard1.3' or '$(TargetFramework)' == 'netstandard1.4' or '$(TargetFramework)' == 'netstandard1.5' or '$(TargetFramework)' == 'netstandard1.6' or '$(TargetFramework)' == 'netcoreapp1.0' or '$(TargetFramework)' == 'netcoreapp1.1' or '$(TargetFramework)' == 'net45' or '$(TargetFramework)' == 'net451' or '$(TargetFramework)' == 'net452' or '$(TargetFramework)' == 'net46')">
+        <DefineConstants>$(DefineConstants);USE_FLURL_3;</DefineConstants>
+    </PropertyGroup>
+    
     <PropertyGroup Condition="'$(Configuration)'=='Debug'">
         <OutputPath>bin\Debug\</OutputPath>
         <DebugSymbols>true</DebugSymbols>
@@ -62,11 +68,11 @@
         <PackageReference Include="Roslyn.Analyzers" Version="1.0.3.4" />
     </ItemGroup>
 
-    <ItemGroup Condition="$(DefineConstants.Contains('NET461_OR_GREATER')) or $(DefineConstants.Contains('NETSTANDARD2_0_OR_GREATER')) or $(DefineConstants.Contains('NETCOREAPP2_0_OR_GREATER'))">
+    <ItemGroup Condition="$(DefineConstants.Contains(';USE_FLURL_3;'))">
         <PackageReference Include="Flurl.Http" Version="3.2.4" />
     </ItemGroup>
 
-    <ItemGroup Condition="!($(DefineConstants.Contains('NET461_OR_GREATER')) or $(DefineConstants.Contains('NETSTANDARD2_0_OR_GREATER')) or $(DefineConstants.Contains('NETCOREAPP2_0_OR_GREATER')))">
+    <ItemGroup Condition="!$(DefineConstants.Contains(';USE_FLURL_3;'))">
         <PackageReference Include="Flurl.Http" Version="2.4.2" />
     </ItemGroup>
 </Project>

@@ -38,12 +38,12 @@ namespace Verifalia.Api.Common.Converters
 {
     internal class IPAddressConverter : JsonConverter
     {
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
         {
             writer.WriteRawValue(((IPAddress)value).ToString());
         }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        public override object ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
         {
             var value = Convert.ToString(reader.Value, CultureInfo.InvariantCulture);
             return IPAddress.Parse(value);

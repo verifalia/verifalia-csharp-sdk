@@ -29,16 +29,12 @@
 * THE SOFTWARE.
 */
 
-#nullable enable
-
 using System.IO;
 using System.Text;
 using Flurl.Http.Configuration;
 using Newtonsoft.Json;
 using Verifalia.Api.EmailValidations.Converters;
 using Verifalia.Api.Common.Converters;
-
-//using Verifalia.Api.EmailAddresses.Converters;
 
 namespace Verifalia.Api
 {

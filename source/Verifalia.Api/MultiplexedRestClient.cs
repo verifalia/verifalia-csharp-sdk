@@ -29,8 +29,6 @@
 * THE SOFTWARE.
 */
 
-#nullable enable
-
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -154,14 +152,22 @@ namespace Verifalia.Api
                                 .ConfigureAwait(false);
                         }
 
-                        response = await request
-                            .SendAsync(verb,
-                                content,
-                                cancellationToken,
-                                bufferResponseContent
-                                    ? HttpCompletionOption.ResponseContentRead
-                                    : HttpCompletionOption.ResponseHeadersRead)
-                            .ConfigureAwait(false);
+                        response =
+                            (
+                                await request
+                                    .SendAsync(verb,
+                                        content,
+                                        cancellationToken,
+                                        bufferResponseContent
+                                            ? HttpCompletionOption.ResponseContentRead
+                                            : HttpCompletionOption.ResponseHeadersRead)
+                                    .ConfigureAwait(false)
+                            )
+#if USE_FLURL_3
+                            // Flurl v3.x compatibility
+                            .ResponseMessage
+#endif
+                            ;
                     }
                     finally
                     {

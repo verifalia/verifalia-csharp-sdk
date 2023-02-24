@@ -29,8 +29,6 @@
 * THE SOFTWARE.
 */
 
-#nullable enable
-
 using Newtonsoft.Json;
 
 namespace Verifalia.Api.EmailValidations.Models
