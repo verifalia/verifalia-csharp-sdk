@@ -19,6 +19,37 @@ Verifalia RESTful API - .NET SDK and helper library
 
 To learn more about Verifalia please see [https://verifalia.com][0]
 
+## Table of contents
+
+- [Adding Verifalia REST API support to your .NET solution](#adding-verifalia-rest-api-support-to-your-net-solution)
+  + [With Visual Studio IDE](#with-visual-studio-ide)
+  + [Manual download and compilation](#manual-download-and-compilation)
+  * [Authentication](#authentication)
+    + [Authenticating via bearer token](#authenticating-via-bearer-token)
+    + [Authenticating via X.509 client certificate (TLS mutual authentication)](#authenticating-via-x509-client-certificate--tls-mutual-authentication-)
+- [Validating email addresses](#validating-email-addresses)
+  * [How to validate an email address](#how-to-validate-an-email-address)
+  * [How to validate a list of email addresses](#how-to-validate-a-list-of-email-addresses)
+  * [How to import and submit a file for validation](#how-to-import-and-submit-a-file-for-validation)
+  * [Processing options](#processing-options)
+    + [Quality level](#quality-level)
+    + [Deduplication mode](#deduplication-mode)
+    + [Data retention](#data-retention)
+  * [Wait options](#wait-options)
+    + [Avoid waiting](#avoid-waiting)
+    + [Progress tracking](#progress-tracking)
+  * [Completion callbacks](#completion-callbacks)
+  * [Retrieving jobs](#retrieving-jobs)
+  * [Exporting email verification results in different output formats](#exporting-email-verification-results-in-different-output-formats)
+  * [Don't forget to clean up, when you are done](#don-t-forget-to-clean-up--when-you-are-done)
+  * [Iterating over your email validation jobs](#iterating-over-your-email-validation-jobs)
+- [Managing credits](#managing-credits)
+  * [Getting the credits balance](#getting-the-credits-balance)
+  * [Retrieving credits usage statistics](#retrieving-credits-usage-statistics)
+- [Changelog / What's new](#changelog---what-s-new)
+
+---
+
 ## Adding Verifalia REST API support to your .NET solution ##
 
 The best and easiest way to add the Verifalia email verification SDK library to your .NET project is to use the NuGet package manager.
@@ -252,6 +283,32 @@ var job = await verifalia
     .SubmitAsync(new FileInfo("that-file.xslx"), deduplication: DeduplicationMode.Relaxed);
 ```
 
+#### Data retention
+
+Verifalia automatically deletes completed email verification jobs according to the data retention
+policy defined at the account level, which can be eventually overriden at the user level: one can
+use the [Verifalia clients area](https://verifalia.com/client-area) to configure these settings.
+
+It is also possible to specify a per-job data retention policy which govern the time to live of a submitted
+email verification job; to do that, use the `SubmitAsync()` method overloads which either accepts
+a `ValidationRequest` or a `FileValidationRequest` instance and initialize its `Retention` property
+accordingly.
+
+Here is how, for instance, one can set a data retention policy of 10 minutes while verifying
+an email address:
+
+```c#
+var job = await verifalia
+    .EmailValidations
+    .SubmitAsync(new ValidationRequest(new[]
+    {
+        "batman@gmail.com"
+    })
+    {
+        Retention = TimeSpan.FromMinutes(10)
+    });
+```
+
 ### Wait options
 
 By default, the `SubmitAsync()` method overloads submit an email verification job to Verifalia and wait
@@ -378,13 +435,13 @@ await exportedStream.CopyToAsync(fileStream);
 ### Don't forget to clean up, when you are done
 
 Verifalia automatically deletes completed jobs after a configurable
-data-retention period (minimum 5 minutes, maximum 30 days) but it is strongly advisable that
+data-retention policy (see the related section) but it is strongly advisable that
 you delete your completed jobs as soon as possible, for privacy and security reasons. To do that, you can invoke the `DeleteAsync()` method passing the job Id you wish to get rid of:
 
 ```c#
 await verifalia
     .EmailValidations
-    .DeleteAsync(validation.Id);
+    .DeleteAsync(job.Id);
 ```
 
 Once deleted, a job is gone and there is no way to retrieve its email validation results.
