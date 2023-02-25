@@ -1,4 +1,4 @@
-![Verifalia API](https://img.shields.io/badge/Verifalia%20API-v2.2-green)
+![Verifalia API](https://img.shields.io/badge/Verifalia%20API-v2.4-green)
 [![NuGet](https://img.shields.io/nuget/v/Verifalia.svg)](https://www.nuget.org/packages/Verifalia)
 
 Verifalia RESTful API - .NET SDK and helper library
@@ -6,7 +6,7 @@ Verifalia RESTful API - .NET SDK and helper library
 
 [Verifalia][0] provides a simple HTTPS-based API for validating email addresses in real-time and checking whether they are deliverable or not; this SDK library integrates with Verifalia and allows to [verify email addresses][0] under the following platforms:
 
-- .NET 5.0 and higher, including .NET 6.0 ![new](https://img.shields.io/badge/new-green)
+- .NET 5.0 and higher, including .NET 6.0 and **.NET 7.0** ![new](https://img.shields.io/badge/new-green)
 - .NET Core 1.0 (and higher)
 - .NET Framework 4.5 (and higher)
 - .NET Standard 1.3 (and higher)
@@ -30,9 +30,9 @@ From within Visual Studio, you can use the NuGet GUI to search for and install t
 
 #### Manual download and compilation
 	
-As an alternative way to add the Verifalia SDK to your .NET solution, you can [download the SDK source project from github][1], extract it to a folder of your choice and add a reference from your own project to the Verifalia SDK project. The SDK project is a C# project with support for Visual Studio 2019, which can be referenced and used with any other .NET language too, including Visual Basic (VB.NET), C++/CLI, J#, IronPython, IronRuby, F# and PowerShell.
+As an alternative way to add the Verifalia SDK to your .NET solution, you can [download the SDK source project from github][1], extract it to a folder of your choice and add a reference from your own project to the Verifalia SDK project. The SDK project is a C# project which can be referenced and used with any other .NET language too, including Visual Basic (VB.NET), C++/CLI, J#, IronPython, IronRuby, F# and PowerShell.
 
-Learn more at [https://verifalia.com][0].
+Learn more at [https://verifalia.com][0]
 
 ### Authentication ###
 
@@ -48,11 +48,11 @@ using Verifalia.Api;
 var verifalia = new VerifaliaRestClient("username", "password");
 ```
 
-In addition to the HTTP Basic Auth method, this SDK also supports other different ways to authenticate to the Verifalia API, as explained in the subsequent paragraphs.
+In addition to the HTTP Basic Auth method, this SDK also supports other different ways to authenticate to the Verifalia API, as explained in the subsequent sections.
 
 #### Authenticating via bearer token
 
-Bearer authentication offers higher security over HTTP Basic Auth, as the latter requires sending the actual credentials on each API call, while the former only requires it on a first, dedicated authentication request. On the other side, the first authentication request needed by Bearer authentication takes a non-negligible time: if you need to perform only a single request, using HTTP Basic Auth provides the same degree of security and is the faster option too.
+Bearer authentication offers higher security over HTTP Basic Auth, as the latter requires sending the actual credentials on each API call, while the former only requires it on a first, dedicated authentication request. On the other side, the first authentication request needed by Bearer authentication takes a non-negligible time: if you need to perform only a single request, using HTTP Basic Auth provides the same degree of security and is also faster.
 
 ```c#
 using Verifalia.Api;
@@ -100,81 +100,69 @@ var verifalia = new VerifaliaRestClient(new X509Certificate2("mycertificate.pem"
 
 Every operation related to verifying / validating email addresses is performed through the `EmailValidations` property exposed by the `VerifaliaRestClient` instance you created above. The property is filled with useful methods, each one having lots of overloads: in the next few paragraphs we are looking at the most used ones, so it is strongly advisable to explore the library and look at the embedded xmldoc help for other opportunities.
 
+**The library automatically waits for the completion of email verification jobs**: if needed, it is possible
+to adjust the wait options and have more control over the entire underlying polling process. Please refer to
+the [Wait options](#wait-options) section below for additional details. 
+
 ### How to validate an email address ###
 
-To validate an email address from a .NET application you can invoke the `SubmitAsync()` method: it accepts one or more email addresses and any eventual verification options you wish to pass to Verifalia, including the expected results quality, deduplication preferences and processing priority.
+To validate an email address from a .NET application you can invoke the `SubmitAsync()` method: it accepts one or more email addresses and any eventual verification options you wish to pass to Verifalia, including the expected results quality, deduplication preferences, processing priority.
 
-In the next example, we are showing how to verify a single email address using this library; as the entire process is asynchronous, we are passing a `WaitingStrategy` value, asking `SubmitAsync()` to automatically wait for the job completion:
+> **Note**
+> In the event you need to verify a list of email addresses, it is advisable to submit them all at once through one
+> of the dedicated `SubmitAsync()` method overloads (see the next sections), instead of iterating over the
+> source set and submitting the addresses one by one. Not only the all-at-once method would be faster, it would
+> also allow to detect and mark duplicated items - a feature which is unavailable while verifying the email addresses
+> one by one.
+
+In the following example, we verify an email address with this library, using the default options:
 
 ```c#
-var validation = await verifalia
+var job = await verifalia
     .EmailValidations
-    .SubmitAsync("batman@gmail.com", waitingStrategy: new WaitingStrategy(true));
+    .SubmitAsync("batman@gmail.com");
 
-// At this point the address has been validated: let's print
-// its email validation result to the console.
+// At this point the address has been validated: let's print its email validation
+// result to the console.
 
-var entry = validation.Entries[0];
+var entry = job.Entries[0];
 
-Console.WriteLine("{0} => Classification: {1}, Status: {1}",
-	entry.InputData,
-	entry.Classification,
-	entry.Status);
+Console.WriteLine($"Classification: {entry.Classification} (status: {entry.Status})");
 
-// Prints out something like:
-// batman@gmail.com => Classification: Deliverable, Status: Success
+// Classification: Deliverable (status: Success)
 ```
 
 ### How to validate a list of email addresses ###
 
-As an alternative to method above, you can avoid automatically waiting and retrieve the email validation results at a later time; this is preferred in the event you are verifying a list of email addresses, which could take minutes or even hours to complete.
+To verify a list of email addresses - instead of a single address - it is possible to use the `SubmitAsync()` method
+overload which accepts an `IEnumerable<string>`; if the email addresses to be verified are originally stored
+in a file, it is also possible to simply upload the file and have Verifalia automatically import and verify
+it - see the next section for the details.
 
-Here is how to do that:
+Here is an example showing how to verify an array with some email addresses:
 
 ```c#
-var validation = await verifalia
+var job = await verifalia
     .EmailValidations
     .SubmitAsync(new[] {
-      "batman@gmail.com",
-      "steve.vai@best.music",
-      "samantha42@yahoo.de"
+        "batman@gmail.com",
+        "steve.vai@best.music",
+        "samantha42@yahoo.it"
     });
 
-Console.WriteLine("Job Id: {validation.Overview.Id}");
-Console.WriteLine("Status: {validation.Overview.Status}");
+Console.WriteLine($"Job ID: {job.Overview.Id}");
 
-// Prints out something like:
+foreach (var entry in job.Entries)
+{
+    Console.WriteLine($"- {entry.InputData} => {entry.Classification} ({entry.Status})");
+}
+
 // Job Id: 290b5146-eeac-4a2b-a9c1-61c7e715f2e9
-// Status: InProgress
+// - batman@gmail.com => Deliverable (Success)
+// - steve.vai@best.music => Undeliverable (DomainIsMisconfigured)
+// - samantha42@yahoo.it => Deliverable (Success)
 ```
 
-Once you have an email validation job Id, which is always returned by `SubmitAsync()` as part of the validation's `Overview` property, you can retrieve the job data using the `GetAsync()` method. Similarly to the submission process, you can either wait for the completion of the job or just retrieve the current job snapshot to get its progress, using an instance of the same `WaitingStrategy` type mentioned above. Only completed jobs have their `Entries` filled with the email validation results, however.
-
-In the following example, we are requesting the current snapshot of a given email validation job back from Verifalia:
-
-```c#
-var validation = await verifalia
-    .EmailValidations
-    .GetAsync(Guid.Parse("290b5146-eeac-4a2b-a9c1-61c7e715f2e9"));
-
-if (validation.Overview.Status == ValidationStatus.Completed)
-{
-	// validation.Entries will have the validation results!
-}
-else
-{
-	// What about having a coffee?
-}
-```
-
-And here is how to request the same job, asking the SDK to automatically wait for us until the job is completed (that is, _joining_ the job):
-
-```c#
-var validation = await verifalia
-    .EmailValidations
-    .GetAsync(Guid.Parse("290b5146-eeac-4a2b-a9c1-61c7e715f2e9"),
-        new WaitingStrategy(true));
-```
 
 ### How to import and submit a file for validation
 
@@ -191,11 +179,10 @@ and ending rows to process, the column, the sheet index, the line ending and the
 delimiter - depending of course on the nature of the submitted file (see
 `FileValidationRequest` in the source to learn more).
 
-Here is how to submit an Excel file, for example (pass a `WaitingStrategy` to actually
-wait for its results - see the sections above for more details):
+Here is how to submit and verify an Excel file, for example:
 
 ```c#
-var validation = await verifalia
+var job = await verifalia
     .EmailValidations
     .SubmitAsync(new FileInfo("that-file.xslx"));
 ```
@@ -204,7 +191,7 @@ For more advanced options, just pass `FileValidationRequest` instance to the `Su
 method:
 
 ```c#
-var validation = await verifalia
+var job = await verifalia
     .EmailValidations
     .SubmitAsync(new FileValidationRequest(new FileInfo("that-file.xslx"))
         {
@@ -222,13 +209,104 @@ the event you pass a `FileInfo` instance:
 ```c#
 Stream inputStream = ...; // TODO: Acquire the input data somehow
 
-var validation = await verifalia
+var job = await verifalia
     .EmailValidations
     .SubmitAsync(inputStream,
         MediaTypeHeaderValue.Parse(WellKnownMimeContentTypes.TextPlain)); // text/plain
 ```
 
-### Completion callbacks ###
+### Processing options
+
+While submitting one or more email addresses for verification, it is possible to specify several
+options which affect the behavior of the Verifalia processing engine as well as the verification flow
+from the API consumer standpoint.
+
+#### Quality level
+
+Verifalia offers three distinct quality levels - namely, _Standard_, _High_ and _Extreme_  - which rule out how the email verification engine should
+deal with temporary undeliverability issues, with slower mail exchangers and other potentially transient
+problems which can affect the quality of the verification results. The `SubmitAsync()` method overloads accept a `quality` parameter which allows
+to specify the desired quality level; here is an example showing how to verify an email address using
+the _High_ quality level:
+
+```c#
+var job = await verifalia
+    .EmailValidations
+    .SubmitAsync("batman@gmail.com", quality: QualityLevelName.High);
+```
+
+#### Deduplication mode
+
+The `SubmitAsync()` method overloads accepting multiple email addresses at once allow to specify how to
+deal with duplicated entries pertaining to the same input set; Verifalia supports a _Safe_ deduplication
+mode, which strongly adheres to the old IETF standards, and a _Relaxed_ mode which is more in line with
+what can be found in the majority of today's mail exchangers configurations.
+
+In the next example, we show how to import and verify a list of email addresses and mark duplicated
+entries using the _Relaxed_ deduplication mode:
+
+```c#
+var job = await verifalia
+    .EmailValidations
+    .SubmitAsync(new FileInfo("that-file.xslx"), deduplication: DeduplicationMode.Relaxed);
+```
+
+### Wait options
+
+By default, the `SubmitAsync()` method overloads submit an email verification job to Verifalia and wait
+for its completion; the entire process may require some time to complete depending on the plan of the
+Verifalia account, the number of email addresses the submission contains, the specified quality level
+and other network factors including the latency of the mail exchangers under test. 
+
+In waiting for the completion of a given email verification job, the library automatically polls the
+underlying Verifalia API until the results are ready; by default, it tries to take advantage of the long
+polling mode introduced with the Verifalia API v2.4, which allows to minimize the number of requests
+and get the verification results faster.
+
+#### Avoid waiting
+
+In certain scenarios (in a microservice architecture, for example), however, it may preferable to avoid
+waiting for a job completion and ask the Verifalia API, instead, to just queue it: in that case, the library
+would just return the job overview (and not its verification results) and it will be necessary to retrieve
+the verification results using the `GetAsync()` method.
+
+To do that, it is possible to specify the `WaitOptions.NoWait` as the value for the `waitOptions` parameter
+of the `SubmitAsync()` method overloads, as shown in the next example:
+
+```c#
+var job = await verifalia
+    .EmailValidations
+    .SubmitAsync(new FileInfo("that-file.xslx"),
+        waitOptions: WaitOptions.NoWait);
+
+Console.WriteLine($"Status: {job.Overview.Status}");
+// Status: InProgress
+```
+
+#### Progress tracking
+
+For jobs with a large number of email addresses, it could be useful to track progress as they are processed
+by the Verifalia email verification engine; to do that, it is possible to create an instance of the
+`WaitOptions` class and provide an handler which eventually receives progress notifications through the
+`Progress` property.
+
+Here is how to define a progress notification handler which displays the progress percentage of a submitted
+job to the console window:
+
+```c#
+var job = await verifalia
+    .EmailValidations
+    .SubmitAsync(new FileInfo("that-other-file.csv"),
+        waitOptions: new WaitOptions
+        {
+            Progress = new Progress<ValidationOverview>(overview =>
+            {
+                Console.WriteLine(overview.Progress?.Percentage);
+            })
+        });
+```
+
+### Completion callbacks
 
 Along with each email validation job, it is possible to specify an URL which
 Verifalia will invoke (POST) once the job completes: this URL must use the HTTPS or HTTP
@@ -244,15 +322,30 @@ await verifalia
     .EmailValidations
     .SubmitAsync(new ValidationRequest(new[] { "batman@gmail.com" })
     {
-        CompletionCallback = new Uri("https://your-website-here/foo/bar"),
-        // TODO: Other settings, if needed
+        CompletionCallback = new CompletionCallback("https://your-website-here/foo/bar")
     });
 ```
 
 Note that completion callbacks are invoked asynchronously and it could take up to
 several seconds for your callback URL to get invoked.
 
-### How to export validated entries in different output formats ###
+### Retrieving jobs
+
+It is possible to retrieve a job through the `GetAsync()` and `GetOverviewAsync()` methods, which
+return, respectively, a `Validation` instance or a `ValidationOverview` instance for the desired
+email verification job. While doing that, the library automatically waits for the completion of
+the job, and it is possible to adjust this behavior by passing to the aforementioned methods
+a `waitOptions` parameter, in the exactly same fashion as described for the `SubmitAsync()` method
+overloads; please see the [Wait options](#wait-options) section for additional details.
+
+Here is an example showing how to retrieve a job, given its identifier:
+
+```c#
+var jobId = Guid.Parse("ec415ecd-0d0b-49c4-a5f0-f35c182e40ea");
+var job = await verifalia.EmailValidations.GetAsync(jobId);
+```
+
+### Exporting email verification results in different output formats
 
 This library also allows to export the entries of a completed email validation
 job in different output formats through the `ExportEntriesAsync()` method, with the goal of generating a human-readable representation
@@ -281,7 +374,7 @@ var fileStream = new FileStream("my-list.csv", FileMode.Create);
 await exportedStream.CopyToAsync(fileStream);
 ```
 
-### Don't forget to clean up, when you are done ###
+### Don't forget to clean up, when you are done
 
 Verifalia automatically deletes completed jobs after a configurable
 data-retention period (minimum 5 minutes, maximum 30 days) but it is strongly advisable that
@@ -295,7 +388,7 @@ await verifalia
 
 Once deleted, a job is gone and there is no way to retrieve its email validation results.
 
-### Iterating over your email validation jobs ###
+### Iterating over your email validation jobs
 
 For management and reporting purposes, you may want to obtain a detailed list of your past email validation jobs. This SDK library allows to do that through the `ListAsync()` method, which allows to iterate asynchronously over a collection of `ValidationOverview` instances (the same type of the `Overview` property of the results returned by `SubmitAsync()` and `GetAsync()`).
 
@@ -311,20 +404,19 @@ var jobOverviews = verifalia
 
 await foreach (var jobOverview in jobOverviews)
 {
-	Console.WriteLine("Id: {0}, submitted: {1}, status: {2}, entries: {3}",
+	Console.WriteLine("Id: {0}, status: {2}, entries: {3}",
 		jobOverview.Id,
-		jobOverview.SubmittedOn,
 		jobOverview.Status,
 		jobOverview.NoOfEntries);
 }
 
 // Prints out something like:
-// Id: a7784f9a-86d4-436c-b8e4-f72f2bd377ac, submitted: 8/2/2019 10:27:29 AM, status: InProgress, entries: 9886
-// Id: 86d57c00-147a-4736-88cc-c918260c67c6, submitted: 8/2/2019 10:27:29 AM, status: Completed, entries: 1
-// Id: 594bbb0f-6f12-481c-926f-606cfefc1cd5, submitted: 8/2/2019 10:27:28 AM, status: Completed, entries: 1
-// Id: a5c1cd5b-39cc-43bc-9a3a-ee4a0f80ee6d, submitted: 8/2/2019 10:27:26 AM, status: InProgress, entries: 226
-// Id: b6f69e30-60dd-4c21-b2cb-e73ba75fb278, submitted: 8/2/2019 10:27:21 AM, status: Completed, entries: 12077
-// Id: 5e5a97dc-459f-4edf-a607-47371c32aa94, submitted: 8/2/2019 10:27:18 AM, status: Deleted, entries: 1009
+// Id: a7784f9a-86d4-436c-b8e4-f72f2bd377ac, status: InProgress, entries: 9886
+// Id: 86d57c00-147a-4736-88cc-c918260c67c6, status: Completed, entries: 1
+// Id: 594bbb0f-6f12-481c-926f-606cfefc1cd5, status: Completed, entries: 1
+// Id: a5c1cd5b-39cc-43bc-9a3a-ee4a0f80ee6d, status: InProgress, entries: 226
+// Id: b6f69e30-60dd-4c21-b2cb-e73ba75fb278, status: Completed, entries: 12077
+// Id: 5e5a97dc-459f-4edf-a607-47371c32aa94, status: Deleted, entries: 1009
 // ...
 ```
 
@@ -380,9 +472,9 @@ await foreach (var dailyUsage in dailyUsages)
 }
 
 // Prints out something like:
-// 20200301 - credit packs: 1965.68, free daily credits: 200
-// 20200226 - credit packs: 0, free daily credits: 185.628
-// 20200225 - credit packs: 15.32, free daily credits: 200
+// 20230201 - credit packs: 1965.68, free daily credits: 200
+// 20230126 - credit packs: 0, free daily credits: 185.628
+// 20230125 - credit packs: 15.32, free daily credits: 200
 // ...
 ```
 
@@ -392,6 +484,25 @@ await foreach (var dailyUsage in dailyUsages)
 
 This section lists the changelog for the current major version of the library: for older versions,
 please see the [project releases](https://github.com/verifalia/verifalia-csharp-sdk/releases).
+
+### v4.0
+
+Released on February 27<sup>th</sup>, 2023
+
+- Added support for API v2.4
+- Added support for .NET 7.0
+- Added support for new completion callback options
+- Added support for parked mail exchangers detection
+- Added support for specifying a custom wait time while submitting and retrieving email verification jobs
+- Added support for nullable annotations
+- Breaking change: renamed `WaitingStrategy` into `WaitOptions` and refactored the latter so that it now allows to
+adjust the underlying polling wait times
+- Breaking change: the default job submission and retrieval behavior is now to wait for the completion
+of jobs (but it is possible to change that through the new `WaitOptions` class)
+- Breaking change: the `CompletionCallback` property of the `ValidationRequest` and `FileValidationRequest` classes
+now points to a full fledged `CompletionCallback` class instead of a simple `Uri`
+- Bumped dependencies (including Newtonsoft.Json and Flurl) 
+- Improved documentation
 
 ### v3.1
 

@@ -44,7 +44,7 @@ using Verifalia.Api.Common.Models;
 namespace Verifalia.Api.Credits
 {
     /// <inheritdoc />
-    internal class CreditsRestClient : ICreditsRestClient
+    internal sealed class CreditsRestClient : ICreditsRestClient
     {
         private readonly IRestClientFactory _restClientFactory;
 

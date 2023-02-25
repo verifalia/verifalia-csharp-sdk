@@ -40,7 +40,7 @@ namespace Verifalia.Api
     public interface IVerifaliaRestClient
     {
         /// <summary>
-        /// Allows to submit and manage email validations using the Verifalia service.
+        /// Allows to verify email addresses and manage email verification jobs using the Verifalia service.
         /// </summary>
         IEmailValidationsRestClient EmailValidations { get; }
 
