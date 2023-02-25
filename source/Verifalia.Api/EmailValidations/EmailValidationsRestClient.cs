@@ -34,7 +34,7 @@ using System;
 namespace Verifalia.Api.EmailValidations
 {
     /// <inheritdoc />
-    internal partial class EmailValidationsRestClient : IEmailValidationsRestClient
+    internal sealed partial class EmailValidationsRestClient : IEmailValidationsRestClient
     {
         private readonly IRestClientFactory _restClientFactory;
 

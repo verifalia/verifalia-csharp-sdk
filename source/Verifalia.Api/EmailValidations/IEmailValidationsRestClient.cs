@@ -51,7 +51,7 @@ namespace Verifalia.Api.EmailValidations
         /// <summary>
         /// Submits a new email validation for processing.
         /// <remarks>
-        /// By default, this method does not wait for the completion of the email validation job: pass a <see cref="WaitOptions"/> to request
+        /// By default, this method waits for the completion of the email validation job: pass a <see cref="WaitOptions"/> to request
         /// a different waiting behavior.
         /// </remarks>
         /// </summary>
@@ -72,7 +72,7 @@ namespace Verifalia.Api.EmailValidations
         /// <summary>
         /// Submits a new email validation for processing.
         /// <remarks>
-        /// By default, this method does not wait for the completion of the email validation job: pass a <see cref="WaitOptions"/> to request
+        /// By default, this method waits for the completion of the email validation job: pass a <see cref="WaitOptions"/> to request
         /// a different waiting behavior.
         /// </remarks>
         /// </summary>
@@ -94,7 +94,7 @@ namespace Verifalia.Api.EmailValidations
         /// <summary>
         /// Submits a new email validation for processing.
         /// <remarks>
-        /// By default, this method does not wait for the completion of the email validation job: pass a <see cref="WaitOptions"/> to request
+        /// By default, this method waits for the completion of the email validation job: pass a <see cref="WaitOptions"/> to request
         /// a different waiting behavior.
         /// </remarks>
         /// </summary>
@@ -115,7 +115,7 @@ namespace Verifalia.Api.EmailValidations
         /// <summary>
         /// Submits a new email validation for processing.
         /// <remarks>
-        /// By default, this method does not wait for the completion of the email validation job: pass a <see cref="WaitOptions"/> to request
+        /// By default, this method waits for the completion of the email validation job: pass a <see cref="WaitOptions"/> to request
         /// a different waiting behavior.
         /// </remarks>
         /// </summary>
@@ -137,7 +137,7 @@ namespace Verifalia.Api.EmailValidations
         /// <summary>
         /// Submits a new email validation for processing.
         /// <remarks>
-        /// By default, this method does not wait for the completion of the email validation job: pass a <see cref="WaitOptions"/> to request
+        /// By default, this method waits for the completion of the email validation job: pass a <see cref="WaitOptions"/> to request
         /// a different waiting behavior.
         /// </remarks>
         /// </summary>
@@ -160,7 +160,7 @@ namespace Verifalia.Api.EmailValidations
         /// - comma-separated values (.csv), tab-separated values (.tsv) and other delimiter-separated values files
         /// - Microsoft Excel spreadsheets (.xls and .xlsx)
         /// <remarks>
-        /// By default, this method does not wait for the completion of the email validation job: pass a <see cref="WaitOptions"/> to request
+        /// By default, this method waits for the completion of the email validation job: pass a <see cref="WaitOptions"/> to request
         /// a different waiting behavior.
         /// </remarks>
         /// </summary>
@@ -179,7 +179,7 @@ namespace Verifalia.Api.EmailValidations
         /// - comma-separated values (.csv), tab-separated values (.tsv) and other delimiter-separated values files
         /// - Microsoft Excel spreadsheets (.xls and .xlsx)
         /// <remarks>
-        /// By default, this method does not wait for the completion of the email validation job: pass a <see cref="WaitOptions"/> to request
+        /// By default, this method waits for the completion of the email validation job: pass a <see cref="WaitOptions"/> to request
         /// a different waiting behavior.
         /// </remarks>
         /// </summary>
@@ -200,7 +200,7 @@ namespace Verifalia.Api.EmailValidations
         /// - comma-separated values (.csv), tab-separated values (.tsv) and other delimiter-separated values files
         /// - Microsoft Excel spreadsheets (.xls and .xlsx)
         /// <remarks>
-        /// By default, this method does not wait for the completion of the email validation job: pass a <see cref="WaitOptions"/> to request
+        /// By default, this method waits for the completion of the email validation job: pass a <see cref="WaitOptions"/> to request
         /// a different waiting behavior.
         /// </remarks>
         /// </summary>
@@ -219,7 +219,7 @@ namespace Verifalia.Api.EmailValidations
         /// - comma-separated values (.csv), tab-separated values (.tsv) and other delimiter-separated values files
         /// - Microsoft Excel spreadsheets (.xls and .xlsx)
         /// <remarks>
-        /// By default, this method does not wait for the completion of the email validation job: pass a <see cref="WaitOptions"/> to request
+        /// By default, this method waits for the completion of the email validation job: pass a <see cref="WaitOptions"/> to request
         /// a different waiting behavior.
         /// </remarks>
         /// </summary>
@@ -235,7 +235,7 @@ namespace Verifalia.Api.EmailValidations
         /// would be enough, use the <see cref="GetOverviewAsync"/> method instead.</remarks>
         /// </summary>
         /// <remarks>
-        /// By default, this method does not wait for the eventual completion of the email validation job: pass a
+        /// By default, this method waits for the eventual completion of the email validation job: pass a
         /// <see cref="WaitOptions"/> to request a different waiting behavior.
         /// </remarks>
         /// <example>
@@ -257,7 +257,7 @@ namespace Verifalia.Api.EmailValidations
         /// <remarks>To retrieve the whole job data, including its results, use the <see cref="GetAsync"/> method instead.</remarks>
         /// </summary>
         /// <remarks>
-        /// By default, this method does not wait for the eventual completion of the email validation job: pass a
+        /// By default, this method waits for the eventual completion of the email validation job: pass a
         /// <see cref="WaitOptions"/> to request a different waiting behavior.
         /// </remarks>
         /// <example>
