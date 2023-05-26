@@ -43,6 +43,7 @@ To learn more about Verifalia please see [https://verifalia.com][0]
   * [Exporting email verification results in different output formats](#exporting-email-verification-results-in-different-output-formats)
   * [Don't forget to clean up, when you are done](#don-t-forget-to-clean-up--when-you-are-done)
   * [Iterating over your email validation jobs](#iterating-over-your-email-validation-jobs)
+    * [Filtering email validation jobs](#filtering-email-validation-jobs)
 - [Managing credits](#managing-credits)
   * [Getting the credits balance](#getting-the-credits-balance)
   * [Retrieving credits usage statistics](#retrieving-credits-usage-statistics)
@@ -456,16 +457,16 @@ Here is how to iterate over your jobs, from the most recent to the oldest one:
 var jobOverviews = verifalia
     .EmailValidations
     .ListAsync(new ValidationOverviewListingOptions
-	{
-		Direction = Direction.Backward
-	});
+    {
+        Direction = Direction.Backward
+    });
 
 await foreach (var jobOverview in jobOverviews)
 {
-	Console.WriteLine("Id: {0}, status: {2}, entries: {3}",
-		jobOverview.Id,
-		jobOverview.Status,
-		jobOverview.NoOfEntries);
+    Console.WriteLine("Id: {0}, status: {2}, entries: {3}",
+        jobOverview.Id,
+        jobOverview.Status,
+        jobOverview.NoOfEntries);
 }
 
 // Prints out something like:
@@ -479,6 +480,32 @@ await foreach (var jobOverview in jobOverviews)
 ```
 
 > The `ListAsync()` method uses the *C# 8.0 async enumerable* feature; for previous language support please check the `ListSegmentedAsync()` methods group.
+
+#### Filtering email validation jobs
+
+The `ListAsync()` method also have the ability, by way of the same `options` argument, to filter the email
+verification jobs returned by the Verifalia API: it is possible to filter by date of submission,
+owner and status of the jobs.
+
+Here is how to repeat the listing operation shown in the example above, this time returning only the jobs
+of a given user and for a given date range:
+
+```c#
+var jobOverviews = verifalia
+    .EmailValidations
+    .ListAsync(new ValidationOverviewListingOptions
+    {
+        Direction = Direction.Backward,
+        CreatedOn = new DateBetweenPredicate(new DateTime(2023, 5, 26),
+            new DateTime(2023, 5, 30)),
+        Owner = new StringEqualityPredicate("50173acd-9ed2-4298-ba7f-8ccaeed48deb")
+    });
+
+await foreach (var jobOverview in jobOverviews)
+{
+    // ...
+}
+```
 
 ## Managing credits ##
 
@@ -515,18 +542,18 @@ var dailyUsages = verifalia
     .Credits
     .ListDailyUsagesAsync(new DailyUsageListingOptions
 	{
-		DateFilter = new DateBetweenPredicate
-		{
-			Since = DateTime.Now.AddDays(-30)
-		}
-	});
+        DateFilter = new DateBetweenPredicate
+        {
+            Since = DateTime.Now.AddDays(-30)
+        }
+    });
 
 await foreach (var dailyUsage in dailyUsages)
 {
-	Console.WriteLine("{0:yyyyMMdd} - credit packs: {1}, free daily credits: {2}",
-		dailyUsage.Date,
-		dailyUsage.CreditPacks,
-		dailyUsage.FreeCredits);
+    Console.WriteLine("{0:yyyyMMdd} - credit packs: {1}, free daily credits: {2}",
+        dailyUsage.Date,
+        dailyUsage.CreditPacks,
+        dailyUsage.FreeCredits);
 }
 
 // Prints out something like:
@@ -542,6 +569,13 @@ await foreach (var dailyUsage in dailyUsages)
 
 This section lists the changelog for the current major version of the library: for older versions,
 please see the [project releases](https://github.com/verifalia/verifalia-csharp-sdk/releases).
+
+### v4.1
+
+Released on May 26<sup>th</sup>, 2023
+
+- Added support for filters when listing email verification jobs
+- Resolved an issue with the `ToAsyncEnumerableAsync()` method that previously resulted in incomplete listings in specific scenarios
 
 ### v4.0
 
