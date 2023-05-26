@@ -96,7 +96,6 @@ namespace Verifalia.Api.Common
                 if (options != null)
                 {
                     cursor.Limit = options.Limit;
-                    cursor.Direction = options.Direction;
                 };
             }
         }

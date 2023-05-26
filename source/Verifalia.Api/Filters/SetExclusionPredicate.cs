@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Verifalia - Email list cleaning and real-time email verification service
 * https://verifalia.com/
 * support@verifalia.com
@@ -29,35 +29,48 @@
 * THE SOFTWARE.
 */
 
-using Verifalia.Api.Common.Models;
-using Verifalia.Api.Filters;
+using System;
+using System.Collections.Generic;
 
-namespace Verifalia.Api.EmailValidations.Models
+namespace Verifalia.Api.Filters
 {
     /// <summary>
-    /// Provides options for a listing of validation jobs.
+    /// A filter predicate used to exclude certain elements from a target set of possible values.
     /// </summary>
-    public class ValidationOverviewListingOptions : ListingOptions
+    /// <typeparam name="T">The type of elements in the set.</typeparam>
+    public sealed class SetExclusionPredicate<T> : SetFilterPredicate<T>
     {
-        /// <summary>
-        /// The field to order the resulting listing by.
-        /// </summary>
-        public ValidationOverviewListingField OrderBy { get; set; }
+        private readonly T[] _values;
 
         /// <summary>
-        /// Allows to filter the resulting list by the creation date of its <see cref="ValidationOverview"/> items.
+        /// The values to exclude from the target set.
         /// </summary>
-        public DateFilterPredicate? CreatedOn { get; set; }
-        
-        /// <summary>
-        /// Allows to filter the resulting list by the ID of its owner; if present, the API will return only the jobs
-        /// submitted by the specified user.
-        /// </summary>
-        public StringEqualityPredicate? Owner { get; set; }
+        public IReadOnlyCollection<T> Values => _values;
 
         /// <summary>
-        /// Allows to filter the results by their <see cref="ValidationStatus"/>.
+        /// Initializes a filter predicate used to exclude certain elements from a target set of possible values.
         /// </summary>
-        public SetFilterPredicate<ValidationStatus>? Statuses { get; set; }        
+        /// <param name="values">The values to exclude from the target set.</param>
+        public SetExclusionPredicate(params T[] values)
+        {
+            _values = values ?? throw new ArgumentNullException(nameof(values));
+        }
+
+        public override IEnumerable<FilterPredicateFragment> Serialize(string fieldName)
+        {
+            if (_values.Length > 0)
+            {
+                return new FilterPredicateFragment[]
+                {
+                    new(fieldName + ":exclude", String.Join(",", _values))
+                };
+            }
+
+#if NETFRAMEWORK
+            return new FilterPredicateFragment[0];
+#else
+            return Array.Empty<FilterPredicateFragment>();
+#endif
+        }
     }
 }

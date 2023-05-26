@@ -29,35 +29,12 @@
 * THE SOFTWARE.
 */
 
-using Verifalia.Api.Common.Models;
-using Verifalia.Api.Filters;
-
-namespace Verifalia.Api.EmailValidations.Models
+namespace Verifalia.Api.Filters
 {
     /// <summary>
-    /// Provides options for a listing of validation jobs.
+    /// Base class for string filter predicates, used to filter data retrieved from the Verifalia API.
     /// </summary>
-    public class ValidationOverviewListingOptions : ListingOptions
+    public abstract class StringFilterPredicate: FilterPredicate
     {
-        /// <summary>
-        /// The field to order the resulting listing by.
-        /// </summary>
-        public ValidationOverviewListingField OrderBy { get; set; }
-
-        /// <summary>
-        /// Allows to filter the resulting list by the creation date of its <see cref="ValidationOverview"/> items.
-        /// </summary>
-        public DateFilterPredicate? CreatedOn { get; set; }
-        
-        /// <summary>
-        /// Allows to filter the resulting list by the ID of its owner; if present, the API will return only the jobs
-        /// submitted by the specified user.
-        /// </summary>
-        public StringEqualityPredicate? Owner { get; set; }
-
-        /// <summary>
-        /// Allows to filter the results by their <see cref="ValidationStatus"/>.
-        /// </summary>
-        public SetFilterPredicate<ValidationStatus>? Statuses { get; set; }        
     }
 }

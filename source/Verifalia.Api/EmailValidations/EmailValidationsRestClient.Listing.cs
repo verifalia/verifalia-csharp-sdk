@@ -79,6 +79,34 @@ namespace Verifalia.Api.EmailValidations
                 {
                     queryParams["limit"] = options.Limit.ToString(CultureInfo.InvariantCulture);
                 }
+                
+                // Predicates
+                
+                if (options.CreatedOn != null)
+                {
+                    foreach (var fragment in options.CreatedOn.Serialize("createdOn"))
+                    {
+                        queryParams[fragment.Key] = fragment.Value;
+                    }
+                }
+                
+                if (options.Statuses != null)
+                {
+                    foreach (var fragment in options.Statuses.Serialize("status"))
+                    {
+                        queryParams[fragment.Key] = fragment.Value;
+                    }
+                }
+
+                if (options.Owner != null)
+                {
+                    foreach (var fragment in options.Owner.Serialize("owner"))
+                    {
+                        queryParams[fragment.Key] = fragment.Value;
+                    }
+                }
+                
+                // Sort
 
                 switch (options.OrderBy)
                 {

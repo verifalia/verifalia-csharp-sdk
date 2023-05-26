@@ -29,35 +29,34 @@
 * THE SOFTWARE.
 */
 
-using Verifalia.Api.Common.Models;
-using Verifalia.Api.Filters;
+using System;
+using System.Collections.Generic;
 
-namespace Verifalia.Api.EmailValidations.Models
+namespace Verifalia.Api.Filters
 {
     /// <summary>
-    /// Provides options for a listing of validation jobs.
+    /// A filter predicate used to filter strings on a specific value.
     /// </summary>
-    public class ValidationOverviewListingOptions : ListingOptions
+    /// <inheritdoc />
+    public sealed class StringEqualityPredicate : StringFilterPredicate
     {
         /// <summary>
-        /// The field to order the resulting listing by.
+        /// The string to be included in the filter.
         /// </summary>
-        public ValidationOverviewListingField OrderBy { get; set; }
+        public string Value { get; }
 
         /// <summary>
-        /// Allows to filter the resulting list by the creation date of its <see cref="ValidationOverview"/> items.
+        /// Initializes a filter predicate used to filter strings on a specific value.
         /// </summary>
-        public DateFilterPredicate? CreatedOn { get; set; }
-        
-        /// <summary>
-        /// Allows to filter the resulting list by the ID of its owner; if present, the API will return only the jobs
-        /// submitted by the specified user.
-        /// </summary>
-        public StringEqualityPredicate? Owner { get; set; }
+        /// <param name="value">The string to be included in the filter.</param>
+        public StringEqualityPredicate(string value)
+        {
+            Value = value ?? throw new ArgumentNullException(nameof(value));
+        }
 
-        /// <summary>
-        /// Allows to filter the results by their <see cref="ValidationStatus"/>.
-        /// </summary>
-        public SetFilterPredicate<ValidationStatus>? Statuses { get; set; }        
+        public override IEnumerable<FilterPredicateFragment> Serialize(string fieldName)
+        {
+            yield return new FilterPredicateFragment(fieldName, Value);
+        }
     }
 }
