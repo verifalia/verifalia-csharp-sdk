@@ -3,7 +3,7 @@
 * https://verifalia.com/
 * support@verifalia.com
 *
-* Copyright (c) 2005-2023 Cobisi Research
+* Copyright (c) 2005-2024 Cobisi Research
 *
 * Cobisi Research
 * Via Della Costituzione, 31
@@ -72,6 +72,7 @@ namespace Verifalia.Api.EmailValidations.Converters
             ["MailExchangerIsHoneypot"] = ValidationEntryStatus.MailExchangerIsHoneypot,
             ["MailExchangerIsParked"] = ValidationEntryStatus.MailExchangerIsParked,
             ["MailExchangerIsWellKnownDea"] = ValidationEntryStatus.MailExchangerIsWellKnownDea,
+            ["OverrideMatch"] = ValidationEntryStatus.OverrideMatch,
             ["ServerDoesNotSupportInternationalMailboxes"] = ValidationEntryStatus.ServerDoesNotSupportInternationalMailboxes,
             ["ServerIsCatchAll"] = ValidationEntryStatus.ServerIsCatchAll,
             ["ServerTemporaryUnavailable"] = ValidationEntryStatus.ServerTemporaryUnavailable,
@@ -83,7 +84,7 @@ namespace Verifalia.Api.EmailValidations.Converters
             ["UnbalancedCommentParenthesis"] = ValidationEntryStatus.UnbalancedCommentParenthesis,
             ["UnexpectedQuotedPairSequence"] = ValidationEntryStatus.UnexpectedQuotedPairSequence,
             ["UnhandledException"] = ValidationEntryStatus.UnhandledException,
-            ["UnmatchedQuotedPair"] = ValidationEntryStatus.UnmatchedQuotedPair
+            ["UnmatchedQuotedPair"] = ValidationEntryStatus.UnmatchedQuotedPair,
         };
 
         public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)

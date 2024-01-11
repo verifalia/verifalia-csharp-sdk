@@ -1,4 +1,4 @@
-![Verifalia API](https://img.shields.io/badge/Verifalia%20API-v2.4-green)
+![Verifalia API](https://img.shields.io/badge/Verifalia%20API-v2.5-green)
 [![NuGet](https://img.shields.io/nuget/v/Verifalia.svg)](https://www.nuget.org/packages/Verifalia)
 ![License](https://img.shields.io/badge/License-MIT-yellow.svg)
 
@@ -7,7 +7,7 @@ Verifalia RESTful API - .NET SDK and helper library
 
 [Verifalia][0] provides a simple HTTPS-based API for validating email addresses in real-time and checking whether they are deliverable or not; this SDK library integrates with Verifalia and allows to [verify email addresses][0] under the following platforms:
 
-- .NET 5.0 and higher, including .NET 6.0 and **.NET 7.0** ![new](https://img.shields.io/badge/new-green)
+- .NET 5.0 and higher, including **.NET 8.0** ![new](https://img.shields.io/badge/new-green)
 - .NET Core 1.0 (and higher)
 - .NET Framework 4.5 (and higher)
 - .NET Standard 1.3 (and higher)
@@ -163,6 +163,59 @@ var entry = job.Entries[0];
 Console.WriteLine($"Classification: {entry.Classification} (status: {entry.Status})");
 
 // Classification: Deliverable (status: Success)
+```
+
+As you may expect, each entry may include various additional details about the verified email address:
+
+| Property                      | Description                                                                                                                                                                                                                                                |
+|-------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `AsciiEmailAddressDomainPart` | Gets the domain part of the email address, converted to ASCII if needed and with comments and folding white spaces stripped off.                                                                                                                           |
+| `Classification`              | The `ValidationEntryClassification` value for this entry.                                                                                                                                                                                                  |
+| `CompletedOn`                 | The date this entry has been completed, if available.                                                                                                                                                                                                      |
+| `Custom`                      | A custom, optional string which is passed back upon completing the validation. To pass back and forth a custom value, use the `Custom` property of `ValidationRequestEntry`.                                                                               |
+| `DuplicateOf`                 | The zero-based index of the first occurrence of this email address in the parent `Validation`, in the event the `Status` for this entry is `Duplicate`; duplicated items do not expose any result detail apart from this and the eventual `Custom` values. |
+| `Index`                       | The index of this entry within its `Validation` container; this property is mostly useful in the event the API returns a filtered view of the items.                                                                                                       |
+| `InputData`                   | The input string being validated.                                                                                                                                                                                                                          |
+| `EmailAddress`                | Gets the email address, without any eventual comment or folding white space. Returns null if the input data is not a syntactically invalid e-mail address.                                                                                                 |
+| `EmailAddressDomainPart`      | Gets the domain part of the email address, without comments and folding white spaces.                                                                                                                                                                      |
+| `EmailAddressLocalPart`       | Gets the local part of the email address, without comments and folding white spaces.                                                                                                                                                                       |
+| `HasInternationalDomainName`  | If true, the email address has an international domain name.                                                                                                                                                                                               |
+| `HasInternationalMailboxName` | If true, the email address has an international mailbox name.                                                                                                                                                                                              |
+| `IsDisposableEmailAddress`    | If true, the email address comes from a disposable email address (DEA) provider. <a href="https://verifalia.com/help/email-validations/what-is-a-disposable-email-address-dea">What is a disposable email address?</a>                                     |
+| `IsFreeEmailAddress`          | If true, the email address comes from a free email address provider (e.g. gmail, yahoo, outlook / hotmail, ...).                                                                                                                                           |
+| `IsRoleAccount`               | If true, the local part of the email address is a well-known role account.                                                                                                                                                                                 |
+| `Status`                      | The `ValidationEntryStatus` value for this entry.                                                                                                                                                                                                          |
+| `Suggestions`                 | The potential corrections for the input data, in the event Verifalia identified potential typos during the verification process.                                                                                                                           |
+| `SyntaxFailureIndex`          | The position of the character in the email address that eventually caused the syntax validation to fail.                                                                                                                                                   |
+
+Here is another example, showing some of the additional result details provided by Verifalia:
+
+```c#
+var job = await verifalia
+    .EmailValidations
+    .SubmitAsync("bat[man@gmal.com");
+
+var entry = job.Entries[0];
+
+Console.WriteLine($"Classification: {entry.Classification}");
+Console.WriteLine($"Status: {entry.Status}");
+Console.WriteLine($"Syntax failure index: {entry.SyntaxFailureIndex}");
+
+if (entry.Suggestions != null)
+{
+    Console.WriteLine("Suggestions:");
+
+    foreach (var suggestion in entry.Suggestions)
+    {
+        Console.WriteLine($"- {suggestion}");
+    }
+}
+
+// Classification: Undeliverable
+// Status: InvalidCharacterInSequence
+// Syntax failure index: 3
+// Suggestions:
+// - batman@gmail.com
 ```
 
 ### How to validate a list of email addresses ###
@@ -496,8 +549,8 @@ var jobOverviews = verifalia
     .ListAsync(new ValidationOverviewListingOptions
     {
         Direction = Direction.Backward,
-        CreatedOn = new DateBetweenPredicate(new DateTime(2023, 5, 26),
-            new DateTime(2023, 5, 30)),
+        CreatedOn = new DateBetweenPredicate(new DateTime(2024, 1, 3),
+            new DateTime(2024, 1, 7)),
         Owner = new StringEqualityPredicate("50173acd-9ed2-4298-ba7f-8ccaeed48deb")
     });
 
@@ -557,9 +610,9 @@ await foreach (var dailyUsage in dailyUsages)
 }
 
 // Prints out something like:
-// 20230201 - credit packs: 1965.68, free daily credits: 200
-// 20230126 - credit packs: 0, free daily credits: 185.628
-// 20230125 - credit packs: 15.32, free daily credits: 200
+// 20240201 - credit packs: 1965.68, free daily credits: 200
+// 20240126 - credit packs: 0, free daily credits: 185.628
+// 20240125 - credit packs: 15.32, free daily credits: 200
 // ...
 ```
 
@@ -569,6 +622,16 @@ await foreach (var dailyUsage in dailyUsages)
 
 This section lists the changelog for the current major version of the library: for older versions,
 please see the [project releases](https://github.com/verifalia/verifalia-csharp-sdk/releases).
+
+### v4.2
+
+Released on January 11<sup>th</sup>, 2024
+
+- Added support for API v2.5
+- Added support for classification override rules
+- Added support for AI-powered suggestions
+- Added support for .NET 8.0
+- Bumped dependencies
 
 ### v4.1
 

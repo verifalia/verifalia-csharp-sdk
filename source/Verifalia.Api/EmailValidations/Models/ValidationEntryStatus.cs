@@ -3,7 +3,7 @@
 * https://verifalia.com/
 * support@verifalia.com
 *
-* Copyright (c) 2005-2023 Cobisi Research
+* Copyright (c) 2005-2024 Cobisi Research
 *
 * Cobisi Research
 * Via Della Costituzione, 31
@@ -264,5 +264,11 @@ namespace Verifalia.Api.EmailValidations.Models
         /// A quoted pair within a quoted word is not closed properly.
         /// </summary>
         UnmatchedQuotedPair,
+        
+        /// <summary>
+        /// The system assigned a user-defined classification because the input data met the criteria specified in a
+        /// custom classification override rule.
+        /// </summary>
+        OverrideMatch,
     }
 }

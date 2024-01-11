@@ -3,7 +3,7 @@
 * https://verifalia.com/
 * support@verifalia.com
 *
-* Copyright (c) 2005-2023 Cobisi Research
+* Copyright (c) 2005-2024 Cobisi Research
 *
 * Cobisi Research
 * Via Della Costituzione, 31
@@ -154,5 +154,11 @@ namespace Verifalia.Api.EmailValidations.Models
         /// </summary>
         [JsonProperty("duplicateOf")]
         public int? DuplicateOf { get; set; }
+        
+        /// <summary>
+        /// The potential corrections for the input data, in the event Verifalia identified potential typos during the verification process.
+        /// </summary>
+        [JsonProperty("suggestions")]
+        public string[]? Suggestions { get; set; }
     }
 }

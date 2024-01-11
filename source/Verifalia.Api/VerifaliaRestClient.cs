@@ -3,7 +3,7 @@
 * https://verifalia.com/
 * support@verifalia.com
 *
-* Copyright (c) 2005-2023 Cobisi Research
+* Copyright (c) 2005-2024 Cobisi Research
 *
 * Cobisi Research
 * Via Della Costituzione, 31
@@ -48,7 +48,7 @@ namespace Verifalia.Api
         /// The default API version used by this SDK.
         /// </summary>
         // ReSharper disable once MemberCanBePrivate.Global
-        public const string DefaultApiVersion = "v2.4";
+        public const string DefaultApiVersion = "v2.5";
 
         private readonly Random _uriShuffler;
         private readonly IAuthenticationProvider _authenticator;
@@ -202,6 +202,8 @@ namespace Verifalia.Api
 #elif NETCOREAPP3_1
                 "netcoreapp3.1",
 // Note: starting .NET 5.0, TFM compilation constants mean "version X or greater", see: https://github.com/dotnet/sdk/issues/13377
+#elif NET8_0
+                "net8.0",
 #elif NET7_0
                 "net7.0",
 #elif NET6_0

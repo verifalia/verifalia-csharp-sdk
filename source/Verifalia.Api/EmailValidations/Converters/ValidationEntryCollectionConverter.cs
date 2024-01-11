@@ -3,7 +3,7 @@
 * https://verifalia.com/
 * support@verifalia.com
 *
-* Copyright (c) 2005-2023 Cobisi Research
+* Copyright (c) 2005-2024 Cobisi Research
 *
 * Cobisi Research
 * Via Della Costituzione, 31
@@ -50,10 +50,13 @@ namespace Verifalia.Api.EmailValidations.Converters
 
             // Read the key-set metadata
 
-            var meta = (JObject)rootObject["meta"];
+            var meta = (JObject?)rootObject["meta"];
 
-            validationEntryCollection.Cursor = meta["cursor"]?.Value<string>();
-            validationEntryCollection.IsTruncated = meta["isTruncated"]?.Value<bool>() ?? false;
+            if (meta != null)
+            {
+                validationEntryCollection.Cursor = meta["cursor"]?.Value<string>();
+                validationEntryCollection.IsTruncated = meta["isTruncated"]?.Value<bool>() ?? false;
+            }
 
             // Read the actual items
 

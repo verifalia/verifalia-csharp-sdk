@@ -3,11 +3,11 @@
         <TargetFrameworks>netstandard1.3;netstandard1.4;netstandard1.5;netstandard1.6;netstandard2.0;netstandard2.1;
             net45;net451;net452;net46;net461;net462;net47;net471;net472;net48;
             netcoreapp1.0;netcoreapp1.1;netcoreapp2.0;netcoreapp2.1;netcoreapp2.2;netcoreapp3.0;netcoreapp3.1;
-            net5.0;net6.0;net7.0;</TargetFrameworks>
+            net5.0;net6.0;net7.0;net8.0</TargetFrameworks>
         <PackageId>Verifalia</PackageId>
-        <Version>4.1.0</Version>
+        <Version>4.2.0</Version>
         <Company>Cobisi Research</Company>
-        <Copyright>Copyright © Cobisi Research 2005-2023 - https://verifalia.com</Copyright>
+        <Copyright>Copyright © Cobisi Research 2005-2024 - https://verifalia.com</Copyright>
         <Authors>Verifalia</Authors>
         <PackageTags>email validation verification real-time verifalia api sdk</PackageTags>
         <PackageIconUrl>https://verifalia.com/favicon.ico</PackageIconUrl>
@@ -22,6 +22,7 @@
         <DocumentationFile>bin\$(Configuration)\Verifalia.Api.xml</DocumentationFile>
         <Nullable>enable</Nullable>
         <WarningsAsErrors>ASYNC0001;ASYNC0004;VSTHRD200</WarningsAsErrors>
+<!--        <PackageReadmeFile>../README.md</PackageReadmeFile>-->
     </PropertyGroup>
 
     <PropertyGroup Condition="!('$(TargetFramework)' == 'net45' or '$(TargetFramework)' == 'net451' or '$(TargetFramework)' == 'net452')">
@@ -59,9 +60,9 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" />
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.27.0" Condition="$(DefineConstants.Contains(';HAS_JWT_SUPPORT;'))" />
-        <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.5.22">
+        <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.8.14">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
