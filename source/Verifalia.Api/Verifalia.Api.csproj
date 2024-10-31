@@ -5,7 +5,7 @@
             netcoreapp1.0;netcoreapp1.1;netcoreapp2.0;netcoreapp2.1;netcoreapp2.2;netcoreapp3.0;netcoreapp3.1;
             net5.0;net6.0;net7.0;net8.0</TargetFrameworks>
         <PackageId>Verifalia</PackageId>
-        <Version>4.2.0</Version>
+        <Version>4.2.1</Version>
         <Company>Cobisi Research</Company>
         <Copyright>Copyright © Cobisi Research 2005-2024 - https://verifalia.com</Copyright>
         <Authors>Verifalia</Authors>
@@ -32,7 +32,9 @@
     <PropertyGroup Condition="!('$(TargetFramework)' == 'net45' or '$(TargetFramework)' == 'net451' or '$(TargetFramework)' == 'net452' or '$(TargetFramework)' == 'net46' or '$(TargetFramework)' == 'net461' or '$(TargetFramework)' == 'net462' or '$(TargetFramework)' == 'net47')">
         <DefineConstants>$(DefineConstants);HAS_CLIENT_CERTIFICATES_SUPPORT;</DefineConstants>
     </PropertyGroup>
-    <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0' or '$(TargetFramework)' == 'netcoreapp3.1' or '$(TargetFramework)' == 'net5.0' or '$(TargetFramework)' == 'net6.0' or '$(TargetFramework)' == 'net7.0'">
+    <PropertyGroup Condition="!('$(TargetFramework)' == 'netstandard1.3' or '$(TargetFramework)' == 'netstandard1.4' or '$(TargetFramework)' == 'netstandard1.5' or '$(TargetFramework)' == 'netstandard1.6' or '$(TargetFramework)' == 'netstandard2.0' or '$(TargetFramework)' == 'netstandard2.1'
+        or '$(TargetFramework)' == 'net45' or '$(TargetFramework)' == 'net451' or '$(TargetFramework)' == 'net452' or '$(TargetFramework)' == 'net46' or '$(TargetFramework)' == 'net461' or '$(TargetFramework)' == 'net462' or '$(TargetFramework)' == 'net47' or '$(TargetFramework)' == 'net472' or '$(TargetFramework)' == 'net48'
+        or '$(TargetFramework)' == 'netcoreapp1.0' or '$(TargetFramework)' == 'netcoreapp1.1' or '$(TargetFramework)' == 'netcoreapp2.0' or '$(TargetFramework)' == 'netcoreapp2.1' or '$(TargetFramework)' == 'netcoreapp2.2')">
         <DefineConstants>$(DefineConstants);HAS_ASYNC_ENUMERABLE_SUPPORT;</DefineConstants>
     </PropertyGroup>
     

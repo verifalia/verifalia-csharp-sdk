@@ -49,11 +49,14 @@ namespace Verifalia.Api.EmailValidations.Models
         public QualityLevelName? Quality { get; set; }
 
         /// <summary>
-        /// The priority (speed) of a validation job, relative to the parent Verifalia account. In the event of an account
-        /// with many concurrent validation jobs, this value allows to increase the processing speed of a job with respect to the others.
-        /// <remarks>The allowed range of values spans from <see cref="ValidationPriority.Lowest"/> (0 - lowest priority) to <see cref="ValidationPriority.Highest"/>
-        /// (255 - highest priority), where the midway value  <see cref="ValidationPriority.Normal"/> (127) means normal priority; if not specified,
-        /// Verifalia processes all the concurrent validation jobs for an account using the same speed.</remarks>
+        /// Specifies the priority (speed) of a validation job relative to the parent Verifalia account. If there are
+        /// multiple concurrent validation jobs in an account, this value allows you to adjust the processing speed of a
+        /// specific job in comparison to others.
+        /// <remarks>The valid range for this priority spans from <see cref="ValidationPriority.Lowest"/> (0 - lowest
+        /// priority) to <see cref="ValidationPriority.Highest"/> (255 - highest priority), with
+        /// <see cref="ValidationPriority.Normal"/> (127) representing normal priority. If not specified, Verifalia
+        /// processes all concurrent validation jobs for an account at the same speed.
+        /// </remarks>
         /// </summary>
         public ValidationPriority? Priority { get; set; }
 
@@ -64,18 +67,18 @@ namespace Verifalia.Api.EmailValidations.Models
         public DeduplicationMode? Deduplication { get; set; }
 
         /// <summary>
-        /// The maximum data retention period Verifalia observes for this verification job, after which the job will be
-        /// automatically deleted. The default value of null forces the service to fall back to the default retention
-        /// period for the user or browser app which is submitting the job.
-        /// <remarks>A verification job can be deleted anytime prior to its retention period through the
-        /// <see cref="EmailValidationsRestClient.DeleteAsync(Guid, CancellationToken)"/> method.</remarks>
-        /// <remarks>If set, the retention period must have a value between 5 minutes and 30 days.</remarks>
+        /// Defines the data retention period for this verification job in Verifalia. After this specified period, the
+        /// job will be automatically deleted. If set to null, the service defaults to the retention period associated
+        /// with the user or browser app submitting the job.
+        /// <remarks>A verification job can be deleted at any time before its retention period using the
+        /// <see cref="EmailValidationsRestClient.DeleteAsync(Guid, CancellationToken)"/> method. The configured
+        /// retention period, if specified, must be within the range of 5 minutes to 30 days.</remarks>
         /// </summary>
         public TimeSpan? Retention { get; set; }
 
         /// <summary>
-        /// An optional user-defined name for the validation job, for your own reference. The name will be returned
-        /// on subsequent API calls and shown on the Verifalia clients area.
+        /// Allows to assign an optional custom name to the validation job for personal reference. This name will be
+        /// included in subsequent API calls and displayed in the Verifalia client area.
         /// </summary>
         public string? Name { get; set; }
 

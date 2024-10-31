@@ -45,8 +45,7 @@ namespace Verifalia.Api.EmailValidations.Models
     public class ValidationRequest : ValidationRequestBase
     {
         /// <summary>
-        /// One or more <see cref="ValidationRequestEntry"/> containing with the email addresses to validate, each along
-        /// with an optional custom state to be passed back upon completion.
+        /// One or more <see cref="ValidationRequestEntry"/> containing the email addresses to validate.
         /// </summary>
         public IReadOnlyCollection<ValidationRequestEntry> Entries { get; }
 

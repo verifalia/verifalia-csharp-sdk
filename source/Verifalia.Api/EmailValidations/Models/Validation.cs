@@ -35,7 +35,7 @@ using Newtonsoft.Json;
 namespace Verifalia.Api.EmailValidations.Models
 {
     /// <summary>
-    /// Represents a snapshot of an email validation job, along with its overview and eventual validated entries.
+    /// Represents a snapshot of an email validation job, including its overview and any validated entries.
     /// </summary>
     public class Validation
     {
@@ -46,7 +46,7 @@ namespace Verifalia.Api.EmailValidations.Models
         public ValidationOverview Overview { get; set; }
 
         /// <summary>
-        /// The eventual validated items for this email validation job.
+        /// The items that have been validated as part of this email validation job.
         /// </summary>
         [JsonProperty("entries")]
         public IReadOnlyList<ValidationEntry>? Entries { get; set; }

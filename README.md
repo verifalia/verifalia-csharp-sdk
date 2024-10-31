@@ -7,7 +7,7 @@ Verifalia RESTful API - .NET SDK and helper library
 
 [Verifalia][0] provides a simple HTTPS-based API for validating email addresses in real-time and checking whether they are deliverable or not; this SDK library integrates with Verifalia and allows to [verify email addresses][0] under the following platforms:
 
-- .NET 5.0 and higher, including **.NET 8.0** ![new](https://img.shields.io/badge/new-green)
+- .NET 5.0 and higher, including **.NET 8.0**
 - .NET Core 1.0 (and higher)
 - .NET Framework 4.5 (and higher)
 - .NET Standard 1.3 (and higher)
@@ -377,7 +377,7 @@ and get the verification results faster.
 
 #### Avoid waiting
 
-In certain scenarios (in a microservice architecture, for example), however, it may preferable to avoid
+In certain scenarios (in a microservice architecture, for example), however, it may be preferable to avoid
 waiting for a job completion and ask the Verifalia API, instead, to just queue it: in that case, the library
 would just return the job overview (and not its verification results) and it will be necessary to retrieve
 the verification results using the `GetAsync()` method.
@@ -621,7 +621,7 @@ await foreach (var dailyUsage in dailyUsages)
 ## Changelog / What's new
 
 This section lists the changelog for the current major version of the library: for older versions,
-please see the [project releases](https://github.com/verifalia/verifalia-csharp-sdk/releases).
+please see the [project releases](https://github.com/verifalia/verifalia-csharp-sdk/releases). For the sake of clarity, logs for build and revision updates are excluded.
 
 ### v4.2
 

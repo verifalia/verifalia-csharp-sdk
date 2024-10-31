@@ -64,7 +64,7 @@ namespace Verifalia.Api.EmailValidations
         /// </example>
         /// <param name="emailAddress">An email addresses to validate.</param>
         /// <param name="quality">The desired results quality for this email validation.</param>
-        /// <param name="waitOptions">The strategy which rules out how to wait for the completion of the email validation.</param>
+        /// <param name="waitOptions">Defines the options that specify how to wait for the completion of the email validation job.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>A <see cref="Validation"/> object representing the submitted email validation job.</returns>
         Task<Validation> SubmitAsync(string emailAddress, QualityLevelName? quality = default, WaitOptions? waitOptions = default, CancellationToken cancellationToken = default);
@@ -86,7 +86,7 @@ namespace Verifalia.Api.EmailValidations
         /// <param name="emailAddresses">An enumerable collection of email addresses to validate.</param>
         /// <param name="quality">The desired results quality for this email validation.</param>
         /// <param name="deduplication">The strategy to follow while determining which email addresses are duplicates.</param>
-        /// <param name="waitOptions">The strategy which rules out how to wait for the completion of the email validation.</param>
+        /// <param name="waitOptions">Defines the options that specify how to wait for the completion of the email validation job.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>A <see cref="Validation"/> object representing the submitted email validation job.</returns>
         Task<Validation> SubmitAsync(IEnumerable<string> emailAddresses, QualityLevelName? quality = default, DeduplicationMode? deduplication = default, WaitOptions? waitOptions = default, CancellationToken cancellationToken = default);
@@ -107,7 +107,7 @@ namespace Verifalia.Api.EmailValidations
         /// </example>
         /// <param name="entry">A <see cref="ValidationRequestEntry"/> to validate.</param>
         /// <param name="quality">The desired results quality for this email validation.</param>
-        /// <param name="waitOptions">The strategy which rules out how to wait for the completion of the email validation.</param>
+        /// <param name="waitOptions">Defines the options that specify how to wait for the completion of the email validation job.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>A <see cref="Validation"/> object representing the submitted email validation job.</returns>
         Task<Validation> SubmitAsync(ValidationRequestEntry entry, QualityLevelName? quality = default, WaitOptions? waitOptions = default, CancellationToken cancellationToken = default);
@@ -129,7 +129,7 @@ namespace Verifalia.Api.EmailValidations
         /// <param name="entries">An enumerable collection of <see cref="ValidationRequestEntry"/> to validate.</param>
         /// <param name="quality">The desired results quality for this email validation.</param>
         /// <param name="deduplication">The strategy to follow while determining which email addresses are duplicates.</param>
-        /// <param name="waitOptions">The strategy which rules out how to wait for the completion of the email validation.</param>
+        /// <param name="waitOptions">Defines the options that specify how to wait for the completion of the email validation job.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>A <see cref="Validation"/> object representing the submitted email validation job.</returns>
         Task<Validation> SubmitAsync(IEnumerable<ValidationRequestEntry> entries, QualityLevelName? quality = default, DeduplicationMode? deduplication = default, WaitOptions? waitOptions = default, CancellationToken cancellationToken = default);
@@ -149,7 +149,7 @@ namespace Verifalia.Api.EmailValidations
         /// </code>
         /// </example>
         /// <param name="request">A <see cref="ValidationRequest"/> to submit for validation.</param>
-        /// <param name="waitOptions">The strategy which rules out how to wait for the completion of the email validation.</param>
+        /// <param name="waitOptions">Defines the options that specify how to wait for the completion of the email validation job.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>A <see cref="Validation"/> object representing the submitted email validation job.</returns>
         Task<Validation> SubmitAsync(ValidationRequest request, WaitOptions? waitOptions = default, CancellationToken cancellationToken = default);
@@ -168,7 +168,7 @@ namespace Verifalia.Api.EmailValidations
         /// <param name="contentType">The MIME content type of the file.</param>
         /// <param name="quality">The desired results quality for this email validation.</param>
         /// <param name="deduplication">The strategy to follow while determining which email addresses are duplicates.</param>
-        /// <param name="waitOptions">The strategy which rules out how to wait for the completion of the email validation.</param>
+        /// <param name="waitOptions">Defines the options that specify how to wait for the completion of the email validation job.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>A <see cref="Validation"/> object representing the submitted email validation job.</returns>
         Task<Validation> SubmitAsync(byte[] file, MediaTypeHeaderValue contentType, QualityLevelName? quality = default, DeduplicationMode? deduplication = default, WaitOptions? waitOptions = default, CancellationToken cancellationToken = default);
@@ -189,7 +189,7 @@ namespace Verifalia.Api.EmailValidations
         /// </param>
         /// <param name="quality">The desired results quality for this email validation.</param>
         /// <param name="deduplication">The strategy to follow while determining which email addresses are duplicates.</param>
-        /// <param name="waitOptions">The strategy which rules out how to wait for the completion of the email validation.</param>
+        /// <param name="waitOptions">Defines the options that specify how to wait for the completion of the email validation job.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>A <see cref="Validation"/> object representing the submitted email validation job.</returns>
         Task<Validation> SubmitAsync(FileInfo fileInfo, MediaTypeHeaderValue? contentType = default, QualityLevelName? quality = default, DeduplicationMode? deduplication = default, WaitOptions? waitOptions = default, CancellationToken cancellationToken = default);
@@ -208,7 +208,7 @@ namespace Verifalia.Api.EmailValidations
         /// <param name="contentType">The MIME content type of the file.</param>
         /// <param name="quality">The desired results quality for this email validation.</param>
         /// <param name="deduplication">The strategy to follow while determining which email addresses are duplicates.</param>
-        /// <param name="waitOptions">The strategy which rules out how to wait for the completion of the email validation.</param>
+        /// <param name="waitOptions">Defines the options that specify how to wait for the completion of the email validation job.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>A <see cref="Validation"/> object representing the submitted email validation job.</returns>
         Task<Validation> SubmitAsync(Stream file, MediaTypeHeaderValue contentType, QualityLevelName? quality = default, DeduplicationMode? deduplication = default, WaitOptions? waitOptions = default, CancellationToken cancellationToken = default);
@@ -224,13 +224,13 @@ namespace Verifalia.Api.EmailValidations
         /// </remarks>
         /// </summary>
         /// <param name="request">A <see cref="FileValidationRequest"/> describing the validation request for a file.</param>
-        /// <param name="waitOptions">The strategy which rules out how to wait for the completion of the email validation.</param>
+        /// <param name="waitOptions">Defines the options that specify how to wait for the completion of the email validation job.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>A <see cref="Validation"/> object representing the submitted email validation job.</returns>
         Task<Validation> SubmitAsync(FileValidationRequest request, WaitOptions? waitOptions = default, CancellationToken cancellationToken = default);
         
         /// <summary>
-        /// Returns an email validation job previously submitted for processing.
+        /// Returns an email validation job that was previously submitted for processing.
         /// <remarks>In the event retrieving the whole validation job data is not needed and getting just the <see cref="ValidationOverview"/>
         /// would be enough, use the <see cref="GetOverviewAsync"/> method instead.</remarks>
         /// </summary>
@@ -247,13 +247,13 @@ namespace Verifalia.Api.EmailValidations
         /// <param name="id">The ID of the email validation job to retrieve.
         /// <remarks>This value is available by way of the <see cref="ValidationOverview.Id"/> property of <see cref="Validation.Overview"/>.</remarks>
         /// </param>
-        /// <param name="waitOptions">The strategy which rules out how to wait for the completion of the email validation.</param>
+        /// <param name="waitOptions">Defines the options that specify how to wait for the completion of the email validation job.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>A <see cref="Validation"/> object representing the requested email validation job.</returns>
         Task<Validation?> GetAsync(Guid id, WaitOptions? waitOptions = default, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Returns a lightweight <see cref="ValidationOverview"/> of an email validation job previously submitted for processing.
+        /// Returns a lightweight <see cref="ValidationOverview"/> of an email validation job that was previously submitted for processing.
         /// <remarks>To retrieve the whole job data, including its results, use the <see cref="GetAsync"/> method instead.</remarks>
         /// </summary>
         /// <remarks>
@@ -269,15 +269,15 @@ namespace Verifalia.Api.EmailValidations
         /// <param name="id">The ID of the email validation job to retrieve the overview for.
         /// <remarks>This value is available by way of the <see cref="ValidationOverview.Id"/> property of <see cref="Validation.Overview"/>.</remarks>
         /// </param>
-        /// <param name="waitOptions">The strategy which rules out how to wait for the completion of the email validation.</param>
+        /// <param name="waitOptions">Defines the options that specify how to wait for the completion of the email validation job.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>A <see cref="ValidationOverview"/> object representing the overview for the requested email validation job.</returns>
         Task<ValidationOverview?> GetOverviewAsync(Guid id, WaitOptions? waitOptions = default, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Deletes an email validation job previously submitted for processing.
+        /// Deletes an email validation job that was previously submitted for processing.
         /// </summary>
-        /// <param name="id">The ID of the email validation job to delete.
+        /// <param name="id">The unique identifier of the email validation job to be deleted.
         /// <remarks>This value is available by way of the <see cref="ValidationOverview.Id"/> property of <see cref="Validation.Overview"/>.</remarks>
         /// </param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>

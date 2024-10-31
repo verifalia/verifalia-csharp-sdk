@@ -35,18 +35,18 @@ using Newtonsoft.Json;
 namespace Verifalia.Api.EmailValidations.Models
 {
     /// <summary>
-    /// Progress details for a <see cref="Validation.Overview"/>, exposed by way of the <see cref="ValidationOverview.Progress"/> property.
+    /// Provides progress details for a <see cref="Validation.Overview"/>, accessible through the <see cref="ValidationOverview.Progress"/> property.
     /// </summary>
     public class ValidationProgress
     {
         /// <summary>
-        /// The percentage of completed entries, ranging from 0 to 1.
+        /// The percentage of completed entries, expressed as a decimal ranging from 0 to 1.
         /// </summary>
         [JsonProperty("percentage", DefaultValueHandling = DefaultValueHandling.Include)]
         public decimal Percentage { get; set; }
 
         /// <summary>
-        /// An eventual estimated required time span needed to complete the whole job.
+        /// An estimated time span required to complete the entire job, if available.
         /// </summary>
         [JsonProperty("estimatedTimeRemaining", DefaultValueHandling = DefaultValueHandling.Ignore, NullValueHandling = NullValueHandling.Ignore)]
         public TimeSpan? EstimatedTimeRemaining { get; set; }

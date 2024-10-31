@@ -40,8 +40,8 @@ namespace Verifalia.Api.EmailValidations.Models
     public class ValidationEntry
     {
         /// <summary>
-        /// The index of this entry within its <see cref="Validation"/> container. This property is mostly useful in the event
-        /// the API returns a filtered view of the items.
+        /// The index of this entry within its <see cref="Validation"/> container. This property is particularly useful
+        /// when the API returns a filtered view of the items
         /// </summary>
         [JsonProperty("index")]
         public int Index { get; set; }
@@ -66,8 +66,8 @@ namespace Verifalia.Api.EmailValidations.Models
         public DateTime? CompletedOn { get; set; }
 
         /// <summary>
-        /// Gets the email address, without any eventual comment or folding white space. Returns null if the input data
-        /// is not a syntactically invalid e-mail address.
+        /// Gets the email address without any comments or folding white space. Returns null if the input data is not a
+        /// syntactically valid email address.
         /// </summary>
         [JsonProperty("emailAddress")]
         public string? EmailAddress { get; set; }
@@ -141,16 +141,16 @@ namespace Verifalia.Api.EmailValidations.Models
         public ValidationEntryClassification Classification { get; set; }
 
         /// <summary>
-        /// The position of the character in the email address that eventually caused the syntax validation to fail.
+        /// The position of the character in the email address that led to the syntax validation failure.
         /// </summary>
-        /// <remarks>Returns <see langword="null">null</see> if there isn't any syntax failure.</remarks>
+        /// <remarks>Returns <see langword="null">null</see> if there is no syntax failure.</remarks>
         [JsonProperty("syntaxFailureIndex")]
         public int? SyntaxFailureIndex { get; set; }
 
         /// <summary>
-        /// The zero-based index of the first occurrence of this email address in the parent <see cref="Validation"/>, in the event the <see cref="Status"/>
-        /// for this entry is <see cref="ValidationEntryStatus.Duplicate"/>; duplicated items do not expose any result detail apart from this and the
-        /// eventual <see cref="Custom"/> values.
+        /// The zero-based index of the first occurrence of this email address in the parent <see cref="Validation"/>.
+        /// This information is relevant when the <see cref="Status"/> for this entry is <see cref="ValidationEntryStatus.Duplicate"/>;
+        /// duplicated items only provide details such as this index and any possible <see cref="Custom"/> values.
         /// </summary>
         [JsonProperty("duplicateOf")]
         public int? DuplicateOf { get; set; }

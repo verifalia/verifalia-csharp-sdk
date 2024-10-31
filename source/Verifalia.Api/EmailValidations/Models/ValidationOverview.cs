@@ -54,19 +54,21 @@ namespace Verifalia.Api.EmailValidations.Models
         public DateTime SubmittedOn { get; set; }
 
         /// <summary>
-        /// The date and time this validation job has been eventually completed.
+        /// The date and time when this validation job was ultimately completed, if applicable.
         /// </summary>
         [JsonProperty("completedOn")]
         public DateTime? CompletedOn { get; set; }
 
         /// <summary>
-        /// The eventual priority (speed) of the validation job, relative to the parent Verifalia account. In the event of an account
-        /// with many concurrent validation jobs, this value allows to increase the processing speed of a job with respect to the others.
+        /// The priority (speed) of a validation job relative to the parent Verifalia account. If there are
+        /// multiple concurrent validation jobs in an account, this value allows you to adjust the processing speed of a
+        /// specific job in comparison to others.
+        /// <remarks>The valid range for this priority spans from <see cref="ValidationPriority.Lowest"/> (0 - lowest
+        /// priority) to <see cref="ValidationPriority.Highest"/> (255 - highest priority), with
+        /// <see cref="ValidationPriority.Normal"/> (127) representing normal priority. If not specified, Verifalia
+        /// processes all concurrent validation jobs for an account at the same speed.
+        /// </remarks>
         /// </summary>
-        /// <remarks>The allowed range of values spans from <see cref="ValidationPriority.Lowest"/> (0 - lowest priority) to
-        /// <see cref="ValidationPriority.Highest"/> (255 - highest priority), where the midway value
-        /// <see cref="ValidationPriority.Normal"/> (127) means normal priority; if not specified, Verifalia processes all the
-        /// concurrent validation jobs for an account using the same priority.</remarks>
         [JsonProperty("priority")]
         public ValidationPriority Priority { get; set; }
 
@@ -77,25 +79,27 @@ namespace Verifalia.Api.EmailValidations.Models
         public string? Name { get; set; }
 
         /// <summary>
-        /// The unique ID of the Verifalia user who submitted the validation job.
+        /// The unique identifier of the Verifalia user who submitted the validation job.
         /// </summary>
         [JsonProperty("owner")]
         public Guid Owner { get; set; }
 
         /// <summary>
-        /// The IP address of the client which submitted the validation job.
+        /// The IP address of the client that submitted the validation job.
         /// </summary>
         [JsonProperty("clientIP")]
         public IPAddress ClientIP { get; set; }
 
         /// <summary>
-        /// The date and time the validation job was created.
+        /// The date and time when the validation job was created.
         /// </summary>
         [JsonProperty("createdOn")]
         public DateTime CreatedOn { get; set; }
 
         /// <summary>
-        /// A reference to the <see cref="QualityLevel"/> this job was validated against.
+        /// A reference to the <see cref="QualityLevel"/> against which this job was validated.
+        /// Quality levels determine how Verifalia validates  email addresses, including whether and how the automatic
+        /// reprocessing logic occurs (for transient statuses) and the verification timeouts settings.
         /// </summary>
         [JsonProperty("quality")]
         public QualityLevelName Quality { get; set; }
@@ -129,7 +133,7 @@ namespace Verifalia.Api.EmailValidations.Models
         public int NoOfEntries { get; set; }
 
         /// <summary>
-        /// The eventual completion progress for the validation job.
+        /// The completion progress of the validation job, if available.
         /// </summary>
         [JsonProperty("progress")]
         public ValidationProgress? Progress { get; set; }

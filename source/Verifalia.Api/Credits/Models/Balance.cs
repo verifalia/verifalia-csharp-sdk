@@ -40,22 +40,22 @@ namespace Verifalia.Api.Credits.Models
     public class Balance
     {
         /// <summary>
-        /// The number of credit packs (that is, non-expiring credits) available for the account.
+        /// The number of credit packs (non-expiring credits) available for the account.
         /// </summary>
         /// <remarks>Visit https://verifalia.com/client-area#/credits/add to add credit packs to your Verifalia account.</remarks>
         [JsonProperty("creditPacks")]
         public decimal CreditPacks { get; set; }
 
         /// <summary>
-        /// The number of free daily credits of the account.
+        /// The number of free daily credits available for the account.
         /// </summary>
-        /// <remarks>Free daily credits depend on the plan of your Verifalia account; visit https://verifalia.com/client-area#/account/change-plan
-        /// to change your plan.</remarks>
+        /// <remarks>The allocation of free daily credits depends on the plan associated with your Verifalia account;
+        /// visit https://verifalia.com/client-area#/account/change-plan to change your plan.</remarks>
         [JsonProperty("freeCredits")]
         public decimal? FreeCredits { get; set; }
 
         /// <summary>
-        /// The time required for the free daily credits to reset.
+        /// The time it takes for the free daily credits to reset.
         /// </summary>
         [JsonProperty("freeCreditsResetIn")]
         public TimeSpan? FreeCreditsResetIn { get; set; }

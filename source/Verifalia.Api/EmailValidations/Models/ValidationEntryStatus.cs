@@ -52,17 +52,17 @@ namespace Verifalia.Api.EmailValidations.Models
         CatchAllConnectionFailure,
         
         /// <summary>
-        /// A timeout occured while verifying fake e-mail address rejection for the mail server.
+        /// A timeout occurred while verifying fake e-mail address rejection for the mail server.
         /// </summary>
         CatchAllValidationTimeout,
 
         /// <summary>
-        /// Verification failed because of a socket connection error occured while querying the DNS server.
+        /// Verification failed because of a socket connection error occurred while querying the DNS server.
         /// </summary>
         DnsConnectionFailure,
 
         /// <summary>
-        /// A timeout has occured while querying the DNS server(s) for records about the email address domain.
+        /// A timeout has occurred while querying the DNS server(s) for records about the email address domain.
         /// </summary>
         DnsQueryTimeout,
 
@@ -183,7 +183,7 @@ namespace Verifalia.Api.EmailValidations.Models
         MailboxTemporarilyUnavailable,
 
         /// <summary>
-        /// A timeout occured while verifying the existence of the mailbox.
+        /// A timeout occurred while verifying the existence of the mailbox.
         /// </summary>
         MailboxValidationTimeout,
 
@@ -219,12 +219,12 @@ namespace Verifalia.Api.EmailValidations.Models
         ServerTemporaryUnavailable,
 
         /// <summary>
-        /// A socket connection error occured while connecting to the mail exchanger which serves the email address domain.
+        /// A socket connection error occurred while connecting to the mail exchanger which serves the email address domain.
         /// </summary>
         SmtpConnectionFailure,
 
         /// <summary>
-        /// A timeout has occured while connecting to the mail exchanger which serves the email address domain.
+        /// A timeout has occurred while connecting to the mail exchanger which serves the email address domain.
         /// </summary>
         SmtpConnectionTimeout,
 
