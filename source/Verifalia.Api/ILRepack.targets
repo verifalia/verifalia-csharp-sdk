@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <Target Name="ILRepacker" AfterTargets="Build" Condition="'$(Configuration)' == 'Release'">
+        <ItemGroup>
+            <!-- References must be included first, see https://github.com/ravibpatel/ILRepack.Lib.MSBuild.Task/issues/34 -->
+            <InputAssemblies Include="@(ReferencePathWithRefAssemblies)" Condition="('%(filename)' == 'Newtonsoft.Json') or ('%(filename)' == 'Flurl') or ('%(filename)' == 'Flurl.Http') or ('%(filename)' == 'Microsoft.Bcl.AsyncInterfaces')"/>
+            <InputAssemblies Include="$(TargetPath)"/>
+        </ItemGroup>
+
+        <ILRepack
+                AllowDuplicateResources="false"
+                DebugInfo="true"
+                Internalize="true"
+                Union="true"
+                InputAssemblies="@(InputAssemblies)"
+                OutputFile="$(OutputPath)Verifalia.Api.dll"
+                Parallel="true"
+                TargetKind="SameAsPrimaryAssembly"/>
+    </Target>
+</Project>
