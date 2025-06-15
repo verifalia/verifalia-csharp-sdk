@@ -29,29 +29,26 @@
 * THE SOFTWARE.
 */
 
-using System;
-using System.Threading.Tasks;
-using Flurl.Http.Testing;
-using Verifalia.Api.EmailVerifications;
-using Verifalia.Api.EmailVerifications.Models;
-using Xunit;
+using System.Collections.Generic;
+using Newtonsoft.Json;
 
-namespace Verifalia.Api.Tests
+namespace Verifalia.Api.EmailVerifications.Models
 {
-    public partial class ValidationRestClientTests
+    /// <summary>
+    /// Represents a snapshot of an email validation job, including its overview and any validated entries.
+    /// </summary>
+    public class Validation
     {
-        [Fact]
-        public async Task DeleteShouldIssueADeleteHttpRequest()
-        {
-            using (var httpTest = new HttpTest())
-            {
-                var validationClient = new EmailVerificationsRestClient(new DummyRestClientFactory());
-                var validationId = Guid.Parse("a3706a81-87da-4762-a135-dabaac6e6971");
+        /// <summary>
+        /// Overview information for this email validation job.
+        /// </summary>
+        [JsonProperty("overview")]
+        public ValidationOverview Overview { get; set; }
 
-                await validationClient.DeleteAsync(validationId);
-
-                httpTest.ShouldHaveCalled($"{DummyRestClientFactory.SoleUri}/email-validations/{validationId:D}");
-            }
-        }
+        /// <summary>
+        /// The items that have been validated as part of this email validation job.
+        /// </summary>
+        [JsonProperty("entries")]
+        public IReadOnlyList<ValidationEntry>? Entries { get; set; }
     }
 }

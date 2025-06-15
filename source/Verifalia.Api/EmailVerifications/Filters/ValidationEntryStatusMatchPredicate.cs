@@ -30,27 +30,33 @@
 */
 
 using System;
-using System.Threading.Tasks;
-using Flurl.Http.Testing;
-using Verifalia.Api.EmailVerifications;
+using System.Collections.Generic;
+using System.Linq;
 using Verifalia.Api.EmailVerifications.Models;
-using Xunit;
+using Verifalia.Api.EmailVerifications.Converters;
+using Verifalia.Api.Filters;
 
-namespace Verifalia.Api.Tests
+namespace Verifalia.Api.EmailVerifications.Filters
 {
-    public partial class ValidationRestClientTests
+    public class ValidationEntryStatusMatchPredicate : FilterPredicate
     {
-        [Fact]
-        public async Task DeleteShouldIssueADeleteHttpRequest()
+        public ValidationEntryStatus[]? IncludedValues { get; set; }
+        public ValidationEntryStatus[]? ExcludedValues { get; set; }
+
+        public override IEnumerable<FilterPredicateFragment> Serialize(string fieldName)
         {
-            using (var httpTest = new HttpTest())
+            if (IncludedValues != null && IncludedValues.Length > 0)
             {
-                var validationClient = new EmailVerificationsRestClient(new DummyRestClientFactory());
-                var validationId = Guid.Parse("a3706a81-87da-4762-a135-dabaac6e6971");
+                yield return new FilterPredicateFragment($"{fieldName}:include",
+                    String.Join(",",
+                        IncludedValues.Select(v => ValidationEntryStatusConverter.Mappings.First(kvp => kvp.Value == v).Key)));
+            }
 
-                await validationClient.DeleteAsync(validationId);
-
-                httpTest.ShouldHaveCalled($"{DummyRestClientFactory.SoleUri}/email-validations/{validationId:D}");
+            if (ExcludedValues != null && ExcludedValues.Length > 0)
+            {
+                yield return new FilterPredicateFragment($"{fieldName}:exclude",
+                    String.Join(",",
+                        ExcludedValues.Select(v => ValidationEntryStatusConverter.Mappings.First(kvp => kvp.Value == v).Key)));
             }
         }
     }

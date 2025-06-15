@@ -33,8 +33,8 @@ using System.IO;
 using System.Text;
 using Flurl.Http.Configuration;
 using Newtonsoft.Json;
-using Verifalia.Api.EmailValidations.Converters;
 using Verifalia.Api.Common.Converters;
+using Verifalia.Api.EmailVerifications.Converters;
 
 namespace Verifalia.Api
 {

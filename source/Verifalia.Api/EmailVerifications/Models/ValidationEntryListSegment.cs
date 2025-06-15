@@ -29,29 +29,15 @@
 * THE SOFTWARE.
 */
 
-using System;
-using System.Threading.Tasks;
-using Flurl.Http.Testing;
-using Verifalia.Api.EmailVerifications;
-using Verifalia.Api.EmailVerifications.Models;
-using Xunit;
+using Verifalia.Api.Common.Models;
 
-namespace Verifalia.Api.Tests
+namespace Verifalia.Api.EmailVerifications.Models
 {
-    public partial class ValidationRestClientTests
+    /// <summary>
+    /// A segment of a list of <see cref="ValidationEntry"/>, returned by a Verifalia API which supports key-set navigation.
+    /// </summary>
+    /// <inheritdoc />
+    public class ValidationEntryListSegment : ListSegment<ValidationEntry>
     {
-        [Fact]
-        public async Task DeleteShouldIssueADeleteHttpRequest()
-        {
-            using (var httpTest = new HttpTest())
-            {
-                var validationClient = new EmailVerificationsRestClient(new DummyRestClientFactory());
-                var validationId = Guid.Parse("a3706a81-87da-4762-a135-dabaac6e6971");
-
-                await validationClient.DeleteAsync(validationId);
-
-                httpTest.ShouldHaveCalled($"{DummyRestClientFactory.SoleUri}/email-validations/{validationId:D}");
-            }
-        }
     }
 }

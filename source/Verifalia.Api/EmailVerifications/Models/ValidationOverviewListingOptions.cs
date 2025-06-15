@@ -29,29 +29,35 @@
 * THE SOFTWARE.
 */
 
-using System;
-using System.Threading.Tasks;
-using Flurl.Http.Testing;
-using Verifalia.Api.EmailVerifications;
-using Verifalia.Api.EmailVerifications.Models;
-using Xunit;
+using Verifalia.Api.Common.Models;
+using Verifalia.Api.Filters;
 
-namespace Verifalia.Api.Tests
+namespace Verifalia.Api.EmailVerifications.Models
 {
-    public partial class ValidationRestClientTests
+    /// <summary>
+    /// Provides options for a listing of validation jobs.
+    /// </summary>
+    public class ValidationOverviewListingOptions : ListingOptions
     {
-        [Fact]
-        public async Task DeleteShouldIssueADeleteHttpRequest()
-        {
-            using (var httpTest = new HttpTest())
-            {
-                var validationClient = new EmailVerificationsRestClient(new DummyRestClientFactory());
-                var validationId = Guid.Parse("a3706a81-87da-4762-a135-dabaac6e6971");
+        /// <summary>
+        /// The field to order the resulting listing by.
+        /// </summary>
+        public ValidationOverviewListingField OrderBy { get; set; }
 
-                await validationClient.DeleteAsync(validationId);
+        /// <summary>
+        /// Allows to filter the resulting list by the creation date of its <see cref="ValidationOverview"/> items.
+        /// </summary>
+        public DateFilterPredicate? CreatedOn { get; set; }
+        
+        /// <summary>
+        /// Allows to filter the resulting list by the ID of its owner; if present, the API will return only the jobs
+        /// submitted by the specified user.
+        /// </summary>
+        public StringEqualityPredicate? Owner { get; set; }
 
-                httpTest.ShouldHaveCalled($"{DummyRestClientFactory.SoleUri}/email-validations/{validationId:D}");
-            }
-        }
+        /// <summary>
+        /// Allows to filter the results by their <see cref="ValidationStatus"/>.
+        /// </summary>
+        public SetFilterPredicate<ValidationStatus>? Statuses { get; set; }        
     }
 }

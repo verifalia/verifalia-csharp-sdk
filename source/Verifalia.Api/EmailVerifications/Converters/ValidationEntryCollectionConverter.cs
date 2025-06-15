@@ -30,28 +30,50 @@
 */
 
 using System;
-using System.Threading.Tasks;
-using Flurl.Http.Testing;
-using Verifalia.Api.EmailVerifications;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Verifalia.Api.EmailVerifications.Models;
-using Xunit;
 
-namespace Verifalia.Api.Tests
+namespace Verifalia.Api.EmailVerifications.Converters
 {
-    public partial class ValidationRestClientTests
+    internal class ValidationEntryCollectionConverter : JsonConverter
     {
-        [Fact]
-        public async Task DeleteShouldIssueADeleteHttpRequest()
+        public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
         {
-            using (var httpTest = new HttpTest())
-            {
-                var validationClient = new EmailVerificationsRestClient(new DummyRestClientFactory());
-                var validationId = Guid.Parse("a3706a81-87da-4762-a135-dabaac6e6971");
-
-                await validationClient.DeleteAsync(validationId);
-
-                httpTest.ShouldHaveCalled($"{DummyRestClientFactory.SoleUri}/email-validations/{validationId:D}");
-            }
+            throw new NotImplementedException();
         }
+
+        public override object ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
+        {
+            var rootObject = JObject.Load(reader);
+            var validationEntryCollection = new ValidationEntryCollection();
+
+            // Read the key-set metadata
+
+            var meta = (JObject?)rootObject["meta"];
+
+            if (meta != null)
+            {
+                validationEntryCollection.Cursor = meta["cursor"]?.Value<string>();
+                validationEntryCollection.IsTruncated = meta["isTruncated"]?.Value<bool>() ?? false;
+            }
+
+            // Read the actual items
+
+            using (var dataReader = rootObject["data"].CreateReader())
+            {
+                var entries = serializer.Deserialize<ValidationEntry[]>(dataReader);
+                validationEntryCollection.AddRange(entries);
+            }
+
+            return validationEntryCollection;
+        }
+
+        public override bool CanConvert(Type objectType)
+        {
+            return objectType == typeof(ValidationEntryCollection);
+        }
+
+        public override bool CanWrite => false;
     }
 }

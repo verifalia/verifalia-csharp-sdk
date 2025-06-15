@@ -30,7 +30,7 @@
 */
 
 using Verifalia.Api.Credits;
-using Verifalia.Api.EmailValidations;
+using Verifalia.Api.EmailVerifications;
 
 namespace Verifalia.Api
 {
@@ -42,7 +42,7 @@ namespace Verifalia.Api
         /// <summary>
         /// Allows to verify email addresses and manage email verification jobs using the Verifalia service.
         /// </summary>
-        IEmailValidationsRestClient EmailValidations { get; }
+        IEmailVerificationsRestClient EmailVerifications { get; }
 
         /// <summary>
         /// Allows to manage the credits for the Verifalia account.

@@ -30,28 +30,28 @@
 */
 
 using System;
-using System.Threading.Tasks;
-using Flurl.Http.Testing;
-using Verifalia.Api.EmailVerifications;
+using System.Globalization;
+using Newtonsoft.Json;
 using Verifalia.Api.EmailVerifications.Models;
-using Xunit;
 
-namespace Verifalia.Api.Tests
+namespace Verifalia.Api.EmailVerifications.Converters
 {
-    public partial class ValidationRestClientTests
+    internal class ValidationEntryClassificationConverter : JsonConverter
     {
-        [Fact]
-        public async Task DeleteShouldIssueADeleteHttpRequest()
+        public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
         {
-            using (var httpTest = new HttpTest())
-            {
-                var validationClient = new EmailVerificationsRestClient(new DummyRestClientFactory());
-                var validationId = Guid.Parse("a3706a81-87da-4762-a135-dabaac6e6971");
+            writer.WriteRawValue(((ValidationEntryClassification)value).Name);
+        }
 
-                await validationClient.DeleteAsync(validationId);
+        public override object ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
+        {
+            var value = Convert.ToString(reader.Value, CultureInfo.InvariantCulture);
+            return new ValidationEntryClassification(value);
+        }
 
-                httpTest.ShouldHaveCalled($"{DummyRestClientFactory.SoleUri}/email-validations/{validationId:D}");
-            }
+        public override bool CanConvert(Type objectType)
+        {
+            return objectType == typeof(ValidationEntryClassification);
         }
     }
 }

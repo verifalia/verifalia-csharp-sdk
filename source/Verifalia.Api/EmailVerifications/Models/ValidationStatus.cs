@@ -29,29 +29,37 @@
 * THE SOFTWARE.
 */
 
-using System;
-using System.Threading.Tasks;
-using Flurl.Http.Testing;
-using Verifalia.Api.EmailVerifications;
-using Verifalia.Api.EmailVerifications.Models;
-using Xunit;
-
-namespace Verifalia.Api.Tests
+namespace Verifalia.Api.EmailVerifications.Models
 {
-    public partial class ValidationRestClientTests
+    /// <summary>
+    /// Provides enumerated values for the supported statuses for a <see cref="Validation.Overview"/>.
+    /// </summary>
+    public enum ValidationStatus
     {
-        [Fact]
-        public async Task DeleteShouldIssueADeleteHttpRequest()
-        {
-            using (var httpTest = new HttpTest())
-            {
-                var validationClient = new EmailVerificationsRestClient(new DummyRestClientFactory());
-                var validationId = Guid.Parse("a3706a81-87da-4762-a135-dabaac6e6971");
+        /// <summary>
+        /// Special unknown status, due to a value reported by the API which is missing in this SDK.
+        /// </summary>
+        Unknown = 0,
 
-                await validationClient.DeleteAsync(validationId);
+        /// <summary>
+        /// The email validation job has been completed and its results are available.
+        /// </summary>
+        Completed,
 
-                httpTest.ShouldHaveCalled($"{DummyRestClientFactory.SoleUri}/email-validations/{validationId:D}");
-            }
-        }
+        /// <summary>
+        /// The email validation job has either been deleted.
+        /// </summary>
+        Deleted,
+
+        /// <summary>
+        /// The email validation job is expired.
+        /// </summary>
+        Expired,
+        
+        /// <summary>
+        /// The email validation job is being processed by Verifalia.
+        /// <remarks>The completion progress, if any, is available through the <see cref="ValidationOverview.Progress"/> property.</remarks>
+        /// </summary>
+        InProgress,
     }
 }

@@ -30,28 +30,18 @@
 */
 
 using System;
-using System.Threading.Tasks;
-using Flurl.Http.Testing;
 using Verifalia.Api.EmailVerifications;
-using Verifalia.Api.EmailVerifications.Models;
-using Xunit;
 
-namespace Verifalia.Api.Tests
+namespace Verifalia.Api.EmailVerifications
 {
-    public partial class ValidationRestClientTests
+    /// <inheritdoc />
+    internal sealed partial class EmailVerificationsRestClient : IEmailVerificationsRestClient
     {
-        [Fact]
-        public async Task DeleteShouldIssueADeleteHttpRequest()
+        private readonly IRestClientFactory _restClientFactory;
+
+        internal EmailVerificationsRestClient(IRestClientFactory restClientFactory)
         {
-            using (var httpTest = new HttpTest())
-            {
-                var validationClient = new EmailVerificationsRestClient(new DummyRestClientFactory());
-                var validationId = Guid.Parse("a3706a81-87da-4762-a135-dabaac6e6971");
-
-                await validationClient.DeleteAsync(validationId);
-
-                httpTest.ShouldHaveCalled($"{DummyRestClientFactory.SoleUri}/email-validations/{validationId:D}");
-            }
+            _restClientFactory = restClientFactory ?? throw new ArgumentNullException(nameof(restClientFactory));
         }
     }
 }

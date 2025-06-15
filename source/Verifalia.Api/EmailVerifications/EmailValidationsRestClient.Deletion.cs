@@ -30,28 +30,52 @@
 */
 
 using System;
+using System.Net;
+using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
-using Flurl.Http.Testing;
-using Verifalia.Api.EmailVerifications;
-using Verifalia.Api.EmailVerifications.Models;
-using Xunit;
+using Verifalia.Api.Exceptions;
 
-namespace Verifalia.Api.Tests
+namespace Verifalia.Api.EmailVerifications
 {
-    public partial class ValidationRestClientTests
+    /// <inheritdoc />
+    internal partial class EmailVerificationsRestClient
     {
-        [Fact]
-        public async Task DeleteShouldIssueADeleteHttpRequest()
+        public async Task DeleteAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            using (var httpTest = new HttpTest())
+            var resource = $"email-validations/{id}";
+
+            // Sends the request to the Verifalia servers
+
+            var restClient = _restClientFactory.Build();
+
+            using var response = await restClient
+                .InvokeAsync(HttpMethod.Delete, resource, cancellationToken: cancellationToken)
+                .ConfigureAwait(false);
+            
+            switch (response.StatusCode)
             {
-                var validationClient = new EmailVerificationsRestClient(new DummyRestClientFactory());
-                var validationId = Guid.Parse("a3706a81-87da-4762-a135-dabaac6e6971");
+                case HttpStatusCode.OK:
+                case HttpStatusCode.Gone:
+                {
+                    // The batch has been correctly deleted
 
-                await validationClient.DeleteAsync(validationId);
-
-                httpTest.ShouldHaveCalled($"{DummyRestClientFactory.SoleUri}/email-validations/{validationId:D}");
+                    return;
+                }
             }
+
+            // An unexpected HTTP status code has been received at this point
+
+            var responseBody = await response
+                .Content
+#if NET5_0_OR_GREATER
+                .ReadAsStringAsync(cancellationToken)
+#else
+                    .ReadAsStringAsync()
+#endif
+                .ConfigureAwait(false);
+
+            throw new VerifaliaException($"Unexpected HTTP response: {(int) response.StatusCode} {responseBody}");
         }
     }
 }

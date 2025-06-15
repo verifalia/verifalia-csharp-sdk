@@ -36,7 +36,7 @@ using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using Verifalia.Api.BaseUrisProviders;
 using Verifalia.Api.Credits;
-using Verifalia.Api.EmailValidations;
+using Verifalia.Api.EmailVerifications;
 using Verifalia.Api.Security;
 
 namespace Verifalia.Api
@@ -73,8 +73,8 @@ namespace Verifalia.Api
             }
         }
 
-        /// <inheritdoc cref="IVerifaliaRestClient.EmailValidations"/>
-        public IEmailValidationsRestClient EmailValidations
+        /// <inheritdoc cref="IVerifaliaRestClient.EmailVerifications"/>
+        public IEmailVerificationsRestClient EmailVerifications
         {
             get;
         }
@@ -135,7 +135,7 @@ namespace Verifalia.Api
             _uriShuffler = new Random();
             _apiVersion = DefaultApiVersion;
 
-            EmailValidations = new EmailValidationsRestClient(this);
+            EmailVerifications = new EmailVerificationsRestClient(this);
             Credits = new CreditsRestClient(this);
         }
 
