@@ -35,10 +35,10 @@ using Newtonsoft.Json;
 namespace Verifalia.Api.EmailVerifications.Models
 {
     /// <summary>
-    /// A single item of a <see cref="ValidationRequest"/> containing an email address to validate, specified by way
+    /// A single item of a <see cref="VerificationRequest"/> containing an email address to validate, specified by way
     /// of the <see cref="InputData"/> property.
     /// </summary>
-    public class ValidationRequestEntry
+    public class VerificationRequestEntry
     {
         private const int MaxCustomLength = 50;
         private string? _custom;
@@ -51,7 +51,7 @@ namespace Verifalia.Api.EmailVerifications.Models
 
         /// <summary>
         /// An optional, custom string which is passed back upon completing the validation job.
-        /// <remarks>Setting this value is useful in the event you wish to have a custom reference of this <see cref="ValidationRequestEntry"/>
+        /// <remarks>Setting this value is useful in the event you wish to have a custom reference of this <see cref="VerificationRequestEntry"/>
         /// with something else (for example, a record in your database).</remarks>
         /// <remarks>This value accepts a string with a maximum length of 50 characters.</remarks>
         /// </summary>
@@ -74,11 +74,11 @@ namespace Verifalia.Api.EmailVerifications.Models
         }
 
         /// <summary>
-        /// Initializes a new <see cref="ValidationRequestEntry"/>.
+        /// Initializes a new <see cref="VerificationRequestEntry"/>.
         /// </summary>
         /// <param name="inputData">The input data string (which should be an email address) to validate.</param>
         /// <param name="custom">An optional, custom string which is passed back upon completing the validation job.</param>
-        public ValidationRequestEntry(string inputData, string? custom = null)
+        public VerificationRequestEntry(string inputData, string? custom = null)
         {
             InputData = inputData ?? throw new ArgumentNullException(nameof(inputData));
             Custom = custom;

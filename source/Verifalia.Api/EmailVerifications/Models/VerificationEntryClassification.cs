@@ -34,56 +34,56 @@ using System;
 namespace Verifalia.Api.EmailVerifications.Models
 {
     /// <summary>
-    /// A classification of the <see cref="ValidationEntryStatus"/> of a <see cref="ValidationEntry"/>.
+    /// A classification of the <see cref="VerificationEntryStatus"/> of a <see cref="VerificationEntry"/>.
     /// </summary>
     /// <remarks>Use one of <see cref="Deliverable"/>, <see cref="Risky"/>, <see cref="Undeliverable"/> or <see cref="Unknown"/>
     /// values if you don't have a custom classification.</remarks>
-    public class ValidationEntryClassification : IEquatable<ValidationEntryClassification>
+    public class VerificationEntryClassification : IEquatable<VerificationEntryClassification>
     {
         /// <summary>
-        /// Gets the name of the <see cref="ValidationEntryClassification"/>.
+        /// Gets the name of the <see cref="VerificationEntryClassification"/>.
         /// <remarks>The default classifications are available by way of the <see cref="Deliverable"/>, <see cref="Risky"/>,
         /// <see cref="Undeliverable"/> and <see cref="Unknown"/> properties.</remarks>
         /// </summary>
         public string Name { get; }
 
         /// <summary>
-        /// A <see cref="ValidationEntry" /> marked as <see cref="Deliverable"/> refers to an <see cref="ValidationEntry.EmailAddress"/> which is deliverable.
+        /// A <see cref="VerificationEntry" /> marked as <see cref="Deliverable"/> refers to an <see cref="VerificationEntry.EmailAddress"/> which is deliverable.
         /// </summary>
-        public static ValidationEntryClassification Deliverable => new("Deliverable");
+        public static VerificationEntryClassification Deliverable => new("Deliverable");
 
         /// <summary>
-        /// A <see cref="ValidationEntry" /> marked as <see cref="Risky"/> refers to an <see cref="ValidationEntry.EmailAddress"/> which could be no longer valid.
+        /// A <see cref="VerificationEntry" /> marked as <see cref="Risky"/> refers to an <see cref="VerificationEntry.EmailAddress"/> which could be no longer valid.
         /// </summary>
-        public static ValidationEntryClassification Risky => new("Risky");
+        public static VerificationEntryClassification Risky => new("Risky");
 
         /// <summary>
-        /// A <see cref="ValidationEntry" /> marked as <see cref="Undeliverable"/> refers to an <see cref="ValidationEntry.EmailAddress"/>
+        /// A <see cref="VerificationEntry" /> marked as <see cref="Undeliverable"/> refers to an <see cref="VerificationEntry.EmailAddress"/>
         /// which is either invalid or no longer deliverable.
         /// </summary>
-        public static ValidationEntryClassification Undeliverable => new("Undeliverable");
+        public static VerificationEntryClassification Undeliverable => new("Undeliverable");
 
         /// <summary>
-        /// A <see cref="ValidationEntry" /> marked as <see cref="Unknown"/> contains an email address whose deliverability is unknown.
+        /// A <see cref="VerificationEntry" /> marked as <see cref="Unknown"/> contains an email address whose deliverability is unknown.
         /// </summary>
-        public static ValidationEntryClassification Unknown => new("Unknown");
+        public static VerificationEntryClassification Unknown => new("Unknown");
 
-        private ValidationEntryClassification()
+        private VerificationEntryClassification()
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="ValidationEntryClassification"/> from its name.
+        /// Initializes a new instance of <see cref="VerificationEntryClassification"/> from its name.
         /// </summary>
         /// <param name="name">The name of the classification.</param>
         /// <remarks>Use one of <see cref="Deliverable"/>, <see cref="Risky"/>, <see cref="Undeliverable"/> or <see cref="Unknown"/> values
         /// if you don't have a custom classification.</remarks>
-        public ValidationEntryClassification(string name)
+        public VerificationEntryClassification(string name)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
         }
 
-        public bool Equals(ValidationEntryClassification? other)
+        public bool Equals(VerificationEntryClassification? other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
@@ -95,7 +95,7 @@ namespace Verifalia.Api.EmailVerifications.Models
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
-            return Equals((ValidationEntryClassification) obj);
+            return Equals((VerificationEntryClassification) obj);
         }
 
         public override int GetHashCode()
@@ -103,12 +103,12 @@ namespace Verifalia.Api.EmailVerifications.Models
             return Name.GetHashCode();
         }
 
-        public static bool operator ==(ValidationEntryClassification? left, ValidationEntryClassification? right)
+        public static bool operator ==(VerificationEntryClassification? left, VerificationEntryClassification? right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(ValidationEntryClassification? left, ValidationEntryClassification? right)
+        public static bool operator !=(VerificationEntryClassification? left, VerificationEntryClassification? right)
         {
             return !Equals(left, right);
         }

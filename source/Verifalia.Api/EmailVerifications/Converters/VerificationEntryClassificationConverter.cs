@@ -30,49 +30,28 @@
 */
 
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using Newtonsoft.Json;
 using Verifalia.Api.EmailVerifications.Models;
 
 namespace Verifalia.Api.EmailVerifications.Converters
 {
-    internal class ValidationStatusConverter : JsonConverter
+    internal class VerificationEntryClassificationConverter : JsonConverter
     {
-        private static readonly Dictionary<string, ValidationStatus> Mappings = new(StringComparer.OrdinalIgnoreCase)
-        {
-            ["Completed"] = ValidationStatus.Completed,
-            ["Deleted"] = ValidationStatus.Deleted,
-            ["Expired"] = ValidationStatus.Expired,
-            ["InProgress"] = ValidationStatus.InProgress,
-        };
-
         public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
         {
-            foreach (var mapping in Mappings)
-            {
-                if (mapping.Value == (ValidationStatus) value)
-                {
-                    writer.WriteRawValue(mapping.Key);
-                    return;
-                }
-            }
-
-            throw new ArgumentOutOfRangeException(nameof(value), value, "Unsupported validation status.");
+            writer.WriteRawValue(((VerificationEntryClassification)value).Name);
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
         {
             var value = Convert.ToString(reader.Value, CultureInfo.InvariantCulture);
-
-            return Mappings.TryGetValue(value, out var mappedStatus)
-                ? mappedStatus
-                : ValidationStatus.Unknown;
+            return new VerificationEntryClassification(value);
         }
 
         public override bool CanConvert(Type objectType)
         {
-            return objectType == typeof(ValidationStatus);
+            return objectType == typeof(VerificationEntryClassification);
         }
     }
 }

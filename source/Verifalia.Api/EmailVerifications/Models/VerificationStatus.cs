@@ -29,29 +29,37 @@
 * THE SOFTWARE.
 */
 
-using System;
-using System.Globalization;
-using Newtonsoft.Json;
-using Verifalia.Api.EmailVerifications.Models;
-
-namespace Verifalia.Api.EmailVerifications.Converters
+namespace Verifalia.Api.EmailVerifications.Models
 {
-    internal class ValidationEntryClassificationConverter : JsonConverter
+    /// <summary>
+    /// Provides enumerated values for the supported statuses for a <see cref="Verification.Overview"/>.
+    /// </summary>
+    public enum VerificationStatus
     {
-        public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
-        {
-            writer.WriteRawValue(((ValidationEntryClassification)value).Name);
-        }
+        /// <summary>
+        /// Special unknown status, due to a value reported by the API which is missing in this SDK.
+        /// </summary>
+        Unknown = 0,
 
-        public override object ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
-        {
-            var value = Convert.ToString(reader.Value, CultureInfo.InvariantCulture);
-            return new ValidationEntryClassification(value);
-        }
+        /// <summary>
+        /// The email validation job has been completed and its results are available.
+        /// </summary>
+        Completed,
 
-        public override bool CanConvert(Type objectType)
-        {
-            return objectType == typeof(ValidationEntryClassification);
-        }
+        /// <summary>
+        /// The email validation job has either been deleted.
+        /// </summary>
+        Deleted,
+
+        /// <summary>
+        /// The email validation job is expired.
+        /// </summary>
+        Expired,
+        
+        /// <summary>
+        /// The email validation job is being processed by Verifalia.
+        /// <remarks>The completion progress, if any, is available through the <see cref="VerificationOverview.Progress"/> property.</remarks>
+        /// </summary>
+        InProgress,
     }
 }

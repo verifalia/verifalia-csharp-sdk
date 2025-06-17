@@ -35,12 +35,12 @@ using Newtonsoft.Json;
 namespace Verifalia.Api.EmailVerifications.Models
 {
     /// <summary>
-    /// Represents a single validated entry within a <see cref="Validation"/>.
+    /// Represents a single validated entry within a <see cref="Verification"/>.
     /// </summary>
-    public class ValidationEntry
+    public class VerificationEntry
     {
         /// <summary>
-        /// The index of this entry within its <see cref="Validation"/> container. This property is particularly useful
+        /// The index of this entry within its <see cref="Verification"/> container. This property is particularly useful
         /// when the API returns a filtered view of the items
         /// </summary>
         [JsonProperty("index")]
@@ -54,7 +54,7 @@ namespace Verifalia.Api.EmailVerifications.Models
 
         /// <summary>
         /// A custom, optional string which is passed back upon completing the validation. To pass back and forth a custom value,
-        /// use the <see cref="ValidationRequestEntry.Custom"/> property of <see cref="ValidationRequestEntry"/>.
+        /// use the <see cref="VerificationRequestEntry.Custom"/> property of <see cref="VerificationRequestEntry"/>.
         /// </summary>
         [JsonProperty("custom")]
         public string? Custom { get; set; }
@@ -130,15 +130,15 @@ namespace Verifalia.Api.EmailVerifications.Models
         /// The validation status for this entry.
         /// </summary>
         [JsonProperty("status")]
-        public ValidationEntryStatus Status { get; set; }
+        public VerificationEntryStatus Status { get; set; }
 
         /// <summary>
-        /// The <see cref="ValidationEntryClassification"/> for the status of this email address.
+        /// The <see cref="VerificationEntryClassification"/> for the status of this email address.
         /// </summary>
-        /// <remarks>Standard values include <see cref="ValidationEntryClassification.Deliverable"/>, <see cref="ValidationEntryClassification.Risky"/>,
-        /// <see cref="ValidationEntryClassification.Undeliverable"/> and <see cref="ValidationEntryClassification.Unknown"/>.</remarks>
+        /// <remarks>Standard values include <see cref="VerificationEntryClassification.Deliverable"/>, <see cref="VerificationEntryClassification.Risky"/>,
+        /// <see cref="VerificationEntryClassification.Undeliverable"/> and <see cref="VerificationEntryClassification.Unknown"/>.</remarks>
         [JsonProperty("classification")]
-        public ValidationEntryClassification Classification { get; set; }
+        public VerificationEntryClassification Classification { get; set; }
 
         /// <summary>
         /// The position of the character in the email address that led to the syntax validation failure.
@@ -148,8 +148,8 @@ namespace Verifalia.Api.EmailVerifications.Models
         public int? SyntaxFailureIndex { get; set; }
 
         /// <summary>
-        /// The zero-based index of the first occurrence of this email address in the parent <see cref="Validation"/>.
-        /// This information is relevant when the <see cref="Status"/> for this entry is <see cref="ValidationEntryStatus.Duplicate"/>;
+        /// The zero-based index of the first occurrence of this email address in the parent <see cref="Verification"/>.
+        /// This information is relevant when the <see cref="Status"/> for this entry is <see cref="VerificationEntryStatus.Duplicate"/>;
         /// duplicated items only provide details such as this index and any possible <see cref="Custom"/> values.
         /// </summary>
         [JsonProperty("duplicateOf")]

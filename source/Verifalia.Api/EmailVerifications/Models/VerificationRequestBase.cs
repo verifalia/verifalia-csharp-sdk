@@ -37,7 +37,7 @@ namespace Verifalia.Api.EmailVerifications.Models
     /// <summary>
     /// Base class for email validation requests.
     /// </summary>
-    public abstract class ValidationRequestBase
+    public abstract class VerificationRequestBase
     {
         /// <summary>
         /// A reference to the expected results quality level for this request. Quality levels determine how Verifalia validates
@@ -52,17 +52,17 @@ namespace Verifalia.Api.EmailVerifications.Models
         /// Specifies the priority (speed) of a validation job relative to the parent Verifalia account. If there are
         /// multiple concurrent validation jobs in an account, this value allows you to adjust the processing speed of a
         /// specific job in comparison to others.
-        /// <remarks>The valid range for this priority spans from <see cref="ValidationPriority.Lowest"/> (0 - lowest
-        /// priority) to <see cref="ValidationPriority.Highest"/> (255 - highest priority), with
-        /// <see cref="ValidationPriority.Normal"/> (127) representing normal priority. If not specified, Verifalia
+        /// <remarks>The valid range for this priority spans from <see cref="VerificationPriority.Lowest"/> (0 - lowest
+        /// priority) to <see cref="VerificationPriority.Highest"/> (255 - highest priority), with
+        /// <see cref="VerificationPriority.Normal"/> (127) representing normal priority. If not specified, Verifalia
         /// processes all concurrent validation jobs for an account at the same speed.
         /// </remarks>
         /// </summary>
-        public ValidationPriority? Priority { get; set; }
+        public VerificationPriority? Priority { get; set; }
 
         /// <summary>
         /// The strategy Verifalia follows while determining which email addresses are duplicates, within a multiple items job.
-        /// <remarks>Duplicated items (after the first occurrence) will have the <see cref="ValidationEntryStatus.Duplicate"/> status.</remarks>
+        /// <remarks>Duplicated items (after the first occurrence) will have the <see cref="VerificationEntryStatus.Duplicate"/> status.</remarks>
         /// </summary>
         public DeduplicationMode? Deduplication { get; set; }
 

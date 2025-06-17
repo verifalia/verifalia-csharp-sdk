@@ -36,22 +36,22 @@ using Verifalia.Api.EmailVerifications.Models;
 
 namespace Verifalia.Api.EmailVerifications.Converters
 {
-    internal class ValidationQualityConverter : JsonConverter
+    internal class VerificationPriorityConverter : JsonConverter
     {
         public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
         {
-            writer.WriteRawValue(((QualityLevelName)value).NameOrGuid);
+            writer.WriteRawValue(((VerificationPriority)value).Value.ToString(CultureInfo.InvariantCulture));
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
         {
-            var value = Convert.ToString(reader.Value, CultureInfo.InvariantCulture);
-            return new QualityLevelName(value);
+            var value = Convert.ToByte(reader.Value, CultureInfo.InvariantCulture);
+            return new VerificationPriority(value);
         }
 
         public override bool CanConvert(Type objectType)
         {
-            return objectType == typeof(QualityLevelName);
+            return objectType == typeof(VerificationPriority);
         }
     }
 }

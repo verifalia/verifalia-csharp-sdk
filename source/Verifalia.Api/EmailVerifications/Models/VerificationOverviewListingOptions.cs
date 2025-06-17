@@ -30,14 +30,34 @@
 */
 
 using Verifalia.Api.Common.Models;
+using Verifalia.Api.Filters;
 
 namespace Verifalia.Api.EmailVerifications.Models
 {
     /// <summary>
-    /// A segment of a list of <see cref="ValidationOverview"/>, returned by a Verifalia API which supports key-set navigation.
+    /// Provides options for a listing of validation jobs.
     /// </summary>
-    /// <inheritdoc />
-    public class ValidationOverviewListSegment : ListSegment<ValidationOverview>
+    public class VerificationOverviewListingOptions : ListingOptions
     {
+        /// <summary>
+        /// The field to order the resulting listing by.
+        /// </summary>
+        public VerificationOverviewListingField OrderBy { get; set; }
+
+        /// <summary>
+        /// Allows to filter the resulting list by the creation date of its <see cref="VerificationOverview"/> items.
+        /// </summary>
+        public DateFilterPredicate? CreatedOn { get; set; }
+        
+        /// <summary>
+        /// Allows to filter the resulting list by the ID of its owner; if present, the API will return only the jobs
+        /// submitted by the specified user.
+        /// </summary>
+        public StringEqualityPredicate? Owner { get; set; }
+
+        /// <summary>
+        /// Allows to filter the results by their <see cref="VerificationStatus"/>.
+        /// </summary>
+        public SetFilterPredicate<VerificationStatus>? Statuses { get; set; }        
     }
 }

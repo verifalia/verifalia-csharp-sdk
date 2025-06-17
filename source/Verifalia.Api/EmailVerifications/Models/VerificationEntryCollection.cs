@@ -29,37 +29,28 @@
 * THE SOFTWARE.
 */
 
+using System.Collections.Generic;
+using Newtonsoft.Json;
+using Verifalia.Api.Common.Models;
+
 namespace Verifalia.Api.EmailVerifications.Models
 {
     /// <summary>
-    /// Provides enumerated values for the supported statuses for a <see cref="Validation.Overview"/>.
+    /// A collection of <see cref="VerificationEntry"/>.
     /// </summary>
-    public enum ValidationStatus
+    public class VerificationEntryCollection : List<VerificationEntry>
     {
         /// <summary>
-        /// Special unknown status, due to a value reported by the API which is missing in this SDK.
+        /// The raw, opaque cursor string returned by the Verifalia API. Should be used in conjunction with <see cref="ListingCursor"/> or
+        /// its descendants to retrieve next or previous segments.
         /// </summary>
-        Unknown = 0,
+        [JsonProperty("cursor")]
+        public string Cursor { get; set; }
 
         /// <summary>
-        /// The email validation job has been completed and its results are available.
+        /// If true, signals more data is available.
         /// </summary>
-        Completed,
-
-        /// <summary>
-        /// The email validation job has either been deleted.
-        /// </summary>
-        Deleted,
-
-        /// <summary>
-        /// The email validation job is expired.
-        /// </summary>
-        Expired,
-        
-        /// <summary>
-        /// The email validation job is being processed by Verifalia.
-        /// <remarks>The completion progress, if any, is available through the <see cref="ValidationOverview.Progress"/> property.</remarks>
-        /// </summary>
-        InProgress,
+        [JsonProperty("isTruncated")]
+        public bool IsTruncated { get; set; }
     }
 }

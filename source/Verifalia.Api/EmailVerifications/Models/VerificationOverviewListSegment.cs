@@ -29,35 +29,15 @@
 * THE SOFTWARE.
 */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Verifalia.Api.EmailVerifications.Models;
-using Verifalia.Api.EmailVerifications.Converters;
-using Verifalia.Api.Filters;
+using Verifalia.Api.Common.Models;
 
-namespace Verifalia.Api.EmailVerifications.Filters
+namespace Verifalia.Api.EmailVerifications.Models
 {
-    public class ValidationEntryStatusMatchPredicate : FilterPredicate
+    /// <summary>
+    /// A segment of a list of <see cref="VerificationOverview"/>, returned by a Verifalia API which supports key-set navigation.
+    /// </summary>
+    /// <inheritdoc />
+    public class VerificationOverviewListSegment : ListSegment<VerificationOverview>
     {
-        public ValidationEntryStatus[]? IncludedValues { get; set; }
-        public ValidationEntryStatus[]? ExcludedValues { get; set; }
-
-        public override IEnumerable<FilterPredicateFragment> Serialize(string fieldName)
-        {
-            if (IncludedValues != null && IncludedValues.Length > 0)
-            {
-                yield return new FilterPredicateFragment($"{fieldName}:include",
-                    String.Join(",",
-                        IncludedValues.Select(v => ValidationEntryStatusConverter.Mappings.First(kvp => kvp.Value == v).Key)));
-            }
-
-            if (ExcludedValues != null && ExcludedValues.Length > 0)
-            {
-                yield return new FilterPredicateFragment($"{fieldName}:exclude",
-                    String.Join(",",
-                        ExcludedValues.Select(v => ValidationEntryStatusConverter.Mappings.First(kvp => kvp.Value == v).Key)));
-            }
-        }
     }
 }

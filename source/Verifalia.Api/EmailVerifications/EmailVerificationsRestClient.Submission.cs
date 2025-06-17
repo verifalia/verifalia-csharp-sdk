@@ -47,43 +47,43 @@ namespace Verifalia.Api.EmailVerifications
 {
     internal partial class EmailVerificationsRestClient
     {
-        public Task<Validation> SubmitAsync(string emailAddress, QualityLevelName? quality = default, WaitOptions? waitOptions = default, CancellationToken cancellationToken = default)
+        public Task<Verification> SubmitAsync(string emailAddress, QualityLevelName? quality = default, WaitOptions? waitOptions = default, CancellationToken cancellationToken = default)
         {
             if (emailAddress == null) throw new ArgumentNullException(nameof(emailAddress));
 
-            return SubmitAsync(new[] {emailAddress},
+            return SubmitAsync([emailAddress],
                 quality: quality,
                 waitOptions: waitOptions,
                 cancellationToken: cancellationToken);
         }
 
-        public Task<Validation> SubmitAsync(IEnumerable<string> emailAddresses, QualityLevelName? quality = default, DeduplicationMode? deduplication = default, WaitOptions? waitOptions = default, CancellationToken cancellationToken = default)
+        public Task<Verification> SubmitAsync(IEnumerable<string> emailAddresses, QualityLevelName? quality = default, DeduplicationMode? deduplication = default, WaitOptions? waitOptions = default, CancellationToken cancellationToken = default)
         {
             if (emailAddresses == null) throw new ArgumentNullException(nameof(emailAddresses));
 
-            return SubmitAsync(emailAddresses.Select(emailAddress => new ValidationRequestEntry(emailAddress)),
+            return SubmitAsync(emailAddresses.Select(emailAddress => new VerificationRequestEntry(emailAddress)),
                 quality: quality,
                 deduplication: deduplication,
                 waitOptions: waitOptions,
                 cancellationToken: cancellationToken);
         }
 
-        public Task<Validation> SubmitAsync(ValidationRequestEntry entry, QualityLevelName? quality = default, WaitOptions? waitOptions = default, CancellationToken cancellationToken = default)
+        public Task<Verification> SubmitAsync(VerificationRequestEntry entry, QualityLevelName? quality = default, WaitOptions? waitOptions = default, CancellationToken cancellationToken = default)
         {
-            return SubmitAsync(new[] {entry},
+            return SubmitAsync([entry],
                 quality: quality,
                 waitOptions: waitOptions,
                 cancellationToken: cancellationToken);
         }
 
-        public Task<Validation> SubmitAsync(IEnumerable<ValidationRequestEntry> entries, QualityLevelName? quality = default, DeduplicationMode? deduplication = default, WaitOptions? waitOptions = default, CancellationToken cancellationToken = default)
+        public Task<Verification> SubmitAsync(IEnumerable<VerificationRequestEntry> entries, QualityLevelName? quality = default, DeduplicationMode? deduplication = default, WaitOptions? waitOptions = default, CancellationToken cancellationToken = default)
         {
-            return SubmitAsync(new ValidationRequest(entries, quality, deduplication),
+            return SubmitAsync(new VerificationRequest(entries, quality, deduplication),
                 waitOptions: waitOptions,
                 cancellationToken: cancellationToken);
         }
 
-        public async Task<Validation> SubmitAsync(ValidationRequest request, WaitOptions? waitOptions = default, CancellationToken cancellationToken = default)
+        public async Task<Verification> SubmitAsync(VerificationRequest request, WaitOptions? waitOptions = default, CancellationToken cancellationToken = default)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
@@ -129,7 +129,7 @@ namespace Verifalia.Api.EmailVerifications
                 .ConfigureAwait(false);
         }
         
-        public async Task<Validation> SubmitAsync(byte[] file, MediaTypeHeaderValue contentType, QualityLevelName? quality = default, DeduplicationMode? deduplication = default, WaitOptions? waitOptions = default, CancellationToken cancellationToken = default)
+        public async Task<Verification> SubmitAsync(byte[] file, MediaTypeHeaderValue contentType, QualityLevelName? quality = default, DeduplicationMode? deduplication = default, WaitOptions? waitOptions = default, CancellationToken cancellationToken = default)
         {
             if (file == null) throw new ArgumentNullException(nameof(file));
             
@@ -144,11 +144,11 @@ namespace Verifalia.Api.EmailVerifications
                 .ConfigureAwait(false);
         }
         
-        public async Task<Validation> SubmitAsync(FileInfo fileInfo, MediaTypeHeaderValue? contentType = default, QualityLevelName? quality = default, DeduplicationMode? deduplication = default, WaitOptions? waitOptions = default, CancellationToken cancellationToken = default)
+        public async Task<Verification> SubmitAsync(FileInfo fileInfo, MediaTypeHeaderValue? contentType = default, QualityLevelName? quality = default, DeduplicationMode? deduplication = default, WaitOptions? waitOptions = default, CancellationToken cancellationToken = default)
         {
             if (fileInfo == null) throw new ArgumentNullException(nameof(fileInfo));
             
-            using var request = new FileValidationRequest(fileInfo, contentType, quality, deduplication);
+            using var request = new FileVerificationRequest(fileInfo, contentType, quality, deduplication);
             
             return await SubmitAsync(request,
                 waitOptions,
@@ -156,12 +156,12 @@ namespace Verifalia.Api.EmailVerifications
                 .ConfigureAwait(false);
         }
 
-        public async Task<Validation> SubmitAsync(Stream file, MediaTypeHeaderValue contentType, QualityLevelName? quality = default, DeduplicationMode? deduplication = default, WaitOptions? waitOptions = default, CancellationToken cancellationToken = default)
+        public async Task<Verification> SubmitAsync(Stream file, MediaTypeHeaderValue contentType, QualityLevelName? quality = default, DeduplicationMode? deduplication = default, WaitOptions? waitOptions = default, CancellationToken cancellationToken = default)
         {
             if (file == null) throw new ArgumentNullException(nameof(file));
             if (contentType == null) throw new ArgumentNullException(nameof(contentType));
 
-            using var request = new FileValidationRequest(file, contentType, quality, deduplication, leaveOpen: true);
+            using var request = new FileVerificationRequest(file, contentType, quality, deduplication, leaveOpen: true);
 
             return await SubmitAsync(request,
                 waitOptions,
@@ -169,7 +169,7 @@ namespace Verifalia.Api.EmailVerifications
                 .ConfigureAwait(false);
         }
         
-        public async Task<Validation> SubmitAsync(FileValidationRequest request, WaitOptions? waitOptions = default, CancellationToken cancellationToken = default)
+        public async Task<Verification> SubmitAsync(FileVerificationRequest request, WaitOptions? waitOptions = default, CancellationToken cancellationToken = default)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
@@ -235,7 +235,7 @@ namespace Verifalia.Api.EmailVerifications
                 .ConfigureAwait(false);
         }
 
-        private async Task<Validation?> SubmitAsync(IRestClient restClient, Func<CancellationToken, Task<HttpContent>> contentFactory, WaitOptions? waitOptions, CancellationToken cancellationToken)
+        private async Task<Verification?> SubmitAsync(IRestClient restClient, Func<CancellationToken, Task<HttpContent>> contentFactory, WaitOptions? waitOptions, CancellationToken cancellationToken)
         {
             var waitOptionsOrDefault = waitOptions ?? WaitOptions.Default;
 
@@ -269,13 +269,13 @@ namespace Verifalia.Api.EmailVerifications
 
                     // Returns immediately if the validation has been completed or if we should not wait for it
 
-                    if (waitOptionsOrDefault == WaitOptions.NoWait || partialValidation.Overview.Status == ValidationStatus.Completed)
+                    if (waitOptionsOrDefault == WaitOptions.NoWait || partialValidation.Overview.Status == VerificationStatus.Completed)
                     {
                         return await RetrieveValidationFromPartialValidationAsync(partialValidation, cancellationToken)
                             .ConfigureAwait(false);
                     }
 
-                    return await WaitForCompletionAsync<Validation>(partialValidation.Overview,
+                    return await WaitForCompletionAsync<Verification>(partialValidation.Overview,
                             waitOptionsOrDefault,
                             cancellationToken)
                         .ConfigureAwait(false);

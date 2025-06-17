@@ -29,28 +29,16 @@
 * THE SOFTWARE.
 */
 
-using System.Collections.Generic;
-using Newtonsoft.Json;
 using Verifalia.Api.Common.Models;
+using Verifalia.Api.EmailVerifications.Filters;
 
 namespace Verifalia.Api.EmailVerifications.Models
 {
     /// <summary>
-    /// A collection of <see cref="ValidationEntry"/>.
+    /// Provides options for a listing of validation entries.
     /// </summary>
-    public class ValidationEntryCollection : List<ValidationEntry>
+    public class VerificationEntryListingOptions : ListingOptions
     {
-        /// <summary>
-        /// The raw, opaque cursor string returned by the Verifalia API. Should be used in conjunction with <see cref="ListingCursor"/> or
-        /// its descendants to retrieve next or previous segments.
-        /// </summary>
-        [JsonProperty("cursor")]
-        public string Cursor { get; set; }
-
-        /// <summary>
-        /// If true, signals more data is available.
-        /// </summary>
-        [JsonProperty("isTruncated")]
-        public bool IsTruncated { get; set; }
+        public VerificationEntryStatusMatchPredicate? StatusFilter { get; set; }
     }
 }

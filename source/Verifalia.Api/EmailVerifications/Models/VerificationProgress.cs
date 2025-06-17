@@ -30,28 +30,25 @@
 */
 
 using System;
-using System.Globalization;
 using Newtonsoft.Json;
-using Verifalia.Api.EmailVerifications.Models;
 
-namespace Verifalia.Api.EmailVerifications.Converters
+namespace Verifalia.Api.EmailVerifications.Models
 {
-    internal class ValidationPriorityConverter : JsonConverter
+    /// <summary>
+    /// Provides progress details for a <see cref="Verification.Overview"/>, accessible through the <see cref="VerificationOverview.Progress"/> property.
+    /// </summary>
+    public class VerificationProgress
     {
-        public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
-        {
-            writer.WriteRawValue(((ValidationPriority)value).Value.ToString(CultureInfo.InvariantCulture));
-        }
+        /// <summary>
+        /// The percentage of completed entries, expressed as a decimal ranging from 0 to 1.
+        /// </summary>
+        [JsonProperty("percentage", DefaultValueHandling = DefaultValueHandling.Include)]
+        public decimal Percentage { get; set; }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
-        {
-            var value = Convert.ToByte(reader.Value, CultureInfo.InvariantCulture);
-            return new ValidationPriority(value);
-        }
-
-        public override bool CanConvert(Type objectType)
-        {
-            return objectType == typeof(ValidationPriority);
-        }
+        /// <summary>
+        /// An estimated time span required to complete the entire job, if available.
+        /// </summary>
+        [JsonProperty("estimatedTimeRemaining", DefaultValueHandling = DefaultValueHandling.Ignore, NullValueHandling = NullValueHandling.Ignore)]
+        public TimeSpan? EstimatedTimeRemaining { get; set; }
     }
 }

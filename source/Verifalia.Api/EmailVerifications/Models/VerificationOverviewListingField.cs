@@ -29,15 +29,16 @@
 * THE SOFTWARE.
 */
 
-using Verifalia.Api.Common.Models;
-
 namespace Verifalia.Api.EmailVerifications.Models
 {
     /// <summary>
-    /// A segment of a list of <see cref="ValidationEntry"/>, returned by a Verifalia API which supports key-set navigation.
+    /// Provides enumerated values for the <see cref="VerificationOverview"/> fields.
     /// </summary>
-    /// <inheritdoc />
-    public class ValidationEntryListSegment : ListSegment<ValidationEntry>
+    public enum VerificationOverviewListingField
     {
+        /// <summary>
+        /// The date and time the validation job was created; refers to the <see cref="VerificationOverview.CreatedOn"/> field.
+        /// </summary>
+        CreatedOn
     }
 }

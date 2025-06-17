@@ -38,12 +38,12 @@ namespace Verifalia.Api.EmailVerifications
 {
     internal partial class EmailVerificationsRestClient
     {
-        private async Task<TResult?> WaitForCompletionAsync<TResult>(ValidationOverview validationOverview, WaitOptions waitOptions, CancellationToken cancellationToken) where TResult : class
+        private async Task<TResult?> WaitForCompletionAsync<TResult>(VerificationOverview verificationOverview, WaitOptions waitOptions, CancellationToken cancellationToken) where TResult : class
         {
-            if (validationOverview == null) throw new ArgumentNullException(nameof(validationOverview));
+            if (verificationOverview == null) throw new ArgumentNullException(nameof(verificationOverview));
             if (waitOptions == null) throw new ArgumentNullException(nameof(waitOptions));
 
-            var resultOverview = validationOverview;
+            var resultOverview = verificationOverview;
 
             do
             {
@@ -61,9 +61,9 @@ namespace Verifalia.Api.EmailVerifications
 
                 TResult? result;
 
-                if (typeof(TResult) == typeof(Validation))
+                if (typeof(TResult) == typeof(Verification))
                 {
-                    var validationResult = await GetAsync(validationOverview.Id,
+                    var validationResult = await GetAsync(verificationOverview.Id,
                             cancellationToken: cancellationToken)
                         .ConfigureAwait(false);
 
@@ -78,9 +78,9 @@ namespace Verifalia.Api.EmailVerifications
 
                     resultOverview = validationResult.Overview;
                 }
-                else if (typeof(TResult) == typeof(ValidationOverview))
+                else if (typeof(TResult) == typeof(VerificationOverview))
                 {
-                    resultOverview = await GetOverviewAsync(validationOverview.Id,
+                    resultOverview = await GetOverviewAsync(verificationOverview.Id,
                             cancellationToken: cancellationToken)
                         .ConfigureAwait(false);
 
@@ -100,7 +100,7 @@ namespace Verifalia.Api.EmailVerifications
 
                 // Returns immediately if the validation has been completed
 
-                if (resultOverview.Status == ValidationStatus.Completed)
+                if (resultOverview.Status == VerificationStatus.Completed)
                 {
                     return result;
                 }

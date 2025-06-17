@@ -29,26 +29,15 @@
 * THE SOFTWARE.
 */
 
-using System;
-using Newtonsoft.Json;
+using Verifalia.Api.Common.Models;
 
 namespace Verifalia.Api.EmailVerifications.Models
 {
     /// <summary>
-    /// Provides progress details for a <see cref="Validation.Overview"/>, accessible through the <see cref="ValidationOverview.Progress"/> property.
+    /// A segment of a list of <see cref="VerificationEntry"/>, returned by a Verifalia API which supports key-set navigation.
     /// </summary>
-    public class ValidationProgress
+    /// <inheritdoc />
+    public class VerificationEntryListSegment : ListSegment<VerificationEntry>
     {
-        /// <summary>
-        /// The percentage of completed entries, expressed as a decimal ranging from 0 to 1.
-        /// </summary>
-        [JsonProperty("percentage", DefaultValueHandling = DefaultValueHandling.Include)]
-        public decimal Percentage { get; set; }
-
-        /// <summary>
-        /// An estimated time span required to complete the entire job, if available.
-        /// </summary>
-        [JsonProperty("estimatedTimeRemaining", DefaultValueHandling = DefaultValueHandling.Ignore, NullValueHandling = NullValueHandling.Ignore)]
-        public TimeSpan? EstimatedTimeRemaining { get; set; }
     }
 }

@@ -60,7 +60,7 @@ namespace Verifalia.Api.EmailVerifications
         /// Gets an <see cref="IProgress{ValidationOverview}"/> instance which eventually receives completion
         /// progress updates for an email validation job.
         /// </summary>
-        public IProgress<ValidationOverview>? Progress { get; set; }
+        public IProgress<VerificationOverview>? Progress { get; set; }
 
         /// <summary>
         /// Defines how much time to ask the Verifalia API to wait for the completion of the job on the server side,
@@ -75,13 +75,13 @@ namespace Verifalia.Api.EmailVerifications
         public TimeSpan PollWaitTime { get; set; } = TimeSpan.FromSeconds(30);
 
         /// <summary>
-        /// Waits for the next polling interval of the specified <see cref="ValidationOverview"/>.
+        /// Waits for the next polling interval of the specified <see cref="VerificationOverview"/>.
         /// </summary>
-        /// <param name="validationOverview">The <see cref="ValidationOverview"/> for which to wait for the next polling interval.</param>
+        /// <param name="verificationOverview">The <see cref="VerificationOverview"/> for which to wait for the next polling interval.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        public virtual Task WaitForNextPollAsync(ValidationOverview validationOverview, CancellationToken cancellationToken)
+        public virtual Task WaitForNextPollAsync(VerificationOverview verificationOverview, CancellationToken cancellationToken)
         {
-            if (validationOverview == null) throw new ArgumentNullException(nameof(validationOverview));
+            if (verificationOverview == null) throw new ArgumentNullException(nameof(verificationOverview));
 
             // TODO: For better results, consider the job age while determining the polling delay
 
@@ -97,8 +97,8 @@ namespace Verifalia.Api.EmailVerifications
 
             // Observe the ETA if we have one, otherwise a delay given the formula: max(0.5, min(30, 2^(log(noOfEntries, 10) - 1)))
 
-            var delay = validationOverview.Progress?.EstimatedTimeRemaining ??
-                   TimeSpan.FromSeconds(Math.Max(0.5, Math.Min(30, Math.Pow(2, Math.Log10(validationOverview.NoOfEntries) - 1))));
+            var delay = verificationOverview.Progress?.EstimatedTimeRemaining ??
+                   TimeSpan.FromSeconds(Math.Max(0.5, Math.Min(30, Math.Pow(2, Math.Log10(verificationOverview.NoOfEntries) - 1))));
 
             return Task.Delay(delay, cancellationToken);
         }

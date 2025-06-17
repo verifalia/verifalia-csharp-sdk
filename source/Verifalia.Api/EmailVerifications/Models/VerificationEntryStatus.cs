@@ -32,9 +32,9 @@
 namespace Verifalia.Api.EmailVerifications.Models
 {
     /// <summary>
-    /// Provides enumerated values for the supported validation statuses for a <see cref="ValidationEntry"/>.
+    /// Provides enumerated values for the supported validation statuses for a <see cref="VerificationEntry"/>.
     /// </summary>
-    public enum ValidationEntryStatus
+    public enum VerificationEntryStatus
     {
         /// <summary>
         /// Special unknown validation status, due to a value reported by the API which is missing in this SDK.
@@ -100,7 +100,7 @@ namespace Verifalia.Api.EmailVerifications.Models
         /// <summary>
         /// The item is a duplicate of another email address in the list.
         /// </summary>
-        /// <remarks>To find out the entry this item is a duplicate of, check the <see cref="ValidationEntry.DuplicateOf"/> property for the <see cref="ValidationEntry"/>
+        /// <remarks>To find out the entry this item is a duplicate of, check the <see cref="VerificationEntry.DuplicateOf"/> property for the <see cref="VerificationEntry"/>
         /// instance which exposes this status code</remarks>
         Duplicate,
 

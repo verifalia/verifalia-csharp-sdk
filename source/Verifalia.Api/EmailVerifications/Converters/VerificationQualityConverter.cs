@@ -29,16 +29,29 @@
 * THE SOFTWARE.
 */
 
-namespace Verifalia.Api.EmailVerifications.Models
+using System;
+using System.Globalization;
+using Newtonsoft.Json;
+using Verifalia.Api.EmailVerifications.Models;
+
+namespace Verifalia.Api.EmailVerifications.Converters
 {
-    /// <summary>
-    /// Provides enumerated values for the <see cref="ValidationOverview"/> fields.
-    /// </summary>
-    public enum ValidationOverviewListingField
+    internal class VerificationQualityConverter : JsonConverter
     {
-        /// <summary>
-        /// The date and time the validation job was created; refers to the <see cref="ValidationOverview.CreatedOn"/> field.
-        /// </summary>
-        CreatedOn
+        public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
+        {
+            writer.WriteRawValue(((QualityLevelName)value).NameOrGuid);
+        }
+
+        public override object ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
+        {
+            var value = Convert.ToString(reader.Value, CultureInfo.InvariantCulture);
+            return new QualityLevelName(value);
+        }
+
+        public override bool CanConvert(Type objectType)
+        {
+            return objectType == typeof(QualityLevelName);
+        }
     }
 }

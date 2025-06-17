@@ -49,10 +49,10 @@ namespace Verifalia.Api.EmailVerifications
 
 #if HAS_ASYNC_ENUMERABLE_SUPPORT
 
-        public IAsyncEnumerable<ValidationOverview> ListAsync(ValidationOverviewListingOptions? options = null, CancellationToken cancellationToken = default)
+        public IAsyncEnumerable<VerificationOverview> ListAsync(VerificationOverviewListingOptions? options = null, CancellationToken cancellationToken = default)
         {
             return AsyncEnumerableHelper
-                .ToAsyncEnumerableAsync<ValidationOverviewListSegment, ValidationOverview, ValidationOverviewListingOptions>(
+                .ToAsyncEnumerableAsync<VerificationOverviewListSegment, VerificationOverview, VerificationOverviewListingOptions>(
                     ListSegmentedAsync,
                     ListSegmentedAsync,
                     options,
@@ -61,7 +61,7 @@ namespace Verifalia.Api.EmailVerifications
 
 #endif
 
-        public async Task<ValidationOverviewListSegment> ListSegmentedAsync(ValidationOverviewListingOptions? options = default, CancellationToken cancellationToken = default)
+        public async Task<VerificationOverviewListSegment> ListSegmentedAsync(VerificationOverviewListingOptions? options = default, CancellationToken cancellationToken = default)
         {
             // Generate the additional parameters, where needed
 
@@ -110,7 +110,7 @@ namespace Verifalia.Api.EmailVerifications
 
                 switch (options.OrderBy)
                 {
-                    case ValidationOverviewListingField.CreatedOn:
+                    case VerificationOverviewListingField.CreatedOn:
                         queryParams["sort"] = $"{(options.Direction == Direction.Backward ? "-" : null)}createdOn";
                         break;
 
@@ -131,7 +131,7 @@ namespace Verifalia.Api.EmailVerifications
                 .ConfigureAwait(false);
         }
 
-        public async Task<ValidationOverviewListSegment> ListSegmentedAsync(ListingCursor cursor, CancellationToken cancellationToken = default)
+        public async Task<VerificationOverviewListSegment> ListSegmentedAsync(ListingCursor cursor, CancellationToken cancellationToken = default)
         {
             if (cursor == null) throw new ArgumentNullException(nameof(cursor));
 
@@ -167,7 +167,7 @@ namespace Verifalia.Api.EmailVerifications
                 .ConfigureAwait(false);
         }
 
-        private async Task<ValidationOverviewListSegment> ListSegmentedImplAsync(IRestClient restClient, HttpResponseMessage response, CancellationToken cancellationToken)
+        private async Task<VerificationOverviewListSegment> ListSegmentedImplAsync(IRestClient restClient, HttpResponseMessage response, CancellationToken cancellationToken)
         {
             switch (response.StatusCode)
             {
@@ -175,7 +175,7 @@ namespace Verifalia.Api.EmailVerifications
                     {
                         return await response
                             .Content
-                            .DeserializeAsync<ValidationOverviewListSegment>(restClient)
+                            .DeserializeAsync<VerificationOverviewListSegment>(restClient)
                             .ConfigureAwait(false);
                     }
 

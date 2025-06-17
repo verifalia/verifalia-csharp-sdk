@@ -49,7 +49,7 @@ namespace Verifalia.Api.EmailVerifications
     /// <inheritdoc />
     internal partial class EmailVerificationsRestClient
     {
-        public async Task<Validation?> GetAsync(Guid id, WaitOptions? waitOptions = default, CancellationToken cancellationToken = default)
+        public async Task<Verification?> GetAsync(Guid id, WaitOptions? waitOptions = default, CancellationToken cancellationToken = default)
         {
             var waitOptionsOrDefault = waitOptions ?? WaitOptions.Default;
             
@@ -87,13 +87,13 @@ namespace Verifalia.Api.EmailVerifications
 
                     // Returns immediately if the validation has been completed or if we should not wait for it
 
-                    if (waitOptionsOrDefault == WaitOptions.NoWait || partialValidation.Overview.Status == ValidationStatus.Completed)
+                    if (waitOptionsOrDefault == WaitOptions.NoWait || partialValidation.Overview.Status == VerificationStatus.Completed)
                     {
                         return await RetrieveValidationFromPartialValidationAsync(partialValidation, cancellationToken)
                             .ConfigureAwait(false);
                     }
 
-                    return await WaitForCompletionAsync<Validation>(partialValidation.Overview,
+                    return await WaitForCompletionAsync<Verification>(partialValidation.Overview,
                             waitOptionsOrDefault,
                             cancellationToken)
                         .ConfigureAwait(false);
@@ -124,11 +124,11 @@ namespace Verifalia.Api.EmailVerifications
             }
         }
 
-        private async Task<Validation> RetrieveValidationFromPartialValidationAsync(PartialValidation partialValidation, CancellationToken cancellationToken)
+        private async Task<Verification> RetrieveValidationFromPartialValidationAsync(PartialValidation partialValidation, CancellationToken cancellationToken)
         {
             if (partialValidation == null) throw new ArgumentNullException(nameof(partialValidation));
 
-            var allEntries = new List<ValidationEntry>(partialValidation.Overview.NoOfEntries);
+            var allEntries = new List<VerificationEntry>(partialValidation.Overview.NoOfEntries);
             var currentSegment = partialValidation.Entries;
 
             while (currentSegment?.Data != null)
@@ -148,14 +148,14 @@ namespace Verifalia.Api.EmailVerifications
                     .ConfigureAwait(false);
             }
 
-            return new Validation
+            return new Verification
             {
                 Overview = partialValidation.Overview,
                 Entries = allEntries
             };
         }
 
-        public async Task<ValidationOverview?> GetOverviewAsync(Guid id, WaitOptions? waitOptions = default, CancellationToken cancellationToken = default)
+        public async Task<VerificationOverview?> GetOverviewAsync(Guid id, WaitOptions? waitOptions = default, CancellationToken cancellationToken = default)
         {
             var waitOptionsOrDefault = waitOptions ?? WaitOptions.Default;
             
@@ -188,21 +188,21 @@ namespace Verifalia.Api.EmailVerifications
                 {
                     var validationOverview = await response
                         .Content
-                        .DeserializeAsync<ValidationOverview>(restClient)
+                        .DeserializeAsync<VerificationOverview>(restClient)
                         .ConfigureAwait(false);
 
                     validationOverview.Status = response.StatusCode == HttpStatusCode.Accepted
-                        ? ValidationStatus.InProgress
-                        : ValidationStatus.Completed;
+                        ? VerificationStatus.InProgress
+                        : VerificationStatus.Completed;
 
                     // Returns immediately if the validation has been completed or if we should not wait for it
 
-                    if (waitOptions == WaitOptions.NoWait || validationOverview.Status == ValidationStatus.Completed)
+                    if (waitOptions == WaitOptions.NoWait || validationOverview.Status == VerificationStatus.Completed)
                     {
                         return validationOverview;
                     }
 
-                    return await WaitForCompletionAsync<ValidationOverview>(validationOverview,
+                    return await WaitForCompletionAsync<VerificationOverview>(validationOverview,
                             waitOptionsOrDefault,
                             cancellationToken)
                         .ConfigureAwait(false);
@@ -232,10 +232,10 @@ namespace Verifalia.Api.EmailVerifications
 
 #if HAS_ASYNC_ENUMERABLE_SUPPORT
 
-        public IAsyncEnumerable<ValidationEntry> ListEntriesAsync(Guid validationId, ValidationEntryListingOptions? options = default, CancellationToken cancellationToken = default)
+        public IAsyncEnumerable<VerificationEntry> ListEntriesAsync(Guid validationId, VerificationEntryListingOptions? options = default, CancellationToken cancellationToken = default)
         {
             return AsyncEnumerableHelper
-                .ToAsyncEnumerableAsync<ValidationEntryListSegment, ValidationEntry, ValidationEntryListingOptions>(
+                .ToAsyncEnumerableAsync<VerificationEntryListSegment, VerificationEntry, VerificationEntryListingOptions>(
                     (listingOptions, token) => ListEntriesSegmentedAsync(validationId, listingOptions, token),
                     (cursor, token) => ListEntriesSegmentedAsync(validationId, cursor, token),
                     options,
@@ -244,7 +244,7 @@ namespace Verifalia.Api.EmailVerifications
 
 #endif
 
-        public async Task<ValidationEntryListSegment> ListEntriesSegmentedAsync(Guid validationId, ValidationEntryListingOptions? options = default, CancellationToken cancellationToken = default)
+        public async Task<VerificationEntryListSegment> ListEntriesSegmentedAsync(Guid validationId, VerificationEntryListingOptions? options = default, CancellationToken cancellationToken = default)
         {
             // Generate the additional parameters, where needed
 
@@ -286,7 +286,7 @@ namespace Verifalia.Api.EmailVerifications
                 .ConfigureAwait(false);
         }
 
-        public async Task<ValidationEntryListSegment> ListEntriesSegmentedAsync(Guid validationId, ListingCursor cursor, CancellationToken cancellationToken = default)
+        public async Task<VerificationEntryListSegment> ListEntriesSegmentedAsync(Guid validationId, ListingCursor cursor, CancellationToken cancellationToken = default)
         {
             if (cursor == null) throw new ArgumentNullException(nameof(cursor));
 
@@ -322,7 +322,7 @@ namespace Verifalia.Api.EmailVerifications
                 .ConfigureAwait(false);
         }
 
-        private async Task<ValidationEntryListSegment> ListEntriesSegmentedImplAsync(IRestClient restClient, HttpResponseMessage response)
+        private async Task<VerificationEntryListSegment> ListEntriesSegmentedImplAsync(IRestClient restClient, HttpResponseMessage response)
         {
             switch (response.StatusCode)
             {
@@ -330,7 +330,7 @@ namespace Verifalia.Api.EmailVerifications
                     {
                         return await response
                             .Content
-                            .DeserializeAsync<ValidationEntryListSegment>(restClient)
+                            .DeserializeAsync<VerificationEntryListSegment>(restClient)
                             .ConfigureAwait(false);
                     }
 
@@ -348,7 +348,7 @@ namespace Verifalia.Api.EmailVerifications
             }
         }
         
-        public async Task<Stream> ExportEntriesAsync(Guid validationId, ExportedEntriesFormat format, ValidationEntryListingOptions? options = default, CancellationToken cancellationToken = default)
+        public async Task<Stream> ExportEntriesAsync(Guid validationId, ExportedEntriesFormat format, VerificationEntryListingOptions? options = default, CancellationToken cancellationToken = default)
         {
             // Determines the acceptable MIME content type
 

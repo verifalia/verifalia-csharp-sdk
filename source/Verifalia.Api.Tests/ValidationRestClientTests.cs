@@ -76,7 +76,7 @@ namespace Verifalia.Api.Tests
 
                 var response = await validationClient.GetAsync(validationId);
 
-                Assert.Equal(ValidationStatus.InProgress, response.Overview.Status);
+                Assert.Equal(VerificationStatus.InProgress, response.Overview.Status);
             }
         }
 
@@ -122,7 +122,7 @@ namespace Verifalia.Api.Tests
                 // Did we make the expected number of requests?
 
                 Assert.Equal(noOfInProgressReplies + 1, httpTest.CallLog.Count);
-                Assert.Equal(ValidationStatus.Completed, validation.Overview.Status);
+                Assert.Equal(VerificationStatus.Completed, validation.Overview.Status);
             }
         }
 

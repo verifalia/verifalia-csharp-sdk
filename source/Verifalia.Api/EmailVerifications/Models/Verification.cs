@@ -29,35 +29,26 @@
 * THE SOFTWARE.
 */
 
-using Verifalia.Api.Common.Models;
-using Verifalia.Api.Filters;
+using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace Verifalia.Api.EmailVerifications.Models
 {
     /// <summary>
-    /// Provides options for a listing of validation jobs.
+    /// Represents a snapshot of an email validation job, including its overview and any validated entries.
     /// </summary>
-    public class ValidationOverviewListingOptions : ListingOptions
+    public class Verification
     {
         /// <summary>
-        /// The field to order the resulting listing by.
+        /// Overview information for this email validation job.
         /// </summary>
-        public ValidationOverviewListingField OrderBy { get; set; }
+        [JsonProperty("overview")]
+        public VerificationOverview Overview { get; set; }
 
         /// <summary>
-        /// Allows to filter the resulting list by the creation date of its <see cref="ValidationOverview"/> items.
+        /// The items that have been validated as part of this email validation job.
         /// </summary>
-        public DateFilterPredicate? CreatedOn { get; set; }
-        
-        /// <summary>
-        /// Allows to filter the resulting list by the ID of its owner; if present, the API will return only the jobs
-        /// submitted by the specified user.
-        /// </summary>
-        public StringEqualityPredicate? Owner { get; set; }
-
-        /// <summary>
-        /// Allows to filter the results by their <see cref="ValidationStatus"/>.
-        /// </summary>
-        public SetFilterPredicate<ValidationStatus>? Statuses { get; set; }        
+        [JsonProperty("entries")]
+        public IReadOnlyList<VerificationEntry>? Entries { get; set; }
     }
 }

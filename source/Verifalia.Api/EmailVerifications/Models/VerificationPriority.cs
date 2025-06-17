@@ -41,31 +41,31 @@ namespace Verifalia.Api.EmailVerifications.Models
     /// (255 - highest priority), where the midway value  <see cref="Normal"/> (127) means normal priority; if not specified,
     /// Verifalia processes all the concurrent validation jobs for an account using the same speed.</remarks>
     /// </summary>
-    public class ValidationPriority : IEquatable<ValidationPriority>
+    public class VerificationPriority : IEquatable<VerificationPriority>
     {
         internal byte Value { get; }
 
         /// <summary>
         /// The lowest possible processing priority (speed) for a validation job.
         /// </summary>
-        public static ValidationPriority Lowest = new(0);
+        public static VerificationPriority Lowest = new(0);
 
         /// <summary>
         /// Normal processing priority (speed) for a validation job.
         /// </summary>
-        public static ValidationPriority Normal = new(127);
+        public static VerificationPriority Normal = new(127);
 
         /// <summary>
         /// The highest possible processing priority (speed) for a validation job.
         /// </summary>
-        public static ValidationPriority Highest = new(255);
+        public static VerificationPriority Highest = new(255);
 
-        public ValidationPriority(byte value)
+        public VerificationPriority(byte value)
         {
             Value = value;
         }
 
-        public bool Equals(ValidationPriority? other)
+        public bool Equals(VerificationPriority? other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
@@ -77,7 +77,7 @@ namespace Verifalia.Api.EmailVerifications.Models
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
-            return Equals((ValidationPriority) obj);
+            return Equals((VerificationPriority) obj);
         }
 
         public override int GetHashCode()
@@ -85,12 +85,12 @@ namespace Verifalia.Api.EmailVerifications.Models
             return Value.GetHashCode();
         }
 
-        public static bool operator ==(ValidationPriority? left, ValidationPriority? right)
+        public static bool operator ==(VerificationPriority? left, VerificationPriority? right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(ValidationPriority? left, ValidationPriority? right)
+        public static bool operator !=(VerificationPriority? left, VerificationPriority? right)
         {
             return !Equals(left, right);
         }

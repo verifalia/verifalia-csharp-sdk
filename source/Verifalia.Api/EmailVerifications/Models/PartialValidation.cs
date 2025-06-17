@@ -36,9 +36,9 @@ namespace Verifalia.Api.EmailVerifications.Models
     internal class PartialValidation
     {
         [JsonProperty("overview")]
-        public ValidationOverview Overview { get; set; }
+        public VerificationOverview Overview { get; set; }
 
         [JsonProperty("entries")]
-        public ValidationEntryListSegment? Entries { get; set; }
+        public VerificationEntryListSegment? Entries { get; set; }
     }
 }

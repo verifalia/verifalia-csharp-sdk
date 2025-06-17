@@ -36,7 +36,7 @@ using Verifalia.Api.EmailVerifications.Models;
 
 namespace Verifalia.Api.EmailVerifications.Converters
 {
-    internal class ValidationEntryCollectionConverter : JsonConverter
+    internal class VerificationEntryCollectionConverter : JsonConverter
     {
         public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
         {
@@ -46,7 +46,7 @@ namespace Verifalia.Api.EmailVerifications.Converters
         public override object ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
         {
             var rootObject = JObject.Load(reader);
-            var validationEntryCollection = new ValidationEntryCollection();
+            var validationEntryCollection = new VerificationEntryCollection();
 
             // Read the key-set metadata
 
@@ -62,7 +62,7 @@ namespace Verifalia.Api.EmailVerifications.Converters
 
             using (var dataReader = rootObject["data"].CreateReader())
             {
-                var entries = serializer.Deserialize<ValidationEntry[]>(dataReader);
+                var entries = serializer.Deserialize<VerificationEntry[]>(dataReader);
                 validationEntryCollection.AddRange(entries);
             }
 
@@ -71,7 +71,7 @@ namespace Verifalia.Api.EmailVerifications.Converters
 
         public override bool CanConvert(Type objectType)
         {
-            return objectType == typeof(ValidationEntryCollection);
+            return objectType == typeof(VerificationEntryCollection);
         }
 
         public override bool CanWrite => false;

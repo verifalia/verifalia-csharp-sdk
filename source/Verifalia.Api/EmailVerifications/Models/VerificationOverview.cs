@@ -37,9 +37,9 @@ using Newtonsoft.Json;
 namespace Verifalia.Api.EmailVerifications.Models
 {
     /// <summary>
-    /// Overview information for a <see cref="Validation"/>.
+    /// Overview information for a <see cref="Verification"/>.
     /// </summary>
-    public class ValidationOverview
+    public class VerificationOverview
     {
         /// <summary>
         /// The unique identifier for the validation job.
@@ -63,14 +63,14 @@ namespace Verifalia.Api.EmailVerifications.Models
         /// The priority (speed) of a validation job relative to the parent Verifalia account. If there are
         /// multiple concurrent validation jobs in an account, this value allows you to adjust the processing speed of a
         /// specific job in comparison to others.
-        /// <remarks>The valid range for this priority spans from <see cref="ValidationPriority.Lowest"/> (0 - lowest
-        /// priority) to <see cref="ValidationPriority.Highest"/> (255 - highest priority), with
-        /// <see cref="ValidationPriority.Normal"/> (127) representing normal priority. If not specified, Verifalia
+        /// <remarks>The valid range for this priority spans from <see cref="VerificationPriority.Lowest"/> (0 - lowest
+        /// priority) to <see cref="VerificationPriority.Highest"/> (255 - highest priority), with
+        /// <see cref="VerificationPriority.Normal"/> (127) representing normal priority. If not specified, Verifalia
         /// processes all concurrent validation jobs for an account at the same speed.
         /// </remarks>
         /// </summary>
         [JsonProperty("priority")]
-        public ValidationPriority Priority { get; set; }
+        public VerificationPriority Priority { get; set; }
 
         /// <summary>
         /// An optional user-defined name for the validation job, for your own reference.
@@ -121,10 +121,10 @@ namespace Verifalia.Api.EmailVerifications.Models
         public DeduplicationMode Deduplication { get; set; }
 
         /// <summary>
-        /// The processing <see cref="ValidationStatus"/> for the validation job.
+        /// The processing <see cref="VerificationStatus"/> for the validation job.
         /// </summary>
         [JsonProperty("status")]
-        public ValidationStatus Status { get; set; }
+        public VerificationStatus Status { get; set; }
 
         /// <summary>
         /// The number of entries the validation job contains.
@@ -136,6 +136,6 @@ namespace Verifalia.Api.EmailVerifications.Models
         /// The completion progress of the validation job, if available.
         /// </summary>
         [JsonProperty("progress")]
-        public ValidationProgress? Progress { get; set; }
+        public VerificationProgress? Progress { get; set; }
     }
 }
