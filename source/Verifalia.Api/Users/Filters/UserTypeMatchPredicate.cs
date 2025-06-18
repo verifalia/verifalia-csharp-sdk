@@ -29,37 +29,21 @@
 * THE SOFTWARE.
 */
 
-using Verifalia.Api.Credits;
-using Verifalia.Api.EmailVerifications;
-using Verifalia.Api.Users;
+using System.Collections.Generic;
+using System.Linq;
+using Verifalia.Api.Filters;
+using Verifalia.Api.Users.Converters;
+using Verifalia.Api.Users.Models;
 
-namespace Verifalia.Api
+namespace Verifalia.Api.Users.Filters
 {
-    /// <summary>
-    /// HTTPS-based REST client for Verifalia.
-    /// </summary>
-    public interface IVerifaliaRestClient
+    public class UserTypeMatchPredicate : FilterPredicate
     {
-        /// <summary>
-        /// Allows to verify email addresses and manage email verification jobs using the Verifalia service.
-        /// </summary>
-        IEmailVerificationsRestClient EmailVerifications { get; }
+        public UserType Value { get; set; }
 
-        /// <summary>
-        /// Allows to manage the credits for the Verifalia account.
-        /// </summary>
-        ICreditsRestClient Credits { get; }
-
-        /// <summary>
-        /// Allows to manage the users and browser apps of the Verifalia account, as well as their security and configuration settings.
-        /// </summary>
-        IUsersRestClient Users { get; }
-        
-        /// <summary>
-        /// Gets or sets the version of the Verifalia API to use when making requests; defaults to the latest API version supported
-        /// by this SDK.
-        /// <remarks>Warning: changing this value may affect the stability of the SDK itself.</remarks>
-        /// </summary>
-        string ApiVersion { get; set; }
+        public override IEnumerable<FilterPredicateFragment> Serialize(string fieldName)
+        {
+            yield return new FilterPredicateFragment(fieldName, UserTypeConverter.Mappings.First(kvp => kvp.Value == Value).Key);
+        }
     }
 }

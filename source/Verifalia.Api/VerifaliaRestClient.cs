@@ -38,6 +38,7 @@ using Verifalia.Api.BaseUrisProviders;
 using Verifalia.Api.Credits;
 using Verifalia.Api.EmailVerifications;
 using Verifalia.Api.Security;
+using Verifalia.Api.Users;
 
 namespace Verifalia.Api
 {
@@ -85,6 +86,12 @@ namespace Verifalia.Api
             get;
         }
 
+        /// <inheritdoc cref="IVerifaliaRestClient.Users"/>
+        public IUsersRestClient Users
+        {
+            get;
+        }
+        
         /// <summary>
         /// Initializes a new HTTPS-based REST client for Verifalia with the specified username and password.
         /// <remarks>While authenticating with your Verifalia main account credentials is possible, it is strongly advised
@@ -137,6 +144,7 @@ namespace Verifalia.Api
 
             EmailVerifications = new EmailVerificationsRestClient(this);
             Credits = new CreditsRestClient(this);
+            Users = new UsersRestClient(this);
         }
 
         /// <summary>

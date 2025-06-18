@@ -35,6 +35,7 @@ using Flurl.Http.Configuration;
 using Newtonsoft.Json;
 using Verifalia.Api.Common.Converters;
 using Verifalia.Api.EmailVerifications.Converters;
+using Verifalia.Api.Users.Converters;
 
 namespace Verifalia.Api
 {
@@ -57,7 +58,7 @@ namespace Verifalia.Api
 
             // TODO: Move the following to a reflection-based initialization in order to decouple the serializer from the data-specific converters
 
-            // Email-addresses specific
+            // Email-verifications
 
             _serializer.Converters.Add(new VerificationStatusConverter());
             _serializer.Converters.Add(new VerificationEntryCollectionConverter());
@@ -67,6 +68,10 @@ namespace Verifalia.Api
             _serializer.Converters.Add(new IPAddressConverter());
             _serializer.Converters.Add(new DeduplicationModeConverter());
             _serializer.Converters.Add(new VerificationEntryClassificationConverter());
+            
+            // Users
+            
+            _serializer.Converters.Add(new UserTypeConverter());
         }
 
         public string Serialize(object obj)

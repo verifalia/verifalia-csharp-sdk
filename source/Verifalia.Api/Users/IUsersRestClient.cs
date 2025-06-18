@@ -29,37 +29,32 @@
 * THE SOFTWARE.
 */
 
-using Verifalia.Api.Credits;
-using Verifalia.Api.EmailVerifications;
-using Verifalia.Api.Users;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Verifalia.Api.Common.Models;
+using System.Collections.Generic;
+using System.ComponentModel;
+using Verifalia.Api.Users.Models;
 
-namespace Verifalia.Api
+namespace Verifalia.Api.Users
 {
-    /// <summary>
-    /// HTTPS-based REST client for Verifalia.
-    /// </summary>
-    public interface IVerifaliaRestClient
+    public interface IUsersRestClient
     {
-        /// <summary>
-        /// Allows to verify email addresses and manage email verification jobs using the Verifalia service.
-        /// </summary>
-        IEmailVerificationsRestClient EmailVerifications { get; }
+#if HAS_ASYNC_ENUMERABLE_SUPPORT
+        IAsyncEnumerable<UserOverview> ListUsersAsync(UserListingOptions? options = null, CancellationToken cancellationToken = default);
+#endif
 
-        /// <summary>
-        /// Allows to manage the credits for the Verifalia account.
-        /// </summary>
-        ICreditsRestClient Credits { get; }
+#if HAS_ASYNC_ENUMERABLE_SUPPORT
+        [Obsolete("ListUsersAsync() is preferred in .NET Core 3.0+ because of its simpler syntax, thanks to the async enumerable support.")]
+        [EditorBrowsable(EditorBrowsableState.Advanced)]
+#endif
+        Task<UserListSegment> ListUsersSegmentedAsync(UserListingOptions? options = null, CancellationToken cancellationToken = default);
 
-        /// <summary>
-        /// Allows to manage the users and browser apps of the Verifalia account, as well as their security and configuration settings.
-        /// </summary>
-        IUsersRestClient Users { get; }
-        
-        /// <summary>
-        /// Gets or sets the version of the Verifalia API to use when making requests; defaults to the latest API version supported
-        /// by this SDK.
-        /// <remarks>Warning: changing this value may affect the stability of the SDK itself.</remarks>
-        /// </summary>
-        string ApiVersion { get; set; }
+#if HAS_ASYNC_ENUMERABLE_SUPPORT
+        [Obsolete("ListUsersAsync() is preferred in .NET Core 3.0+ because of its simpler syntax, thanks to the async enumerable support.")]
+        [EditorBrowsable(EditorBrowsableState.Advanced)]
+#endif
+        Task<UserListSegment> ListUsersSegmentedAsync(ListingCursor cursor, CancellationToken cancellationToken = default);
     }
 }
