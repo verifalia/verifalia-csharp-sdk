@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Verifalia - Email list cleaning and real-time email verification service
 * https://verifalia.com/
 * support@verifalia.com
@@ -29,39 +29,22 @@
 * THE SOFTWARE.
 */
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
-using Flurl.Http;
-using Verifalia.Api.Exceptions;
+using Newtonsoft.Json;
 
-namespace Verifalia.Api
+namespace Verifalia.Api.Exceptions.Models
 {
-    public interface IRestClient : IDisposable
+    public sealed class Problem
     {
-        [CLSCompliant(false)]
-        IFlurlClient UnderlyingClient { get; }
+        [JsonProperty("type")]
+        public string? Type { get; set; }
 
-        Task<HttpResponseMessage> InvokeAsync(HttpMethod verb,
-            string resource,
-            Dictionary<string, string>? queryParams = null,
-            Dictionary<string, object>? headers = null,
-            Func<CancellationToken, Task<HttpContent>>? contentFactory = null,
-            bool bufferResponseContent = true,
-            bool skipAuthentication = false,
-            CancellationToken cancellationToken = default);
+        [JsonProperty("title")]
+        public string Title { get; set; }
 
-        // Json serialization
+        [JsonProperty("status")]
+        public int Status { get; set; }
 
-        T Deserialize<T>(string value);
-        T Deserialize<T>(Stream stream);
-        string Serialize(object obj);
-        
-        // Error handling, factory method
-
-        Task<RequestFailedException> BuildRequestFailedExceptionAsync(HttpResponseMessage response, CancellationToken cancellationToken);
+        [JsonProperty("detail")]
+        public string? Detail { get; set; }
     }
 }

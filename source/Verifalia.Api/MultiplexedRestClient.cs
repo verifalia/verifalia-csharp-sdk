@@ -40,6 +40,7 @@ using System.Threading.Tasks;
 using Flurl;
 using Flurl.Http;
 using Verifalia.Api.Exceptions;
+using Verifalia.Api.Exceptions.Models;
 using Verifalia.Api.Security;
 
 namespace Verifalia.Api
@@ -242,6 +243,11 @@ namespace Verifalia.Api
                 new AggregateException(errors.Select(error => error.Value)));
         }
 
+        public T Deserialize<T>(string value)
+        {
+            return UnderlyingClient.Settings.JsonSerializer.Deserialize<T>(value);
+        }
+        
         public T Deserialize<T>(Stream stream)
         {
             return UnderlyingClient.Settings.JsonSerializer.Deserialize<T>(stream);
@@ -250,6 +256,31 @@ namespace Verifalia.Api
         public string Serialize(object obj)
         {
             return UnderlyingClient.Settings.JsonSerializer.Serialize(obj);
+        }
+        
+        public async Task<RequestFailedException> BuildRequestFailedExceptionAsync(HttpResponseMessage response, CancellationToken cancellationToken)
+        {
+            // An unexpected HTTP status code has been received at this point
+            
+            var responseBody = await response
+                .Content
+#if NET5_0_OR_GREATER
+                .ReadAsStringAsync(cancellationToken)
+#else
+                .ReadAsStringAsync()
+#endif
+                .ConfigureAwait(false);
+            
+            // Retrieve the provided RFC 9457 problem details, if any
+            
+            Problem? problem = null;
+            
+            if (response.Content?.Headers?.ContentType?.MediaType == WellKnownMimeContentTypes.ApplicationProblemJson)
+            {
+                problem = Deserialize<Problem>(responseBody);
+            }
+
+            return new RequestFailedException(response.StatusCode, responseBody, problem);            
         }
 
         public void Dispose()

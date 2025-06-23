@@ -42,6 +42,16 @@ namespace Verifalia.Api
         public const string ApplicationJson = "application/json";
 
         /// <summary>
+        /// application/json-patch+json MIME content type.
+        /// </summary>
+        public const string ApplicationJsonPatch = "application/json-patch+json";
+
+        /// <summary>
+        /// application/problem+json MIME content type.
+        /// </summary>
+        public const string ApplicationProblemJson = "application/problem+json";
+
+        /// <summary>
         /// Plain-text files (.txt), with one email address per line.
         /// </summary>
         public const string TextPlain = "text/plain";
