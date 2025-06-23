@@ -45,7 +45,7 @@ namespace Verifalia.Api.EmailVerifications.Models
         /// The unique identifier for the validation job.
         /// </summary>
         [JsonProperty("id")]
-        public Guid Id { get; set; }
+        public string Id { get; set; }
 
         /// <summary>
         /// The date and time this validation job has been submitted to Verifalia.

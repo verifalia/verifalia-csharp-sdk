@@ -242,7 +242,7 @@ namespace Verifalia.Api.EmailVerifications
         /// <example>
         /// This sample shows how to call the <see cref="GetAsync"/> method and wait for the completion of the submitted job.
         /// <code>
-        /// var validation = await GetAsync(Guid.Parse("c93e972a-7632-4493-aaf8-7523a605a78d"), new WaitOptions { waitForCompletion: true });
+        /// var validation = await GetAsync("c93e972a-7632-4493-aaf8-7523a605a78d", new WaitOptions { waitForCompletion: true });
         /// </code>
         /// </example>
         /// <param name="id">The ID of the email validation job to retrieve.
@@ -251,7 +251,7 @@ namespace Verifalia.Api.EmailVerifications
         /// <param name="waitOptions">Defines the options that specify how to wait for the completion of the email validation job.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>A <see cref="Verification"/> object representing the requested email validation job.</returns>
-        Task<Verification?> GetAsync(Guid id, WaitOptions? waitOptions = default, CancellationToken cancellationToken = default);
+        Task<Verification?> GetAsync(string id, WaitOptions? waitOptions = default, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Returns a lightweight <see cref="VerificationOverview"/> of an email validation job that was previously submitted for processing.
@@ -264,7 +264,7 @@ namespace Verifalia.Api.EmailVerifications
         /// <example>
         /// This sample shows how to call the <see cref="GetOverviewAsync"/> method and wait for the completion of the submitted job.
         /// <code>
-        /// var validation = await GetOverviewAsync(Guid.Parse("c93e972a-7632-4493-aaf8-7523a605a78d"), new WaitOptions { waitForCompletion: true });
+        /// var validation = await GetOverviewAsync("c93e972a-7632-4493-aaf8-7523a605a78d", new WaitOptions { waitForCompletion: true });
         /// </code>
         /// </example>
         /// <param name="id">The ID of the email validation job to retrieve the overview for.
@@ -273,7 +273,7 @@ namespace Verifalia.Api.EmailVerifications
         /// <param name="waitOptions">Defines the options that specify how to wait for the completion of the email validation job.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>A <see cref="VerificationOverview"/> object representing the overview for the requested email validation job.</returns>
-        Task<VerificationOverview?> GetOverviewAsync(Guid id, WaitOptions? waitOptions = default, CancellationToken cancellationToken = default);
+        Task<VerificationOverview?> GetOverviewAsync(string id, WaitOptions? waitOptions = default, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Deletes an email validation job that was previously submitted for processing.
@@ -282,7 +282,7 @@ namespace Verifalia.Api.EmailVerifications
         /// <remarks>This value is available by way of the <see cref="VerificationOverview.Id"/> property of <see cref="Verification.Overview"/>.</remarks>
         /// </param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        Task DeleteAsync(Guid id, CancellationToken cancellationToken = default);
+        Task DeleteAsync(string id, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Begins listing validation jobs according to the specified options and user permissions.
@@ -362,31 +362,31 @@ namespace Verifalia.Api.EmailVerifications
 
         /// <summary>
         /// Begins listing the validated entries for a given validation.
-        /// <remarks>Use the <see cref="ListEntriesSegmentedAsync(Guid,ListingCursor,CancellationToken)"/> method to continue listing.</remarks>
+        /// <remarks>Use the <see cref="ListEntriesSegmentedAsync(string,ListingCursor,CancellationToken)"/> method to continue listing.</remarks>
         /// </summary>
         /// <param name="options">The options for the listing operation.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>A <see cref="VerificationEntryListSegment"/> with the requested data and an eventual <see cref="ListSegmentMeta.Cursor"/> to be
-        /// used on subsequent listing calls to the <see cref="ListEntriesSegmentedAsync(Guid,ListingCursor,CancellationToken)"/> method.</returns>
+        /// used on subsequent listing calls to the <see cref="ListEntriesSegmentedAsync(string,ListingCursor,CancellationToken)"/> method.</returns>
 #if HAS_ASYNC_ENUMERABLE_SUPPORT
         [Obsolete("ListEntriesAsync() is preferred in .NET Core 3.0+ because of its simpler syntax, thanks to the async enumerable support.")]
         [EditorBrowsable(EditorBrowsableState.Advanced)]
 #endif
-        Task<VerificationEntryListSegment> ListEntriesSegmentedAsync(Guid validationId, VerificationEntryListingOptions? options = default, CancellationToken cancellationToken = default);
+        Task<VerificationEntryListSegment> ListEntriesSegmentedAsync(string validationId, VerificationEntryListingOptions? options = default, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Continues listing the validated entries for a given validation.
-        /// <remarks>To begin a listing use the <see cref="ListEntriesSegmentedAsync(Guid,VerificationEntryListingOptions,CancellationToken)"/> method.</remarks>
+        /// <remarks>To begin a listing use the <see cref="ListEntriesSegmentedAsync(string,VerificationEntryListingOptions,CancellationToken)"/> method.</remarks>
         /// </summary>
         /// <param name="cursor">The cursor to use while traversing the list of validated entries.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>A <see cref="VerificationEntryListSegment"/> with the requested data and an eventual <see cref="ListSegmentMeta.Cursor"/> to be
-        /// used on subsequent listing calls to the <see cref="ListEntriesSegmentedAsync(Guid,ListingCursor,CancellationToken)"/> method.</returns>
+        /// used on subsequent listing calls to the <see cref="ListEntriesSegmentedAsync(string,ListingCursor,CancellationToken)"/> method.</returns>
 #if HAS_ASYNC_ENUMERABLE_SUPPORT
         [Obsolete("ListEntriesAsync() is preferred in .NET Core 3.0+ because of its simpler syntax, thanks to the async enumerable support.")]
         [EditorBrowsable(EditorBrowsableState.Advanced)]
 #endif
-        Task<VerificationEntryListSegment> ListEntriesSegmentedAsync(Guid validationId, ListingCursor cursor, CancellationToken cancellationToken = default);
+        Task<VerificationEntryListSegment> ListEntriesSegmentedAsync(string validationId, ListingCursor cursor, CancellationToken cancellationToken = default);
 
 #if HAS_ASYNC_ENUMERABLE_SUPPORT
         /// <summary>
@@ -396,7 +396,7 @@ namespace Verifalia.Api.EmailVerifications
         /// <param name="options">The options for the listing operation.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>An enumerable collection of <see cref="VerificationEntry"/> of the requested validation.</returns>
-        IAsyncEnumerable<VerificationEntry> ListEntriesAsync(Guid validationId, VerificationEntryListingOptions? options = default, CancellationToken cancellationToken = default);
+        IAsyncEnumerable<VerificationEntry> ListEntriesAsync(string validationId, VerificationEntryListingOptions? options = default, CancellationToken cancellationToken = default);
 #endif
 
         /// <summary>
@@ -407,6 +407,6 @@ namespace Verifalia.Api.EmailVerifications
         /// <param name="options">The options for the listing operation.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>A stream with the data exported in the requested format.</returns>
-        Task<Stream> ExportEntriesAsync(Guid validationId, ExportedEntriesFormat format, VerificationEntryListingOptions? options = default, CancellationToken cancellationToken = default);
+        Task<Stream> ExportEntriesAsync(string validationId, ExportedEntriesFormat format, VerificationEntryListingOptions? options = default, CancellationToken cancellationToken = default);
     }
 }

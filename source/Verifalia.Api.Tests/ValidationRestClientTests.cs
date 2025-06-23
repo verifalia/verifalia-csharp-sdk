@@ -48,7 +48,7 @@ namespace Verifalia.Api.Tests
                 httpTest.RespondWithJson(new { }, 404);
 
                 var validationClient = new EmailVerificationsClient(new DummyRestClientFactory());
-                var validationId = Guid.Parse("a3706a81-87da-4762-a135-dabaac6e6971");
+                var validationId = "a3706a81-87da-4762-a135-dabaac6e6971";
 
                 var response = await validationClient.GetAsync(validationId);
 
@@ -61,7 +61,7 @@ namespace Verifalia.Api.Tests
         {
             using (var httpTest = new HttpTest())
             {
-                var validationId = Guid.Parse("a3706a81-87da-4762-a135-dabaac6e6971");
+                var validationId = "a3706a81-87da-4762-a135-dabaac6e6971";
 
                 httpTest.RespondWithJson(new
                 {
@@ -87,7 +87,7 @@ namespace Verifalia.Api.Tests
 
             using (var httpTest = new HttpTest())
             {
-                var fakeValidationId = Guid.Parse("a3706a81-87da-4762-a135-dabaac6e6971");
+                var fakeValidationId = "a3706a81-87da-4762-a135-dabaac6e6971";
 
                 // Reply for a few times with an in-progress status codes
 

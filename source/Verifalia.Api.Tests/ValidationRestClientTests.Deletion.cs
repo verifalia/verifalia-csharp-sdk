@@ -46,7 +46,7 @@ namespace Verifalia.Api.Tests
             using (var httpTest = new HttpTest())
             {
                 var validationClient = new EmailVerificationsClient(new DummyRestClientFactory());
-                var validationId = Guid.Parse("a3706a81-87da-4762-a135-dabaac6e6971");
+                var validationId = "a3706a81-87da-4762-a135-dabaac6e6971";
 
                 await validationClient.DeleteAsync(validationId);
 
