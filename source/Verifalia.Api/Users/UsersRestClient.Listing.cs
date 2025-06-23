@@ -44,30 +44,23 @@ using Verifalia.Api.Users.Models;
 namespace Verifalia.Api.Users
 {
     /// <inheritdoc />
-    internal sealed class UsersRestClient : IUsersRestClient
+    internal partial class UsersClient
     {
-        private readonly IRestClientFactory _restClientFactory;
-
-        internal UsersRestClient(IRestClientFactory restClientFactory)
-        {
-            _restClientFactory = restClientFactory ?? throw new ArgumentNullException(nameof(restClientFactory));
-        }
-
 #if HAS_ASYNC_ENUMERABLE_SUPPORT
 
-        public IAsyncEnumerable<UserOverview> ListUsersAsync(UserListingOptions? options = null, CancellationToken cancellationToken = default)
+        public IAsyncEnumerable<UserOverview> ListAsync(UserListingOptions? options = null, CancellationToken cancellationToken = default)
         {
             return AsyncEnumerableHelper
                 .ToAsyncEnumerableAsync<UserListSegment, UserOverview, UserListingOptions>(
-                    ListUsersSegmentedAsync,
-                    ListUsersSegmentedAsync,
+                    ListSegmentedAsync,
+                    ListSegmentedAsync,
                     options,
                     cancellationToken);
         }
 
 #endif
 
-        public async Task<UserListSegment> ListUsersSegmentedAsync(UserListingOptions? options = null, CancellationToken cancellationToken = default)
+        public async Task<UserListSegment> ListSegmentedAsync(UserListingOptions? options = null, CancellationToken cancellationToken = default)
         {
             // Generate the additional parameters, where needed
 
@@ -124,7 +117,7 @@ namespace Verifalia.Api.Users
                 .ConfigureAwait(false);
         }
 
-        public async Task<UserListSegment> ListUsersSegmentedAsync(ListingCursor cursor, CancellationToken cancellationToken = default)
+        public async Task<UserListSegment> ListSegmentedAsync(ListingCursor cursor, CancellationToken cancellationToken = default)
         {
             if (cursor == null) throw new ArgumentNullException(nameof(cursor));
 
@@ -179,18 +172,9 @@ namespace Verifalia.Api.Users
 
                 default:
                 {
-                    var responseBody = await response
-                        .Content
-#if NET5_0_OR_GREATER
-                                .ReadAsStringAsync(cancellationToken)
-#else
-                        .ReadAsStringAsync()
-#endif
+                    throw await restClient
+                        .BuildRequestFailedExceptionAsync(response, cancellationToken)
                         .ConfigureAwait(false);
-
-                    // An unexpected HTTP status code has been received at this point
-
-                    throw new VerifaliaException($"Unexpected HTTP response: {(int)response.StatusCode} {responseBody}");
                 }
             }
         }

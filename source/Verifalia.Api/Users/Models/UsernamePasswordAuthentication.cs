@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Verifalia - Email list cleaning and real-time email verification service
 * https://verifalia.com/
 * support@verifalia.com
@@ -29,9 +29,22 @@
 * THE SOFTWARE.
 */
 
-// This file is used by Code Analysis to maintain SuppressMessage 
-// attributes that are applied to this project.
-// Project-level suppressions either have no target or are given 
-// a specific target and scoped to a namespace, type, member, etc.
+using Newtonsoft.Json;
 
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1303:Do not pass literals as localized parameters", Justification = "Literals used by this library are for internal-use only and are not intended to be returned to final users.", Scope = "namespaceanddescendants", Target = "Verifalia.Api")]
+namespace Verifalia.Api.Users.Models
+{
+    public sealed class UsernamePasswordAuthentication
+    {
+        [JsonProperty("isEnabled")]
+        public bool IsEnabled { get; set; }
+        
+        [JsonProperty("isMfaRequired")]
+        public bool IsMfaRequired { get; set; }
+        
+        [JsonProperty("username")]
+        public string Username { get; set; }
+        
+        [JsonProperty("password")]
+        public string? Password { get; set; }
+    }
+}

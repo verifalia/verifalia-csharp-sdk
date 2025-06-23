@@ -29,9 +29,30 @@
 * THE SOFTWARE.
 */
 
-// This file is used by Code Analysis to maintain SuppressMessage 
-// attributes that are applied to this project.
-// Project-level suppressions either have no target or are given 
-// a specific target and scoped to a namespace, type, member, etc.
+using System;
+using Newtonsoft.Json;
+using Verifalia.Api.Common.Converters;
 
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1303:Do not pass literals as localized parameters", Justification = "Literals used by this library are for internal-use only and are not intended to be returned to final users.", Scope = "namespaceanddescendants", Target = "Verifalia.Api")]
+namespace Verifalia.Api.Users.Models
+{
+    public sealed class User
+    {
+        [JsonProperty("authorization")]
+        public UserAuthorization Authorization { get; set; }
+
+        [JsonProperty("authentication")]
+        public UserAuthentication Authentication { get; set; }
+        
+        [JsonProperty("displayName")]
+        public string DisplayName { get; set; }
+
+        [JsonProperty("isActive")]
+        public bool IsActive { get; set; }
+
+        [JsonProperty("preferredContactMethod")]
+        public string? PreferredContactMethod { get; set; }
+        
+        [JsonProperty("type")]
+        public UserType Type { get; set; }
+    }
+}

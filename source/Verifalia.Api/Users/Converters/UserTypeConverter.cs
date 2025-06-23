@@ -52,7 +52,7 @@ namespace Verifalia.Api.Users.Converters
             {
                 if (mapping.Value == (UserType) value)
                 {
-                    writer.WriteRawValue(mapping.Key);
+                    writer.WriteValue(mapping.Key);
                     return;
                 }
             }

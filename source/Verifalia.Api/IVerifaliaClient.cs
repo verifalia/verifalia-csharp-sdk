@@ -66,6 +66,6 @@ namespace Verifalia.Api
         /// <summary>
         /// Allows to manage the users and browser apps of the Verifalia account, as well as their security and configuration settings.
         /// </summary>
-        IUsersRestClient Users { get; }
+        IUsersClient Users { get; }
     }
 }

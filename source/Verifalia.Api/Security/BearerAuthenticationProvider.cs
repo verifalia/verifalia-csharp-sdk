@@ -52,7 +52,8 @@ namespace Verifalia.Api.Security
     {
         internal class BearerAuthenticationResponseModel
         {
-            [JsonProperty("accessToken")] public string AccessToken { get; set; }
+            [JsonProperty("accessToken")]
+            public string AccessToken { get; set; }
         }
 
         private const string JwtClaimMfaRequiredName = "verifalia:mfa";
@@ -71,7 +72,7 @@ namespace Verifalia.Api.Security
         /// <param name="username">The username of the user.</param>
         /// <param name="password">The password of the user.</param>
         /// <param name="totpTokenProvider">An optional provider of TOTP tokens (needed if the user has multi-factor authentication enabled).</param>
-        public BearerAuthenticationProvider(string username, string password, ITotpTokenProvider? totpTokenProvider = default)
+        public BearerAuthenticationProvider(string username, string password, ITotpTokenProvider? totpTokenProvider = null)
         {
             if (String.IsNullOrEmpty(username))
             {

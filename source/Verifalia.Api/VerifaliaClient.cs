@@ -94,7 +94,7 @@ namespace Verifalia.Api
         }
         
         /// <inheritdoc cref="IVerifaliaClient.Users"/>
-        public IUsersRestClient Users
+        public IUsersClient Users
         {
             get;
         }
@@ -152,7 +152,7 @@ namespace Verifalia.Api
             ContactMethods = new ContactMethodsClient(this);
             Credits = new CreditsClient(this);
             EmailVerifications = new EmailVerificationsRestClient(this);
-            Users = new UsersRestClient(this);
+            Users = new UsersClient(this);
         }
 
         /// <summary>

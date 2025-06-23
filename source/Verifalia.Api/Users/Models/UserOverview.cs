@@ -29,30 +29,28 @@
 * THE SOFTWARE.
 */
 
-using System;
 using Newtonsoft.Json;
-using Verifalia.Api.Common.Converters;
 
 namespace Verifalia.Api.Users.Models
 {
     public sealed class UserOverview
     {
-        [JsonProperty("id")]
-        public string Id { get; set; }
+        [JsonProperty("displayName")]
+        public string DisplayName { get; set; }
 
         [JsonProperty("etag")]
         public string Etag { get; set; }
 
-        [JsonProperty("type")]
-        public UserType Type { get; set; }
-        
-        [JsonProperty("displayName")]
-        public string DisplayName { get; set; }
-        
+        [JsonProperty("id")]
+        public string Id { get; set; }
+
         [JsonProperty("isActive")]
         public bool IsActive { get; set; }
 
         [JsonProperty("isDeleted")]
         public bool IsDeleted { get; set; }
+        
+        [JsonProperty("type")]
+        public UserType Type { get; set; }
     }
 }

@@ -30,31 +30,27 @@
 */
 
 using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Net;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using Verifalia.Api.Exceptions;
+using Verifalia.Api.Common;
 using Verifalia.Api.Common.Models;
-using System.Collections.Generic;
-using System.ComponentModel;
 using Verifalia.Api.Users.Models;
 
 namespace Verifalia.Api.Users
 {
-    public interface IUsersRestClient
+    /// <inheritdoc />
+    internal sealed partial class UsersClient : IUsersClient
     {
-#if HAS_ASYNC_ENUMERABLE_SUPPORT
-        IAsyncEnumerable<UserOverview> ListUsersAsync(UserListingOptions? options = null, CancellationToken cancellationToken = default);
-#endif
+        private readonly IRestClientFactory _restClientFactory;
 
-#if HAS_ASYNC_ENUMERABLE_SUPPORT
-        [Obsolete("ListUsersAsync() is preferred in .NET Core 3.0+ because of its simpler syntax, thanks to the async enumerable support.")]
-        [EditorBrowsable(EditorBrowsableState.Advanced)]
-#endif
-        Task<UserListSegment> ListUsersSegmentedAsync(UserListingOptions? options = null, CancellationToken cancellationToken = default);
-
-#if HAS_ASYNC_ENUMERABLE_SUPPORT
-        [Obsolete("ListUsersAsync() is preferred in .NET Core 3.0+ because of its simpler syntax, thanks to the async enumerable support.")]
-        [EditorBrowsable(EditorBrowsableState.Advanced)]
-#endif
-        Task<UserListSegment> ListUsersSegmentedAsync(ListingCursor cursor, CancellationToken cancellationToken = default);
+        internal UsersClient(IRestClientFactory restClientFactory)
+        {
+            _restClientFactory = restClientFactory ?? throw new ArgumentNullException(nameof(restClientFactory));
+        }
     }
 }

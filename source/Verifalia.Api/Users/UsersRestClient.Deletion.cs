@@ -30,30 +30,47 @@
 */
 
 using System;
-using Verifalia.Api.Credits;
+using System.Collections.Generic;
+using System.Linq.Expressions;
+using System.Net;
+using System.Net.Http;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using Verifalia.Api.Common.JsonPatch;
+using Verifalia.Api.Users.Models;
 
-namespace Verifalia.Api.Exceptions
+namespace Verifalia.Api.Users
 {
-    /// <summary>
-    /// The exception that is thrown when the credit of the requesting account is not enough to accept a given email
-    /// validation job.
-    /// </summary>
-    /// <remarks>Use the <see cref="ICreditsClient.GetBalanceAsync"/> method of <see cref="VerifaliaClient.Credits"/>
-    /// to check the available credits.</remarks>
-    public class InsufficientCreditException : VerifaliaException
+    /// <inheritdoc />
+    internal partial class UsersClient
     {
-        public InsufficientCreditException()
+        public async Task DeleteAsync(string id, CancellationToken cancellationToken = default)
         {
-        }
+            var restClient = _restClientFactory.Build();
 
-        public InsufficientCreditException(string message)
-            : base(message)
-        {
-        }
+            // Sends the request to the Verifalia servers
 
-        public InsufficientCreditException(string message, Exception innerException)
-            : base(message, innerException)
-        {
-        }
+            var headers = new Dictionary<string, object>
+            {
+                {
+                    "Accept", $"{WellKnownMimeContentTypes.ApplicationJson}, {WellKnownMimeContentTypes.ApplicationProblemJson}"
+                }
+            };
+            
+            using var response = await restClient
+                .InvokeAsync(HttpMethod.Delete, 
+                    $"users/{id}",
+                    headers: headers,
+                    cancellationToken: cancellationToken)
+                .ConfigureAwait(false);
+
+            if (response.StatusCode == HttpStatusCode.OK)
+                return;
+            
+            throw await restClient
+                .BuildRequestFailedExceptionAsync(response, cancellationToken)
+                .ConfigureAwait(false);
+        }        
     }
 }
