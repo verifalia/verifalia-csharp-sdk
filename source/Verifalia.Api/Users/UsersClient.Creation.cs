@@ -35,7 +35,6 @@ using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Verifalia.Api.Exceptions;
 using Verifalia.Api.Users.Models;
 
 namespace Verifalia.Api.Users
