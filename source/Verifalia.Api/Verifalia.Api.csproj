@@ -71,7 +71,7 @@
         <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="1.1.1" Condition="('$(TargetFramework)' == 'netstandard2.0')"/>
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" PrivateAssets="all"/>
         <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.27.0" Condition="$(DefineConstants.Contains(';HAS_JWT_SUPPORT;'))" PrivateAssets="all"/>
-        <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.8.14">
+        <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.14.15">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
