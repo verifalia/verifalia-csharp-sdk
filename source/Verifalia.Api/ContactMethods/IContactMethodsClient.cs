@@ -43,6 +43,8 @@ namespace Verifalia.Api.ContactMethods
     public interface IContactMethodsClient
     {
         Task<ContactMethod> CreateAsync(string userId, ContactMethod contactMethod, CancellationToken cancellationToken = default);
+
+        Task ActivateAsync(string userId, string contactMethodId, string activationCode, CancellationToken cancellationToken = default);
         
         Task<ContactMethod> GetAsync(string userId, string contactMethodId, CancellationToken cancellationToken = default);
         
