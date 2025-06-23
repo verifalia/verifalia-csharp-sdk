@@ -42,11 +42,11 @@ using Verifalia.Api.Exceptions;
 namespace Verifalia.Api.ContactMethods
 {
     /// <inheritdoc />
-    internal sealed partial class ContactMethodsRestClient : IContactMethodsRestClient
+    internal sealed partial class ContactMethodsClient : IContactMethodsClient
     {
         private readonly IRestClientFactory _restClientFactory;
 
-        internal ContactMethodsRestClient(IRestClientFactory restClientFactory)
+        internal ContactMethodsClient(IRestClientFactory restClientFactory)
         {
             _restClientFactory = restClientFactory ?? throw new ArgumentNullException(nameof(restClientFactory));
         }

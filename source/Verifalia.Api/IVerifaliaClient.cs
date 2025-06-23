@@ -51,7 +51,7 @@ namespace Verifalia.Api
         /// <summary>
         /// Allows to manage the contact methods of the Verifalia account.
         /// </summary>
-        IContactMethodsRestClient ContactMethods { get; }
+        IContactMethodsClient ContactMethods { get; }
         
         /// <summary>
         /// Allows to manage the credits for the Verifalia account.

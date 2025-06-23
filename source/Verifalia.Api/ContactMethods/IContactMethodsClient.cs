@@ -40,7 +40,7 @@ using Verifalia.Api.ContactMethods.Models;
 
 namespace Verifalia.Api.ContactMethods
 {
-    public interface IContactMethodsRestClient
+    public interface IContactMethodsClient
     {
         Task<ContactMethod> CreateAsync(string userId, ContactMethod contactMethod, CancellationToken cancellationToken = default);
         

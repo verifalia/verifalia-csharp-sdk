@@ -43,7 +43,7 @@ using Verifalia.Api.ContactMethods.Models;
 namespace Verifalia.Api.ContactMethods
 {
     /// <inheritdoc />
-    internal sealed partial class ContactMethodsRestClient
+    internal sealed partial class ContactMethodsClient
     {
         public async Task UpdateAsync(string userId, string contactMethodId, Expression<Func<ContactMethod, ContactMethod>> changeset, string? ifMatch = null, CancellationToken cancellationToken = default)
         {
