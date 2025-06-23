@@ -60,7 +60,9 @@ namespace Verifalia.Api.Credits
             var restClient = _restClientFactory.Build();
 
             using var response = await restClient
-                .InvokeAsync(HttpMethod.Get, "credits/balance", cancellationToken: cancellationToken)
+                .InvokeAsync(HttpMethod.Get,
+                    "credits/balance",
+                    cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
             
             if (response.StatusCode == HttpStatusCode.OK)
@@ -73,16 +75,9 @@ namespace Verifalia.Api.Credits
 
             // An unexpected HTTP status code has been received at this point
 
-            var responseBody = await response
-                .Content
-#if NET5_0_OR_GREATER
-                .ReadAsStringAsync(cancellationToken)
-#else
-                .ReadAsStringAsync()
-#endif
+            throw await restClient
+                .BuildRequestFailedExceptionAsync(response, cancellationToken)
                 .ConfigureAwait(false);
-
-            throw new VerifaliaException($"Unexpected HTTP response: {(int)response.StatusCode} {responseBody}");
         }
 
 #if HAS_ASYNC_ENUMERABLE_SUPPORT
@@ -190,18 +185,9 @@ namespace Verifalia.Api.Credits
 
                 default:
                 {
-                    var responseBody = await response
-                        .Content
-#if NET5_0_OR_GREATER
-                                .ReadAsStringAsync(cancellationToken)
-#else
-                        .ReadAsStringAsync()
-#endif
+                    throw await restClient
+                        .BuildRequestFailedExceptionAsync(response, cancellationToken)
                         .ConfigureAwait(false);
-
-                    // An unexpected HTTP status code has been received at this point
-
-                    throw new VerifaliaException($"Unexpected HTTP response: {(int)response.StatusCode} {responseBody}");
                 }
             }
         }
