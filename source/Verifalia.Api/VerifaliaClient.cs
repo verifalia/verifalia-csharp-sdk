@@ -35,6 +35,7 @@ using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using Verifalia.Api.BaseUrisProviders;
+using Verifalia.Api.ContactMethods;
 using Verifalia.Api.Credits;
 using Verifalia.Api.EmailVerifications;
 using Verifalia.Api.Security;
@@ -42,14 +43,14 @@ using Verifalia.Api.Users;
 
 namespace Verifalia.Api
 {
-    /// <inheritdoc cref="IVerifaliaRestClient"/>
-    public class VerifaliaRestClient : IRestClientFactory, IVerifaliaRestClient, IDisposable
+    /// <inheritdoc cref="IVerifaliaClient"/>
+    public class VerifaliaClient : IRestClientFactory, IVerifaliaClient, IDisposable
     {
         /// <summary>
         /// The default API version used by this SDK.
         /// </summary>
         // ReSharper disable once MemberCanBePrivate.Global
-        public const string DefaultApiVersion = "v2.5";
+        public const string DefaultApiVersion = "v2.7";
 
         private readonly Random _uriShuffler;
         private readonly IAuthenticationProvider _authenticator;
@@ -60,7 +61,7 @@ namespace Verifalia.Api
         // ReSharper disable once MemberCanBePrivate.Global
         internal MultiplexedRestClient? CachedRestClient; // Marked as internal for unit testing purposes
 
-        /// <inheritdoc cref="IVerifaliaRestClient.ApiVersion"/>
+        /// <inheritdoc cref="IVerifaliaClient.ApiVersion"/>
         public string ApiVersion
         {
             get => _apiVersion;
@@ -74,19 +75,25 @@ namespace Verifalia.Api
             }
         }
 
-        /// <inheritdoc cref="IVerifaliaRestClient.EmailVerifications"/>
-        public IEmailVerificationsRestClient EmailVerifications
+        /// <inheritdoc cref="IVerifaliaClient.Credits"/>
+        public IContactMethodsRestClient ContactMethods
         {
             get;
         }
-
-        /// <inheritdoc cref="IVerifaliaRestClient.Credits"/>
+        
+        /// <inheritdoc cref="IVerifaliaClient.Credits"/>
         public ICreditsRestClient Credits
         {
             get;
         }
 
-        /// <inheritdoc cref="IVerifaliaRestClient.Users"/>
+        /// <inheritdoc cref="IVerifaliaClient.EmailVerifications"/>
+        public IEmailVerificationsRestClient EmailVerifications
+        {
+            get;
+        }
+        
+        /// <inheritdoc cref="IVerifaliaClient.Users"/>
         public IUsersRestClient Users
         {
             get;
@@ -98,7 +105,7 @@ namespace Verifalia.Api
         /// to create one or more users (formerly known as sub-accounts) with just the required permissions, for improved
         /// security. To create a new user or manage existing ones, please visit https://verifalia.com/client-area#/users </remarks>
         /// </summary>
-        public VerifaliaRestClient(string username, string password, Uri[]? baseUris = default)
+        public VerifaliaClient(string username, string password, Uri[]? baseUris = null)
             : this(new UsernamePasswordAuthenticationProvider(username, password), baseUris)
         {
         }
@@ -114,8 +121,8 @@ namespace Verifalia.Api
         /// for improved security. To create a new user or manage existing ones, please visit https://verifalia.com/client-area#/users
         /// </remarks>
         /// </summary>
-        public VerifaliaRestClient(X509Certificate2 clientCertificate, Uri[]? baseUris = default)
-            : this(new ClientCertificateAuthenticationProvider(clientCertificate), baseUris == default(Uri[]) ? new ClientCertificateBaseUrisProvider() : new BaseUrisProvider(baseUris))
+        public VerifaliaClient(X509Certificate2 clientCertificate, Uri[]? baseUris = null)
+            : this(new ClientCertificateAuthenticationProvider(clientCertificate), baseUris == null ? new ClientCertificateBaseUrisProvider() : new BaseUrisProvider(baseUris))
         {
         }
 
@@ -127,12 +134,12 @@ namespace Verifalia.Api
         /// to create one or more users (formerly known as sub-accounts) with just the required permissions, for improved
         /// security. To create a new user or manage existing ones, please visit https://verifalia.com/client-area#/users </remarks>
         /// </summary>
-        public VerifaliaRestClient(IAuthenticationProvider authenticationProvider, Uri[]? baseUris = default)
-            : this(authenticationProvider, baseUris == default(Uri[]) ? new DefaultBaseUrisProvider() : new BaseUrisProvider(baseUris))
+        public VerifaliaClient(IAuthenticationProvider authenticationProvider, Uri[]? baseUris = null)
+            : this(authenticationProvider, baseUris == null ? new DefaultBaseUrisProvider() : new BaseUrisProvider(baseUris))
         {
         }
 
-        private VerifaliaRestClient(IAuthenticationProvider authenticator, BaseUrisProvider baseUrisProvider)
+        private VerifaliaClient(IAuthenticationProvider authenticator, BaseUrisProvider baseUrisProvider)
         {
             _authenticator = authenticator ?? throw new ArgumentNullException(nameof(authenticator));
             _baseUrisProvider = baseUrisProvider ?? throw new ArgumentNullException(nameof(baseUrisProvider));
@@ -142,8 +149,9 @@ namespace Verifalia.Api
             _uriShuffler = new Random();
             _apiVersion = DefaultApiVersion;
 
-            EmailVerifications = new EmailVerificationsRestClient(this);
+            ContactMethods = new ContactMethodsRestClient(this);
             Credits = new CreditsRestClient(this);
+            EmailVerifications = new EmailVerificationsRestClient(this);
             Users = new UsersRestClient(this);
         }
 
@@ -223,14 +231,14 @@ namespace Verifalia.Api
 #else
 #error Unsupported platform.
 #endif
-                typeof(VerifaliaRestClient).GetTypeInfo().Assembly.GetName().Version);
+                typeof(VerifaliaClient).GetTypeInfo().Assembly.GetName().Version);
 
             // Setup the REST client
 
             var shuffledFinalUris = _baseUrisProvider
                 .ProvideBaseUris()
                 .Select(uri => new Uri(uri, ApiVersion))
-                .OrderBy(uri => _uriShuffler.Next());
+                .OrderBy(_ => _uriShuffler.Next());
 
             CachedRestClient = new MultiplexedRestClient(_authenticator,
                 userAgent,
