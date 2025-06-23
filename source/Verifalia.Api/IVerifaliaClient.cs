@@ -29,6 +29,7 @@
 * THE SOFTWARE.
 */
 
+using Verifalia.Api.ClientCertificates;
 using Verifalia.Api.ContactMethods;
 using Verifalia.Api.Credits;
 using Verifalia.Api.EmailVerifications;
@@ -48,6 +49,11 @@ namespace Verifalia.Api
         /// </summary>
         string ApiVersion { get; set; }
 
+        /// <summary>
+        /// Allows to manage the X.509 client certificates of the Verifalia account.
+        /// </summary>
+        IClientCertificatesClient ClientCertificates { get; }
+        
         /// <summary>
         /// Allows to manage the contact methods of the Verifalia account.
         /// </summary>

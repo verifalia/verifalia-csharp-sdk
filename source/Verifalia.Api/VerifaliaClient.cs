@@ -35,6 +35,7 @@ using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using Verifalia.Api.BaseUrisProviders;
+using Verifalia.Api.ClientCertificates;
 using Verifalia.Api.ContactMethods;
 using Verifalia.Api.Credits;
 using Verifalia.Api.EmailVerifications;
@@ -75,6 +76,12 @@ namespace Verifalia.Api
             }
         }
 
+        /// <inheritdoc cref="IVerifaliaClient.ClientCertificates"/>
+        public IClientCertificatesClient ClientCertificates
+        {
+            get;
+        }
+        
         /// <inheritdoc cref="IVerifaliaClient.Credits"/>
         public IContactMethodsClient ContactMethods
         {
@@ -149,6 +156,7 @@ namespace Verifalia.Api
             _uriShuffler = new Random();
             _apiVersion = DefaultApiVersion;
 
+            ClientCertificates = new ClientCertificatesClient(this);
             ContactMethods = new ContactMethodsClient(this);
             Credits = new CreditsClient(this);
             EmailVerifications = new EmailVerificationsClient(this);
