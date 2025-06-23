@@ -58,7 +58,7 @@ namespace Verifalia.Api.EmailVerifications
                 case HttpStatusCode.OK:
                 case HttpStatusCode.Gone:
                 {
-                    // The batch has been correctly deleted
+                    // The email verification job has been correctly deleted
 
                     return;
                 }
@@ -66,16 +66,9 @@ namespace Verifalia.Api.EmailVerifications
 
             // An unexpected HTTP status code has been received at this point
 
-            var responseBody = await response
-                .Content
-#if NET5_0_OR_GREATER
-                .ReadAsStringAsync(cancellationToken)
-#else
-                    .ReadAsStringAsync()
-#endif
+            throw await restClient
+                .BuildRequestFailedExceptionAsync(response, cancellationToken)
                 .ConfigureAwait(false);
-
-            throw new VerifaliaException($"Unexpected HTTP response: {(int) response.StatusCode} {responseBody}");
         }
     }
 }

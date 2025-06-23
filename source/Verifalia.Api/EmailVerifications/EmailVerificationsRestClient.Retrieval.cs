@@ -33,16 +33,13 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Verifalia.Api.Common;
 using Verifalia.Api.Common.Models;
 using Verifalia.Api.EmailVerifications.Models;
-using Verifalia.Api.Exceptions;
 
 namespace Verifalia.Api.EmailVerifications
 {
@@ -109,17 +106,9 @@ namespace Verifalia.Api.EmailVerifications
                 {
                     // An unexpected HTTP status code has been received at this point
 
-                    var responseBody = await response
-                        .Content
-#if NET5_0_OR_GREATER
-                        .ReadAsStringAsync(cancellationToken)
-#else
-                            .ReadAsStringAsync()
-#endif
+                    throw await restClient
+                        .BuildRequestFailedExceptionAsync(response, cancellationToken)
                         .ConfigureAwait(false);
-
-                    throw new VerifaliaException(
-                        $"Unexpected HTTP response: {(int) response.StatusCode} {responseBody}");
                 }
             }
         }
@@ -217,16 +206,9 @@ namespace Verifalia.Api.EmailVerifications
 
             // An unexpected HTTP status code has been received at this point
 
-            var responseBody = await response
-                .Content
-#if NET5_0_OR_GREATER
-                .ReadAsStringAsync(cancellationToken)
-#else
-                    .ReadAsStringAsync()
-#endif
+            throw await restClient
+                .BuildRequestFailedExceptionAsync(response, cancellationToken)
                 .ConfigureAwait(false);
-
-            throw new VerifaliaException($"Unexpected HTTP response: {(int) response.StatusCode} {responseBody}");
         }
 
 
@@ -282,7 +264,7 @@ namespace Verifalia.Api.EmailVerifications
                     cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
             
-            return await ListEntriesSegmentedImplAsync(restClient, response)
+            return await ListEntriesSegmentedImplAsync(restClient, response, cancellationToken)
                 .ConfigureAwait(false);
         }
 
@@ -318,33 +300,28 @@ namespace Verifalia.Api.EmailVerifications
                     cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
             
-            return await ListEntriesSegmentedImplAsync(restClient, response)
+            return await ListEntriesSegmentedImplAsync(restClient, response, cancellationToken)
                 .ConfigureAwait(false);
         }
 
-        private async Task<VerificationEntryListSegment> ListEntriesSegmentedImplAsync(IRestClient restClient, HttpResponseMessage response)
+        private async Task<VerificationEntryListSegment> ListEntriesSegmentedImplAsync(IRestClient restClient, HttpResponseMessage response, CancellationToken cancellationToken)
         {
             switch (response.StatusCode)
             {
                 case HttpStatusCode.OK:
-                    {
-                        return await response
-                            .Content
-                            .DeserializeAsync<VerificationEntryListSegment>(restClient)
-                            .ConfigureAwait(false);
-                    }
+                {
+                    return await response
+                        .Content
+                        .DeserializeAsync<VerificationEntryListSegment>(restClient)
+                        .ConfigureAwait(false);
+                }
 
                 default:
-                    {
-                        var responseBody = await response
-                            .Content
-                            .ReadAsStringAsync()
-                            .ConfigureAwait(false);
-
-                        // An unexpected HTTP status code has been received at this point
-
-                        throw new VerifaliaException($"Unexpected HTTP response: {(int)response.StatusCode} {responseBody}");
-                    }
+                {
+                    throw await restClient
+                        .BuildRequestFailedExceptionAsync(response, cancellationToken)
+                        .ConfigureAwait(false);
+                }
             }
         }
         
@@ -387,16 +364,9 @@ namespace Verifalia.Api.EmailVerifications
 
             // An unexpected HTTP status code has been received at this point
 
-            var responseBody = await response
-                .Content
-#if NET5_0_OR_GREATER
-                .ReadAsStringAsync(cancellationToken)
-#else
-                    .ReadAsStringAsync()
-#endif
+            throw await restClient
+                .BuildRequestFailedExceptionAsync(response, cancellationToken)
                 .ConfigureAwait(false);
-
-            throw new VerifaliaException($"Unexpected HTTP response: {(int)response.StatusCode} {responseBody}");
         }
     }
 }

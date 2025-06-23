@@ -134,28 +134,20 @@ namespace Verifalia.Api.EmailVerifications
             switch (response.StatusCode)
             {
                 case HttpStatusCode.OK:
-                    {
-                        return await response
-                            .Content
-                            .DeserializeAsync<QualityLevelListSegment>(restClient)
-                            .ConfigureAwait(false);
-                    }
+                {
+                    return await response
+                        .Content
+                        .DeserializeAsync<QualityLevelListSegment>(restClient)
+                        .ConfigureAwait(false);
+                }
 
                 default:
-                    {
-                        var responseBody = await response
-                            .Content
-#if NET5_0_OR_GREATER
-                            .ReadAsStringAsync(cancellationToken)
-#else
-                            .ReadAsStringAsync()
-#endif
-                            .ConfigureAwait(false);
+                {
+                    throw await restClient
+                        .BuildRequestFailedExceptionAsync(response, cancellationToken)
+                        .ConfigureAwait(false);
 
-                        // An unexpected HTTP status code has been received at this point
-
-                        throw new VerifaliaException($"Unexpected HTTP response: {(int) response.StatusCode} {responseBody}");
-                    }
+                }
             }
         }
     }
