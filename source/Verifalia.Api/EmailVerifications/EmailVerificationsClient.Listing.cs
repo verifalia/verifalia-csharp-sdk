@@ -44,7 +44,7 @@ using Verifalia.Api.EmailVerifications.Models;
 namespace Verifalia.Api.EmailVerifications
 {
     /// <inheritdoc />
-    internal partial class EmailVerificationsRestClient
+    internal partial class EmailVerificationsClient
     {
 
 #if HAS_ASYNC_ENUMERABLE_SUPPORT

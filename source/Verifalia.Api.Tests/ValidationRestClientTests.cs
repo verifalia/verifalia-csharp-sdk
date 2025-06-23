@@ -47,7 +47,7 @@ namespace Verifalia.Api.Tests
             {
                 httpTest.RespondWithJson(new { }, 404);
 
-                var validationClient = new EmailVerificationsRestClient(new DummyRestClientFactory());
+                var validationClient = new EmailVerificationsClient(new DummyRestClientFactory());
                 var validationId = Guid.Parse("a3706a81-87da-4762-a135-dabaac6e6971");
 
                 var response = await validationClient.GetAsync(validationId);
@@ -72,7 +72,7 @@ namespace Verifalia.Api.Tests
                     }
                 }, 202);
 
-                var validationClient = new EmailVerificationsRestClient(new DummyRestClientFactory());
+                var validationClient = new EmailVerificationsClient(new DummyRestClientFactory());
 
                 var response = await validationClient.GetAsync(validationId);
 
@@ -116,7 +116,7 @@ namespace Verifalia.Api.Tests
 
                 // Fetch the job and poll until it's done
 
-                var validationRestClient = new EmailVerificationsRestClient(new DummyRestClientFactory());
+                var validationRestClient = new EmailVerificationsClient(new DummyRestClientFactory());
                 var validation = await validationRestClient.GetAsync(fakeValidationId, WaitOptions.NoWait);
 
                 // Did we make the expected number of requests?

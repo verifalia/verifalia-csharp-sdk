@@ -88,7 +88,7 @@ namespace Verifalia.Api
         }
 
         /// <inheritdoc cref="IVerifaliaClient.EmailVerifications"/>
-        public IEmailVerificationsRestClient EmailVerifications
+        public IEmailVerificationsClient EmailVerifications
         {
             get;
         }
@@ -151,7 +151,7 @@ namespace Verifalia.Api
 
             ContactMethods = new ContactMethodsClient(this);
             Credits = new CreditsClient(this);
-            EmailVerifications = new EmailVerificationsRestClient(this);
+            EmailVerifications = new EmailVerificationsClient(this);
             Users = new UsersClient(this);
         }
 

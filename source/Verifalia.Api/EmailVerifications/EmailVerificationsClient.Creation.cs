@@ -45,7 +45,7 @@ using Verifalia.Api.Exceptions;
 
 namespace Verifalia.Api.EmailVerifications
 {
-    internal partial class EmailVerificationsRestClient
+    internal partial class EmailVerificationsClient
     {
         public Task<Verification> SubmitAsync(string emailAddress, QualityLevelName? quality = default, WaitOptions? waitOptions = default, CancellationToken cancellationToken = default)
         {

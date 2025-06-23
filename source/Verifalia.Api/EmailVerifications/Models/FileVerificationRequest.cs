@@ -43,7 +43,7 @@ namespace Verifalia.Api.EmailVerifications.Models
     /// Represents an email validation request of a file to be submitted against the Verifalia API.
     /// </summary>
     /// <remarks>Once initialized, pass the instance of <see cref="FileVerificationRequest"/> to the
-    /// <see cref="IEmailVerificationsRestClient.SubmitAsync(FileVerificationRequest,WaitOptions,CancellationToken)"/> method or one of its
+    /// <see cref="IEmailVerificationsClient.SubmitAsync(FileVerificationRequest,WaitOptions,CancellationToken)"/> method or one of its
     /// overloads.</remarks>
     public sealed class FileVerificationRequest : VerificationRequestBase, IDisposable
     {

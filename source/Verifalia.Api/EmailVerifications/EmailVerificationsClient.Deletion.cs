@@ -30,18 +30,44 @@
 */
 
 using System;
-using Verifalia.Api.EmailVerifications;
+using System.Net;
+using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Verifalia.Api.EmailVerifications
 {
     /// <inheritdoc />
-    internal sealed partial class EmailVerificationsRestClient : IEmailVerificationsRestClient
+    internal partial class EmailVerificationsClient
     {
-        private readonly IRestClientFactory _restClientFactory;
-
-        internal EmailVerificationsRestClient(IRestClientFactory restClientFactory)
+        public async Task DeleteAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            _restClientFactory = restClientFactory ?? throw new ArgumentNullException(nameof(restClientFactory));
+            var resource = $"email-validations/{id}";
+
+            // Sends the request to the Verifalia servers
+
+            var restClient = _restClientFactory.Build();
+
+            using var response = await restClient
+                .InvokeAsync(HttpMethod.Delete, resource, cancellationToken: cancellationToken)
+                .ConfigureAwait(false);
+            
+            switch (response.StatusCode)
+            {
+                case HttpStatusCode.OK:
+                case HttpStatusCode.Gone:
+                {
+                    // The email verification job has been correctly deleted
+
+                    return;
+                }
+            }
+
+            // An unexpected HTTP status code has been received at this point
+
+            throw await restClient
+                .BuildRequestFailedExceptionAsync(response, cancellationToken)
+                .ConfigureAwait(false);
         }
     }
 }

@@ -47,7 +47,7 @@ namespace Verifalia.Api.EmailVerifications
     /// <remarks>The features of this type are exposed by way of the <see cref="VerifaliaClient.EmailVerifications">EmailVerifications property</see>
     /// of <see cref="VerifaliaClient">VerifaliaRestClient</see>.</remarks>
     /// </summary>
-    public interface IEmailVerificationsRestClient
+    public interface IEmailVerificationsClient
     {
         /// <summary>
         /// Submits a new email validation for processing.

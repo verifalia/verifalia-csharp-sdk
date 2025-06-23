@@ -61,7 +61,7 @@ namespace Verifalia.Api
         /// <summary>
         /// Allows to verify email addresses and manage email verification jobs using the Verifalia service.
         /// </summary>
-        IEmailVerificationsRestClient EmailVerifications { get; }
+        IEmailVerificationsClient EmailVerifications { get; }
 
         /// <summary>
         /// Allows to manage the users and browser apps of the Verifalia account, as well as their security and configuration settings.

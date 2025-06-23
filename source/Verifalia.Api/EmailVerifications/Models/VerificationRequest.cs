@@ -41,7 +41,7 @@ namespace Verifalia.Api.EmailVerifications.Models
     /// Represents an email validation request to be submitted against the Verifalia API.
     /// </summary>
     /// <remarks>Once initialized, pass the instance of <see cref="VerificationRequest"/> to the
-    /// <see cref="IEmailVerificationsRestClient.SubmitAsync(VerificationRequest,WaitOptions,CancellationToken)"/> method or one of its
+    /// <see cref="IEmailVerificationsClient.SubmitAsync(VerificationRequest,WaitOptions,CancellationToken)"/> method or one of its
     /// overloads.</remarks>
     public class VerificationRequest : VerificationRequestBase
     {

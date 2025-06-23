@@ -36,7 +36,7 @@ using Verifalia.Api.EmailVerifications.Models;
 
 namespace Verifalia.Api.EmailVerifications
 {
-    internal partial class EmailVerificationsRestClient
+    internal partial class EmailVerificationsClient
     {
         private async Task<TResult?> WaitForCompletionAsync<TResult>(VerificationOverview verificationOverview, WaitOptions waitOptions, CancellationToken cancellationToken) where TResult : class
         {
