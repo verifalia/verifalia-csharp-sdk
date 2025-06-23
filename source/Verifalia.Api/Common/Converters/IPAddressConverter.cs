@@ -40,7 +40,7 @@ namespace Verifalia.Api.Common.Converters
     {
         public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
         {
-            writer.WriteRawValue(((IPAddress)value).ToString());
+            writer.WriteValue(((IPAddress)value).ToString());
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)

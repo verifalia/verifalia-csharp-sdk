@@ -53,7 +53,7 @@ namespace Verifalia.Api.EmailVerifications.Converters
             {
                 if (mapping.Value == (VerificationStatus) value)
                 {
-                    writer.WriteRawValue(mapping.Key);
+                    writer.WriteValue(mapping.Key);
                     return;
                 }
             }

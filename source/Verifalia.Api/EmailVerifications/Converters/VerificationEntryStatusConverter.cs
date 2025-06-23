@@ -93,7 +93,7 @@ namespace Verifalia.Api.EmailVerifications.Converters
             {
                 if (mapping.Value == (VerificationEntryStatus) value)
                 {
-                    writer.WriteRawValue(mapping.Key);
+                    writer.WriteValue(mapping.Key);
                     return;
                 }
             }
