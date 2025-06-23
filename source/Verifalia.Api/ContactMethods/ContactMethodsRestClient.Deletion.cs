@@ -44,7 +44,7 @@ namespace Verifalia.Api.ContactMethods
     /// <inheritdoc />
     internal sealed partial class ContactMethodsClient
     {
-        public async Task<ContactMethod> DeleteAsync(string userId, string contactMethodId, CancellationToken cancellationToken = default)
+        public async Task DeleteAsync(string userId, string contactMethodId, CancellationToken cancellationToken = default)
         {
             if (userId == null) throw new ArgumentNullException(nameof(userId));
             if (contactMethodId == null) throw new ArgumentNullException(nameof(contactMethodId));
@@ -67,10 +67,7 @@ namespace Verifalia.Api.ContactMethods
 
             if (response.StatusCode == HttpStatusCode.OK)
             {
-                return await response
-                    .Content
-                    .DeserializeAsync<ContactMethod>(restClient)
-                    .ConfigureAwait(false);
+                return;
             }
             
             // Unexpected error

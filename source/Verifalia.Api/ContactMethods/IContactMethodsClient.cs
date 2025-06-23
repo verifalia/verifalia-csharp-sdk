@@ -65,6 +65,6 @@ namespace Verifalia.Api.ContactMethods
 
         Task UpdateAsync(string userId, string contactMethodId, Expression<Func<ContactMethod, ContactMethod>> changeset, string? ifMatch = null, CancellationToken cancellationToken = default);
 
-        Task<ContactMethod> DeleteAsync(string userId, string contactMethodId, CancellationToken cancellationToken = default);
+        Task DeleteAsync(string userId, string contactMethodId, CancellationToken cancellationToken = default);
     }
 }
