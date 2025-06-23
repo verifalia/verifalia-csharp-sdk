@@ -33,9 +33,15 @@ using Newtonsoft.Json;
 
 namespace Verifalia.Api.Users.Models
 {
-    public sealed class UserAuthorization
+    public sealed class ThrottlingRule
     {
-        [JsonProperty("rules")]
-        public string[] Rules { get; set; }
+        [JsonProperty("limit")]
+        public int Limit { get; set; }
+
+        [JsonProperty("scope")]
+        public ThrottlingScope Scope { get; set; }
+
+        [JsonProperty("period")]
+        public ThrottlingPeriod Period { get; set; }
     }
 }

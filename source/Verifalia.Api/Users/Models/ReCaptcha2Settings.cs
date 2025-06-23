@@ -33,9 +33,9 @@ using Newtonsoft.Json;
 
 namespace Verifalia.Api.Users.Models
 {
-    public sealed class UserAuthentication
+    public sealed class ReCaptcha2Settings
     {
-        [JsonProperty("password")]
-        public UsernamePasswordAuthentication? UsernamePasswordAuthentication { get; set; }
+        [JsonProperty("secretKey")]
+        public string? SecretKey { get; set; }
     }
 }

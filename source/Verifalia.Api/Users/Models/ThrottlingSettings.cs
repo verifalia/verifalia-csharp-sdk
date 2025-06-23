@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Verifalia - Email list cleaning and real-time email verification service
 * https://verifalia.com/
 * support@verifalia.com
@@ -33,39 +33,12 @@ using Newtonsoft.Json;
 
 namespace Verifalia.Api.Users.Models
 {
-    public sealed class User
+    public sealed class ThrottlingSettings
     {
-        [JsonProperty("authentication")]
-        public AuthenticationSettings? Authentication { get; set; }
+        [JsonProperty("rules")]
+        public ThrottlingRule[] Rules { get; set; }
 
-        [JsonProperty("authorization")]
-        public AuthorizationSettings? Authorization { get; set; }
-
-        [JsonProperty("captcha")]
-        public CaptchaSettings? Captcha { get; set; }
-        
-        [JsonProperty("defaults")]
-        public DefaultSettings? Defaults { get; set; }
-        
-        [JsonProperty("displayName")]
-        public string DisplayName { get; set; }
-
-        [JsonProperty("firewall")]
-        public FirewallSettings? Firewall { get; set; }
-        
-        [JsonProperty("isActive")]
-        public bool IsActive { get; set; }
-
-        [JsonProperty("preferredContactMethod")]
-        public string? PreferredContactMethodId { get; set; }
-
-        [JsonProperty("throttling")]
-        public ThrottlingSettings? Throttling { get; set; }
-
-        [JsonProperty("trustedOrigin")]
-        public TrustedOriginSettings? TrustedOrigin { get; set; }
-        
-        [JsonProperty("type")]
-        public UserType Type { get; set; }
+        [JsonProperty("maxEntriesPerJob", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public int? MaxEntriesPerJob { get; set; }
     }
 }

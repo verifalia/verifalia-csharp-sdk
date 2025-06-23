@@ -72,6 +72,9 @@ namespace Verifalia.Api
             // Users
             
             _serializer.Converters.Add(new UserTypeConverter());
+            _serializer.Converters.Add(new FirewallRuleAddressFamilyConverter());
+            _serializer.Converters.Add(new ThrottlingScopeConverter());
+            _serializer.Converters.Add(new ThrottlingPeriodConverter());
         }
 
         public string Serialize(object obj)
