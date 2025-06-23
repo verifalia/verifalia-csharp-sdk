@@ -56,7 +56,7 @@ namespace Verifalia.Api
         /// <summary>
         /// Allows to manage the credits for the Verifalia account.
         /// </summary>
-        ICreditsRestClient Credits { get; }
+        ICreditsClient Credits { get; }
 
         /// <summary>
         /// Allows to verify email addresses and manage email verification jobs using the Verifalia service.

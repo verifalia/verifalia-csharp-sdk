@@ -42,7 +42,7 @@ namespace Verifalia.Api.Credits
     /// <summary>
     /// Manages credit packs, daily free credits and usage consumption for the Verifalia account.
     /// </summary>
-    public interface ICreditsRestClient
+    public interface ICreditsClient
     {
         /// <summary>
         /// Returns the current credits balance for the Verifalia account.

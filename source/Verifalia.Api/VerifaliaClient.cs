@@ -82,7 +82,7 @@ namespace Verifalia.Api
         }
         
         /// <inheritdoc cref="IVerifaliaClient.Credits"/>
-        public ICreditsRestClient Credits
+        public ICreditsClient Credits
         {
             get;
         }
@@ -150,7 +150,7 @@ namespace Verifalia.Api
             _apiVersion = DefaultApiVersion;
 
             ContactMethods = new ContactMethodsRestClient(this);
-            Credits = new CreditsRestClient(this);
+            Credits = new CreditsClient(this);
             EmailVerifications = new EmailVerificationsRestClient(this);
             Users = new UsersRestClient(this);
         }
