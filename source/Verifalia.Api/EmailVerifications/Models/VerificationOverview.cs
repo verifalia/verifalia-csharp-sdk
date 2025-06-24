@@ -82,7 +82,7 @@ namespace Verifalia.Api.EmailVerifications.Models
         /// The unique identifier of the Verifalia user who submitted the validation job.
         /// </summary>
         [JsonProperty("owner")]
-        public Guid Owner { get; set; }
+        public string OwnerId { get; set; }
 
         /// <summary>
         /// The IP address of the client that submitted the validation job.
