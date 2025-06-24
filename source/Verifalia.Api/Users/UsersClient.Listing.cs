@@ -52,15 +52,15 @@ namespace Verifalia.Api.Users
         {
             return AsyncEnumerableHelper
                 .ToAsyncEnumerableAsync<UserPagedResult, UserOverview, UserListingOptions>(
-                    ListSegmentedAsync,
-                    ListSegmentedAsync,
+                    GetPageAsync,
+                    GetPageAsync,
                     options,
                     cancellationToken);
         }
 
 #endif
 
-        public async Task<UserPagedResult> ListSegmentedAsync(UserListingOptions? options = null, CancellationToken cancellationToken = default)
+        public async Task<UserPagedResult> GetPageAsync(UserListingOptions? options = null, CancellationToken cancellationToken = default)
         {
             // Generate the additional parameters, where needed
 
@@ -113,11 +113,11 @@ namespace Verifalia.Api.Users
                 }
             }
 
-            return await ListUsersSegmentedImplAsync(restClient, queryParams, cancellationToken)
+            return await GetPageImplAsync(restClient, queryParams, cancellationToken)
                 .ConfigureAwait(false);
         }
 
-        public async Task<UserPagedResult> ListSegmentedAsync(ListingCursor cursor, CancellationToken cancellationToken = default)
+        public async Task<UserPagedResult> GetPageAsync(ListingCursor cursor, CancellationToken cancellationToken = default)
         {
             if (cursor == null) throw new ArgumentNullException(nameof(cursor));
 
@@ -141,11 +141,11 @@ namespace Verifalia.Api.Users
                 queryParams["limit"] = cursor.Limit.ToString(CultureInfo.InvariantCulture);
             }
 
-            return await ListUsersSegmentedImplAsync(restClient, queryParams, cancellationToken)
+            return await GetPageImplAsync(restClient, queryParams, cancellationToken)
                 .ConfigureAwait(false);
         }
 
-        private async Task<UserPagedResult> ListUsersSegmentedImplAsync(IRestClient restClient, Dictionary<string, string>? queryParams, CancellationToken cancellationToken)
+        private async Task<UserPagedResult> GetPageImplAsync(IRestClient restClient, Dictionary<string, string>? queryParams, CancellationToken cancellationToken)
         {
             using var response = await restClient
                 .InvokeAsync(HttpMethod.Get,

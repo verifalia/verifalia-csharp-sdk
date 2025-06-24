@@ -131,7 +131,7 @@ namespace Verifalia.Api.EmailVerifications
 
                 var listingCursor = new ListingCursor(currentSegment.Meta.Cursor);
 
-                currentSegment = await ListEntriesSegmentedAsync(partialVerification.Overview.Id,
+                currentSegment = await GetEntriesPageAsync(partialVerification.Overview.Id,
                         listingCursor,
                         cancellationToken)
                     .ConfigureAwait(false);
@@ -218,15 +218,15 @@ namespace Verifalia.Api.EmailVerifications
         {
             return AsyncEnumerableHelper
                 .ToAsyncEnumerableAsync<VerificationEntryPagedResult, VerificationEntry, VerificationEntryListingOptions>(
-                    (listingOptions, token) => ListEntriesSegmentedAsync(validationId, listingOptions, token),
-                    (cursor, token) => ListEntriesSegmentedAsync(validationId, cursor, token),
+                    (listingOptions, token) => GetEntriesPageAsync(validationId, listingOptions, token),
+                    (cursor, token) => GetEntriesPageAsync(validationId, cursor, token),
                     options,
                     cancellationToken);
         }
 
 #endif
 
-        public async Task<VerificationEntryPagedResult> ListEntriesSegmentedAsync(string validationId, VerificationEntryListingOptions? options = default, CancellationToken cancellationToken = default)
+        public async Task<VerificationEntryPagedResult> GetEntriesPageAsync(string validationId, VerificationEntryListingOptions? options = default, CancellationToken cancellationToken = default)
         {
             // Generate the additional parameters, where needed
 
@@ -264,11 +264,11 @@ namespace Verifalia.Api.EmailVerifications
                     cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
             
-            return await ListEntriesSegmentedImplAsync(restClient, response, cancellationToken)
+            return await GetEntriesPageImplAsync(restClient, response, cancellationToken)
                 .ConfigureAwait(false);
         }
 
-        public async Task<VerificationEntryPagedResult> ListEntriesSegmentedAsync(string validationId, ListingCursor cursor, CancellationToken cancellationToken = default)
+        public async Task<VerificationEntryPagedResult> GetEntriesPageAsync(string validationId, ListingCursor cursor, CancellationToken cancellationToken = default)
         {
             if (cursor == null) throw new ArgumentNullException(nameof(cursor));
 
@@ -300,29 +300,23 @@ namespace Verifalia.Api.EmailVerifications
                     cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
             
-            return await ListEntriesSegmentedImplAsync(restClient, response, cancellationToken)
+            return await GetEntriesPageImplAsync(restClient, response, cancellationToken)
                 .ConfigureAwait(false);
         }
 
-        private async Task<VerificationEntryPagedResult> ListEntriesSegmentedImplAsync(IRestClient restClient, HttpResponseMessage response, CancellationToken cancellationToken)
+        private async Task<VerificationEntryPagedResult> GetEntriesPageImplAsync(IRestClient restClient, HttpResponseMessage response, CancellationToken cancellationToken)
         {
-            switch (response.StatusCode)
+            if (response.StatusCode == HttpStatusCode.OK)
             {
-                case HttpStatusCode.OK:
-                {
-                    return await response
-                        .Content
-                        .DeserializeAsync<VerificationEntryPagedResult>(restClient)
-                        .ConfigureAwait(false);
-                }
-
-                default:
-                {
-                    throw await restClient
-                        .BuildRequestFailedExceptionAsync(response, cancellationToken)
-                        .ConfigureAwait(false);
-                }
+                return await response
+                    .Content
+                    .DeserializeAsync<VerificationEntryPagedResult>(restClient)
+                    .ConfigureAwait(false);
             }
+
+            throw await restClient
+                .BuildRequestFailedExceptionAsync(response, cancellationToken)
+                .ConfigureAwait(false);
         }
         
         public async Task<Stream> ExportEntriesAsync(string validationId, ExportedEntriesFormat format, VerificationEntryListingOptions? options = default, CancellationToken cancellationToken = default)

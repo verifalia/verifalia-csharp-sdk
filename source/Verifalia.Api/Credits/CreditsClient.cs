@@ -86,15 +86,15 @@ namespace Verifalia.Api.Credits
         {
             return AsyncEnumerableHelper
                 .ToAsyncEnumerableAsync<DailyUsagePagedResult, DailyUsage, DailyUsageListingOptions>(
-                    ListDailyUsagesSegmentedAsync,
-                    ListDailyUsagesSegmentedAsync,
+                    GetDailyUsagesPageAsync,
+                    GetDailyUsagesPageAsync,
                     options,
                     cancellationToken);
         }
 
 #endif
 
-        public async Task<DailyUsagePagedResult> ListDailyUsagesSegmentedAsync(DailyUsageListingOptions? options = null, CancellationToken cancellationToken = default)
+        public async Task<DailyUsagePagedResult> GetDailyUsagesPageAsync(DailyUsageListingOptions? options = null, CancellationToken cancellationToken = default)
         {
             // Generate the additional parameters, where needed
 
@@ -126,11 +126,11 @@ namespace Verifalia.Api.Credits
                 }
             }
 
-            return await ListDailyUsageSegmentedImplAsync(restClient, queryParams, cancellationToken)
+            return await GetDailyUsagesPageImplAsync(restClient, queryParams, cancellationToken)
                 .ConfigureAwait(false);
         }
 
-        public async Task<DailyUsagePagedResult> ListDailyUsagesSegmentedAsync(ListingCursor cursor, CancellationToken cancellationToken = default)
+        public async Task<DailyUsagePagedResult> GetDailyUsagesPageAsync(ListingCursor cursor, CancellationToken cancellationToken = default)
         {
             if (cursor == null) throw new ArgumentNullException(nameof(cursor));
 
@@ -154,11 +154,11 @@ namespace Verifalia.Api.Credits
                 queryParams["limit"] = cursor.Limit.ToString(CultureInfo.InvariantCulture);
             }
 
-            return await ListDailyUsageSegmentedImplAsync(restClient, queryParams, cancellationToken)
+            return await GetDailyUsagesPageImplAsync(restClient, queryParams, cancellationToken)
                 .ConfigureAwait(false);
         }
 
-        private async Task<DailyUsagePagedResult> ListDailyUsageSegmentedImplAsync(IRestClient restClient, Dictionary<string, string>? queryParams, CancellationToken cancellationToken)
+        private async Task<DailyUsagePagedResult> GetDailyUsagesPageImplAsync(IRestClient restClient, Dictionary<string, string>? queryParams, CancellationToken cancellationToken)
         {
             using var response = await restClient
                 .InvokeAsync(HttpMethod.Get,

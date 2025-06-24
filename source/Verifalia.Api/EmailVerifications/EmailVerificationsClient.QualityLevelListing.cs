@@ -49,19 +49,19 @@ namespace Verifalia.Api.EmailVerifications
 
 #if HAS_ASYNC_ENUMERABLE_SUPPORT
 
-        public IAsyncEnumerable<QualityLevel> ListQualityLevelsAsync(ListingOptions? options = default, CancellationToken cancellationToken = default)
+        public IAsyncEnumerable<QualityLevel> ListQualityLevelsAsync(ListingOptions? options = null, CancellationToken cancellationToken = default)
         {
             return AsyncEnumerableHelper
                 .ToAsyncEnumerableAsync<QualityLevelPagedResult, QualityLevel, ListingOptions>(
-                    ListQualityLevelsSegmentedAsync,
-                    ListQualityLevelsSegmentedAsync,
+                    GetQualityLevelsPageAsync,
+                    GetQualityLevelsPageAsync,
                     options,
                     cancellationToken);
         }
 
 #endif
 
-        public async Task<QualityLevelPagedResult> ListQualityLevelsSegmentedAsync(ListingOptions? options = default, CancellationToken cancellationToken = default)
+        public async Task<QualityLevelPagedResult> GetQualityLevelsPageAsync(ListingOptions? options = null, CancellationToken cancellationToken = default)
         {
             // Generate the additional parameters, where needed
 
@@ -85,15 +85,20 @@ namespace Verifalia.Api.EmailVerifications
                 .InvokeAsync(HttpMethod.Get,
                     "email-validations/quality-levels",
                     queryParams: queryParams,
-                    headers: new Dictionary<string, object> {{"Accept", WellKnownMimeContentTypes.ApplicationJson}},
+                    headers: new Dictionary<string, object>
+                    {
+                        {
+                            "Accept", WellKnownMimeContentTypes.ApplicationJson
+                        }
+                    },
                     cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
             
-            return await ListQualityLevelsSegmentedImplAsync(restClient, response, cancellationToken)
+            return await GetQualityLevelsPageImplAsync(restClient, response, cancellationToken)
                 .ConfigureAwait(false);
         }
 
-        public async Task<QualityLevelPagedResult> ListQualityLevelsSegmentedAsync(ListingCursor cursor, CancellationToken cancellationToken = default)
+        public async Task<QualityLevelPagedResult> GetQualityLevelsPageAsync(ListingCursor cursor, CancellationToken cancellationToken = default)
         {
             if (cursor == null) throw new ArgumentNullException(nameof(cursor));
 
@@ -125,30 +130,23 @@ namespace Verifalia.Api.EmailVerifications
                     cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
             
-            return await ListQualityLevelsSegmentedImplAsync(restClient, response, cancellationToken)
+            return await GetQualityLevelsPageImplAsync(restClient, response, cancellationToken)
                 .ConfigureAwait(false);
         }
 
-        private async Task<QualityLevelPagedResult> ListQualityLevelsSegmentedImplAsync(IRestClient restClient, HttpResponseMessage response, CancellationToken cancellationToken)
+        private async Task<QualityLevelPagedResult> GetQualityLevelsPageImplAsync(IRestClient restClient, HttpResponseMessage response, CancellationToken cancellationToken)
         {
-            switch (response.StatusCode)
+            if (response.StatusCode == HttpStatusCode.OK)
             {
-                case HttpStatusCode.OK:
-                {
-                    return await response
-                        .Content
-                        .DeserializeAsync<QualityLevelPagedResult>(restClient)
-                        .ConfigureAwait(false);
-                }
-
-                default:
-                {
-                    throw await restClient
-                        .BuildRequestFailedExceptionAsync(response, cancellationToken)
-                        .ConfigureAwait(false);
-
-                }
+                return await response
+                    .Content
+                    .DeserializeAsync<QualityLevelPagedResult>(restClient)
+                    .ConfigureAwait(false);
             }
+
+            throw await restClient
+                .BuildRequestFailedExceptionAsync(response, cancellationToken)
+                .ConfigureAwait(false);
         }
     }
 }

@@ -53,15 +53,15 @@ namespace Verifalia.Api.EmailVerifications
         {
             return AsyncEnumerableHelper
                 .ToAsyncEnumerableAsync<VerificationOverviewPagedResult, VerificationOverview, VerificationOverviewListingOptions>(
-                    ListSegmentedAsync,
-                    ListSegmentedAsync,
+                    GetPageAsync,
+                    GetPageAsync,
                     options,
                     cancellationToken);
         }
 
 #endif
 
-        public async Task<VerificationOverviewPagedResult> ListSegmentedAsync(VerificationOverviewListingOptions? options = default, CancellationToken cancellationToken = default)
+        public async Task<VerificationOverviewPagedResult> GetPageAsync(VerificationOverviewListingOptions? options = default, CancellationToken cancellationToken = default)
         {
             // Generate the additional parameters, where needed
 
@@ -127,11 +127,11 @@ namespace Verifalia.Api.EmailVerifications
                     cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
             
-            return await ListSegmentedImplAsync(restClient, response, cancellationToken)
+            return await GetPageImplAsync(restClient, response, cancellationToken)
                 .ConfigureAwait(false);
         }
 
-        public async Task<VerificationOverviewPagedResult> ListSegmentedAsync(ListingCursor cursor, CancellationToken cancellationToken = default)
+        public async Task<VerificationOverviewPagedResult> GetPageAsync(ListingCursor cursor, CancellationToken cancellationToken = default)
         {
             if (cursor == null) throw new ArgumentNullException(nameof(cursor));
 
@@ -163,29 +163,23 @@ namespace Verifalia.Api.EmailVerifications
                     cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
             
-            return await ListSegmentedImplAsync(restClient, response, cancellationToken)
+            return await GetPageImplAsync(restClient, response, cancellationToken)
                 .ConfigureAwait(false);
         }
 
-        private async Task<VerificationOverviewPagedResult> ListSegmentedImplAsync(IRestClient restClient, HttpResponseMessage response, CancellationToken cancellationToken)
+        private async Task<VerificationOverviewPagedResult> GetPageImplAsync(IRestClient restClient, HttpResponseMessage response, CancellationToken cancellationToken)
         {
-            switch (response.StatusCode)
+            if (response.StatusCode == HttpStatusCode.OK)
             {
-                case HttpStatusCode.OK:
-                {
-                    return await response
-                        .Content
-                        .DeserializeAsync<VerificationOverviewPagedResult>(restClient)
-                        .ConfigureAwait(false);
-                }
-
-                default:
-                {
-                    throw await restClient
-                        .BuildRequestFailedExceptionAsync(response, cancellationToken)
-                        .ConfigureAwait(false);
-                }
+                return await response
+                    .Content
+                    .DeserializeAsync<VerificationOverviewPagedResult>(restClient)
+                    .ConfigureAwait(false);
             }
+
+            throw await restClient
+                .BuildRequestFailedExceptionAsync(response, cancellationToken)
+                .ConfigureAwait(false);
         }
     }
 }

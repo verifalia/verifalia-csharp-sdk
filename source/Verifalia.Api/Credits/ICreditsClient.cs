@@ -67,7 +67,7 @@ namespace Verifalia.Api.Credits
         [Obsolete("ListDailyUsageAsync() is preferred in .NET Core 3.0+ because of its simpler syntax, thanks to the async enumerable support.")]
         [EditorBrowsable(EditorBrowsableState.Advanced)]
 #endif
-        Task<DailyUsagePagedResult> ListDailyUsagesSegmentedAsync(DailyUsageListingOptions? options = null, CancellationToken cancellationToken = default);
+        Task<DailyUsagePagedResult> GetDailyUsagesPageAsync(DailyUsageListingOptions? options = null, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Continues listing the daily usages of the credits for the Verifalia account.
@@ -78,6 +78,6 @@ namespace Verifalia.Api.Credits
         [Obsolete("ListDailyUsageAsync() is preferred in .NET Core 3.0+ because of its simpler syntax, thanks to the async enumerable support.")]
         [EditorBrowsable(EditorBrowsableState.Advanced)]
 #endif
-        Task<DailyUsagePagedResult> ListDailyUsagesSegmentedAsync(ListingCursor cursor, CancellationToken cancellationToken = default);
+        Task<DailyUsagePagedResult> GetDailyUsagesPageAsync(ListingCursor cursor, CancellationToken cancellationToken = default);
     }
 }

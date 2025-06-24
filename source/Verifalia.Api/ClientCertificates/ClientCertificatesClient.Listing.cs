@@ -59,17 +59,17 @@ namespace Verifalia.Api.ClientCertificates
 
             Task<ClientCertificatePagedResult> FetchFirstSegmentAsync(ClientCertificateListingOptions? options = null, CancellationToken cancellationToken = default)
             {
-                return ListSegmentedAsync(userId, options, cancellationToken);
+                return GetPageAsync(userId, options, cancellationToken);
             }
             
             Task<ClientCertificatePagedResult> FetchNextSegmentAsync(ListingCursor cursor, CancellationToken cancellationToken = default)
             {
-                return ListSegmentedAsync(userId, cursor, cancellationToken);
+                return GetPageAsync(userId, cursor, cancellationToken);
             }
         }
 #endif
 
-        public async Task<ClientCertificatePagedResult> ListSegmentedAsync(string userId, ClientCertificateListingOptions? options = null, CancellationToken cancellationToken = default)
+        public async Task<ClientCertificatePagedResult> GetPageAsync(string userId, ClientCertificateListingOptions? options = null, CancellationToken cancellationToken = default)
         {
             if (userId == null) throw new ArgumentNullException(nameof(userId));
             
@@ -93,11 +93,11 @@ namespace Verifalia.Api.ClientCertificates
 
             // Send the request to the Verifalia servers
             
-            return await ListSegmentedImplAsync(restClient, userId, queryParams, cancellationToken)
+            return await GetPageImplAsync(restClient, userId, queryParams, cancellationToken)
                 .ConfigureAwait(false);
         }
 
-        public async Task<ClientCertificatePagedResult> ListSegmentedAsync(string userId, ListingCursor cursor, CancellationToken cancellationToken = default)
+        public async Task<ClientCertificatePagedResult> GetPageAsync(string userId, ListingCursor cursor, CancellationToken cancellationToken = default)
         {
             if (userId == null) throw new ArgumentNullException(nameof(userId));
             if (cursor == null) throw new ArgumentNullException(nameof(cursor));
@@ -122,11 +122,11 @@ namespace Verifalia.Api.ClientCertificates
 
             // Send the request to the Verifalia servers
             
-            return await ListSegmentedImplAsync(restClient, userId, queryParams, cancellationToken)
+            return await GetPageImplAsync(restClient, userId, queryParams, cancellationToken)
                 .ConfigureAwait(false);
         }
 
-        private async Task<ClientCertificatePagedResult> ListSegmentedImplAsync(IRestClient restClient, string userId, Dictionary<string, string>? queryParams, CancellationToken cancellationToken)
+        private async Task<ClientCertificatePagedResult> GetPageImplAsync(IRestClient restClient, string userId, Dictionary<string, string>? queryParams, CancellationToken cancellationToken)
         {
             if (restClient == null) throw new ArgumentNullException(nameof(restClient));
             if (userId == null) throw new ArgumentNullException(nameof(userId));

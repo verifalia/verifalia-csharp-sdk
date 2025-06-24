@@ -59,17 +59,17 @@ namespace Verifalia.Api.ContactMethods
 
             Task<ContactMethodPagedResult> FetchFirstSegmentAsync(ContactMethodListingOptions? options = null, CancellationToken cancellationToken = default)
             {
-                return ListSegmentedAsync(userId, options, cancellationToken);
+                return GetPageAsync(userId, options, cancellationToken);
             }
             
             Task<ContactMethodPagedResult> FetchNextSegmentAsync(ListingCursor cursor, CancellationToken cancellationToken = default)
             {
-                return ListSegmentedAsync(userId, cursor, cancellationToken);
+                return GetPageAsync(userId, cursor, cancellationToken);
             }
         }
 #endif
 
-        public async Task<ContactMethodPagedResult> ListSegmentedAsync(string userId, ContactMethodListingOptions? options = null, CancellationToken cancellationToken = default)
+        public async Task<ContactMethodPagedResult> GetPageAsync(string userId, ContactMethodListingOptions? options = null, CancellationToken cancellationToken = default)
         {
             if (userId == null) throw new ArgumentNullException(nameof(userId));
             
@@ -93,11 +93,11 @@ namespace Verifalia.Api.ContactMethods
 
             // Send the request to the Verifalia servers
             
-            return await ListSegmentedImplAsync(restClient, userId, queryParams, cancellationToken)
+            return await GetPageImplAsync(restClient, userId, queryParams, cancellationToken)
                 .ConfigureAwait(false);
         }
 
-        public async Task<ContactMethodPagedResult> ListSegmentedAsync(string userId, ListingCursor cursor, CancellationToken cancellationToken = default)
+        public async Task<ContactMethodPagedResult> GetPageAsync(string userId, ListingCursor cursor, CancellationToken cancellationToken = default)
         {
             if (cursor == null) throw new ArgumentNullException(nameof(cursor));
 
@@ -121,11 +121,11 @@ namespace Verifalia.Api.ContactMethods
 
             // Send the request to the Verifalia servers
             
-            return await ListSegmentedImplAsync(restClient, userId, queryParams, cancellationToken)
+            return await GetPageImplAsync(restClient, userId, queryParams, cancellationToken)
                 .ConfigureAwait(false);
         }
 
-        private async Task<ContactMethodPagedResult> ListSegmentedImplAsync(IRestClient restClient, string userId, Dictionary<string, string>? queryParams, CancellationToken cancellationToken)
+        private async Task<ContactMethodPagedResult> GetPageImplAsync(IRestClient restClient, string userId, Dictionary<string, string>? queryParams, CancellationToken cancellationToken)
         {
             if (restClient == null) throw new ArgumentNullException(nameof(restClient));
             if (userId == null) throw new ArgumentNullException(nameof(userId));
