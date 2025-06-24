@@ -94,8 +94,8 @@ namespace Verifalia.Api.EmailVerifications
             var content = restClient
                 .Serialize(new
                 {
-                    quality = request.Quality?.NameOrGuid,
-                    deduplication = request.Deduplication?.NameOrGuid,
+                    quality = request.Quality?.NameOrId,
+                    deduplication = request.Deduplication?.NameOrId,
                     priority = request.Priority?.Value,
                     name = request.Name,
                     // Strips the milliseconds portion from the specified retention period, if any
@@ -180,8 +180,8 @@ namespace Verifalia.Api.EmailVerifications
             var settingsContent = restClient
                 .Serialize(new
                 {
-                    quality = request.Quality?.NameOrGuid,
-                    deduplication = request.Deduplication?.NameOrGuid,
+                    quality = request.Quality?.NameOrId,
+                    deduplication = request.Deduplication?.NameOrId,
                     priority = request.Priority?.Value,
                     name = request.Name,
                     // Strips the milliseconds portion from the specified retention period, if any

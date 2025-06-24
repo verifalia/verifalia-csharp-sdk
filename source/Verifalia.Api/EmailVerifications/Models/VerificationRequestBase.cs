@@ -71,7 +71,7 @@ namespace Verifalia.Api.EmailVerifications.Models
         /// job will be automatically deleted. If set to null, the service defaults to the retention period associated
         /// with the user or browser app submitting the job.
         /// <remarks>A verification job can be deleted at any time before its retention period using the
-        /// <see cref="EmailVerificationsClient.DeleteAsync(Guid, CancellationToken)"/> method. The configured
+        /// <see cref="EmailVerificationsClient.DeleteAsync(string, CancellationToken)"/> method. The configured
         /// retention period, if specified, must be within the range of 5 minutes to 30 days.</remarks>
         /// </summary>
         public TimeSpan? Retention { get; set; }

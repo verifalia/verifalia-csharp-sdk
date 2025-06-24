@@ -39,7 +39,7 @@ namespace Verifalia.Api.EmailVerifications.Models
     /// </summary>
     public class DeduplicationMode : IEquatable<DeduplicationMode>
     {
-        internal string NameOrGuid { get; }
+        internal string NameOrId { get; }
 
         /// <summary>
         /// Duplicates detection is turned off.
@@ -63,30 +63,20 @@ namespace Verifalia.Api.EmailVerifications.Models
         }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="DeduplicationMode"/> from its name.
+        /// Initializes a new instance of <see cref="DeduplicationMode"/> from its name or ID.
         /// </summary>
-        /// <param name="modeName">The name of the deduplication mode.</param>
-        /// <remarks>Use <see cref="Off"/> or <see cref="Safe"/>, if no name is known.</remarks>
-        public DeduplicationMode(string modeName)
+        /// <param name="nameOrId">The name or ID of the deduplication mode.</param>
+        /// <remarks>Use <see cref="Off"/>, <see cref="Relaxed"/>, or <see cref="Safe"/>, if no name or ID is known.</remarks>
+        public DeduplicationMode(string nameOrId)
         {
-            NameOrGuid = modeName ?? throw new ArgumentNullException(nameof(modeName));
-        }
-
-        /// <summary>
-        /// Initializes a new instance of <see cref="DeduplicationMode"/> from its ID.
-        /// </summary>
-        /// <param name="modeGuid">The ID of the deduplication mode.</param>
-        /// <remarks>Use <see cref="Off"/> or <see cref="Safe"/>, if no ID is known.</remarks>
-        public DeduplicationMode(Guid modeGuid)
-        {
-            NameOrGuid = modeGuid.ToString("B");
+            NameOrId = nameOrId ?? throw new ArgumentNullException(nameof(nameOrId));
         }
 
         public bool Equals(DeduplicationMode? other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return NameOrGuid == other.NameOrGuid;
+            return NameOrId == other.NameOrId;
         }
 
         public override bool Equals(object? obj)
@@ -99,7 +89,7 @@ namespace Verifalia.Api.EmailVerifications.Models
 
         public override int GetHashCode()
         {
-            return NameOrGuid.GetHashCode();
+            return NameOrId.GetHashCode();
         }
 
         public static bool operator ==(DeduplicationMode? left, DeduplicationMode? right)
@@ -114,22 +104,22 @@ namespace Verifalia.Api.EmailVerifications.Models
 
         public override string ToString()
         {
-            if (String.Equals(NameOrGuid, Off.NameOrGuid, StringComparison.OrdinalIgnoreCase))
+            if (String.Equals(NameOrId, Off.NameOrId, StringComparison.OrdinalIgnoreCase))
             {
-                return $"{NameOrGuid} (off)";
+                return $"{NameOrId} (off)";
             }
 
-            if (String.Equals(NameOrGuid, Safe.NameOrGuid, StringComparison.OrdinalIgnoreCase))
+            if (String.Equals(NameOrId, Safe.NameOrId, StringComparison.OrdinalIgnoreCase))
             {
-                return $"{NameOrGuid} (safe)";
+                return $"{NameOrId} (safe)";
             }
 
-            if (String.Equals(NameOrGuid, Relaxed.NameOrGuid, StringComparison.OrdinalIgnoreCase))
+            if (String.Equals(NameOrId, Relaxed.NameOrId, StringComparison.OrdinalIgnoreCase))
             {
-                return $"{NameOrGuid} (relaxed)";
+                return $"{NameOrId} (relaxed)";
             }
             
-            return NameOrGuid;
+            return NameOrId;
         }
     }
 }

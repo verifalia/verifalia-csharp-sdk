@@ -108,7 +108,7 @@ namespace Verifalia.Api.EmailVerifications.Models
         /// The maximum data retention period Verifalia observes for this verification job, after which the job will be
         /// automatically deleted.
         /// <remarks>A verification job can be deleted anytime prior to its retention period through the
-        /// <see cref="EmailVerificationsClient.DeleteAsync(Guid, CancellationToken)"/> method.</remarks>
+        /// <see cref="EmailVerificationsClient.DeleteAsync(string, CancellationToken)"/> method.</remarks>
         /// </summary>
         [JsonProperty("retention")]
         public TimeSpan Retention { get; set; }

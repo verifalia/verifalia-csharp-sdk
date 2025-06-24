@@ -43,7 +43,7 @@ namespace Verifalia.Api.EmailVerifications.Models
         /// The ID of the quality level.
         /// </summary>
         [JsonProperty("id")]
-        public Guid Id { get; set; }
+        public string Id { get; set; }
 
         /// <summary>
         /// A text used to display this quality level to final users.
@@ -80,6 +80,6 @@ namespace Verifalia.Api.EmailVerifications.Models
         /// A <see cref="QualityLevelName"/> to be used as a reference while calling the Verifalia API.
         /// </summary>
         [JsonIgnore]
-        public QualityLevelName Name => new QualityLevelName(Id);
+        public QualityLevelName Name => new(Id);
     }
 }

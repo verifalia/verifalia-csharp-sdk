@@ -41,7 +41,7 @@ namespace Verifalia.Api.EmailVerifications.Models
     /// if you have one (custom quality levels are available to premium plans only).</remarks>
     public class QualityLevelName : IEquatable<QualityLevelName>
     {
-        internal string NameOrGuid { get; }
+        internal string NameOrId { get; }
 
         /// <summary>
         /// The Standard quality level. Suitable for most businesses, provides good results for the vast majority of email addresses;
@@ -69,28 +69,18 @@ namespace Verifalia.Api.EmailVerifications.Models
         /// <summary>
         /// Initializes a new instance of <see cref="QualityLevelName"/> from its name.
         /// </summary>
-        /// <param name="qualityName">The name of the quality level.</param>
+        /// <param name="nameOrId">The name of the quality level.</param>
         /// <remarks>Use <see cref="Standard"/>, <see cref="High"/> or <see cref="Extreme"/>, if no name is known.</remarks>
-        public QualityLevelName(string qualityName)
+        public QualityLevelName(string nameOrId)
         {
-            NameOrGuid = qualityName ?? throw new ArgumentNullException(nameof(qualityName));
-        }
-
-        /// <summary>
-        /// Initializes a new instance of <see cref="QualityLevelName"/> from its ID.
-        /// </summary>
-        /// <param name="qualityGuid">The ID of the quality level.</param>
-        /// <remarks>Use <see cref="Standard"/>, <see cref="High"/> or <see cref="Extreme"/>, if no ID is known.</remarks>
-        public QualityLevelName(Guid qualityGuid)
-        {
-            NameOrGuid = qualityGuid.ToString("B");
+            NameOrId = nameOrId ?? throw new ArgumentNullException(nameof(nameOrId));
         }
 
         public bool Equals(QualityLevelName? other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return NameOrGuid == other.NameOrGuid;
+            return NameOrId == other.NameOrId;
         }
 
         public override bool Equals(object? obj)
@@ -103,7 +93,7 @@ namespace Verifalia.Api.EmailVerifications.Models
 
         public override int GetHashCode()
         {
-            return NameOrGuid.GetHashCode();
+            return NameOrId.GetHashCode();
         }
 
         public static bool operator ==(QualityLevelName? left, QualityLevelName? right)
@@ -118,22 +108,22 @@ namespace Verifalia.Api.EmailVerifications.Models
 
         public override string ToString()
         {
-            if (String.Equals(NameOrGuid, Standard.NameOrGuid, StringComparison.OrdinalIgnoreCase))
+            if (String.Equals(NameOrId, Standard.NameOrId, StringComparison.OrdinalIgnoreCase))
             {
-                return $"{NameOrGuid} (standard)";
+                return $"{NameOrId} (standard)";
             }
 
-            if (String.Equals(NameOrGuid, High.NameOrGuid, StringComparison.OrdinalIgnoreCase))
+            if (String.Equals(NameOrId, High.NameOrId, StringComparison.OrdinalIgnoreCase))
             {
-                return $"{NameOrGuid} (high)";
+                return $"{NameOrId} (high)";
             }
 
-            if (String.Equals(NameOrGuid, Extreme.NameOrGuid, StringComparison.OrdinalIgnoreCase))
+            if (String.Equals(NameOrId, Extreme.NameOrId, StringComparison.OrdinalIgnoreCase))
             {
-                return $"{NameOrGuid} (extreme)";
+                return $"{NameOrId} (extreme)";
             }
 
-            return NameOrGuid;
+            return NameOrId;
         }
     }
 }

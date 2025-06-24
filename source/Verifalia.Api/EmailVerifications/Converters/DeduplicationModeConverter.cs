@@ -40,7 +40,7 @@ namespace Verifalia.Api.EmailVerifications.Converters
     {
         public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
         {
-            writer.WriteValue(((DeduplicationMode)value).NameOrGuid);
+            writer.WriteValue(((DeduplicationMode)value).NameOrId);
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
