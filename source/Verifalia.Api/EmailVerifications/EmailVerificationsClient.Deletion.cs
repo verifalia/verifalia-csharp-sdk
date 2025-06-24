@@ -40,9 +40,9 @@ namespace Verifalia.Api.EmailVerifications
     /// <inheritdoc />
     internal partial class EmailVerificationsClient
     {
-        public async Task DeleteAsync(string id, CancellationToken cancellationToken = default)
+        public async Task DeleteAsync(string verificationId, CancellationToken cancellationToken = default)
         {
-            var resource = $"email-validations/{id}";
+            var resource = $"email-validations/{verificationId}";
 
             // Sends the request to the Verifalia servers
 

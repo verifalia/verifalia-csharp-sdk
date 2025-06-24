@@ -159,24 +159,18 @@ namespace Verifalia.Api.Users
                     },
                     cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
-            
-            switch (response.StatusCode)
-            {
-                case HttpStatusCode.OK:
-                {
-                    return await response
-                        .Content
-                        .DeserializeAsync<UserPagedResult>(restClient)
-                        .ConfigureAwait(false);
-                }
 
-                default:
-                {
-                    throw await restClient
-                        .BuildRequestFailedExceptionAsync(response, cancellationToken)
-                        .ConfigureAwait(false);
-                }
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                return await response
+                    .Content
+                    .DeserializeAsync<UserPagedResult>(restClient)
+                    .ConfigureAwait(false);
             }
+
+            throw await restClient
+                .BuildRequestFailedExceptionAsync(response, cancellationToken)
+                .ConfigureAwait(false);
         }
     }
 }

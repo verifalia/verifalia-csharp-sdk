@@ -34,7 +34,7 @@ using System;
 namespace Verifalia.Api.EmailVerifications.Models
 {
     /// <summary>
-    /// Provides optional configuration settings for invoking a completion callback upon the completion of an email validation job.
+    /// Provides optional configuration settings for invoking a completion callback upon the completion of an email verification job.
     /// </summary>
     public sealed class CompletionCallback
     {

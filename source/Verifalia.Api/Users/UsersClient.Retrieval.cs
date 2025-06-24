@@ -29,16 +29,11 @@
 * THE SOFTWARE.
 */
 
-using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Verifalia.Api.Exceptions;
-using Verifalia.Api.Common;
-using Verifalia.Api.Common.Models;
 using Verifalia.Api.Users.Models;
 
 namespace Verifalia.Api.Users
@@ -46,7 +41,7 @@ namespace Verifalia.Api.Users
     /// <inheritdoc />
     internal partial class UsersClient
     {
-        public async Task<User?> GetAsync(string id, CancellationToken cancellationToken = default)
+        public async Task<User?> GetAsync(string userId, CancellationToken cancellationToken = default)
         {
             // Sends the request to the Verifalia servers
 
@@ -54,7 +49,7 @@ namespace Verifalia.Api.Users
 
             using var response = await restClient
                 .InvokeAsync(HttpMethod.Get,
-                    $"users/{id}",
+                    $"users/{userId}",
                     headers: new Dictionary<string, object>
                     {
                         {

@@ -1,7 +1,7 @@
 namespace Verifalia.Api.EmailVerifications.Models
 {
     /// <summary>
-    /// Represents the output formats which Verifalia can accept while exporting email validation entries. 
+    /// Represents the output formats which Verifalia can accept while exporting email verification entries. 
     /// </summary>
     public enum ExportedEntriesFormat
     {

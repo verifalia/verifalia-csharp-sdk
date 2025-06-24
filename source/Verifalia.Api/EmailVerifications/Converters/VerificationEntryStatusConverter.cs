@@ -98,7 +98,7 @@ namespace Verifalia.Api.EmailVerifications.Converters
                 }
             }
 
-            throw new ArgumentOutOfRangeException(nameof(value), value, "Unsupported validation entry status.");
+            throw new ArgumentOutOfRangeException(nameof(value), value, "Unsupported verification entry status.");
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)

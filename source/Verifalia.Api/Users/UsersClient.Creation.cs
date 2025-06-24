@@ -62,24 +62,18 @@ namespace Verifalia.Api.Users
                     contentFactory: _ => Task.FromResult<HttpContent>(new StringContent(content, Encoding.UTF8, WellKnownMimeContentTypes.ApplicationJson)),
                     cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
-            
-            switch (response.StatusCode)
-            {
-                case HttpStatusCode.OK:
-                {
-                    return await response
-                        .Content
-                        .DeserializeAsync<UserOverview>(restClient)
-                        .ConfigureAwait(false);
-                }
 
-                default:
-                {
-                    throw await restClient
-                        .BuildRequestFailedExceptionAsync(response, cancellationToken)
-                        .ConfigureAwait(false);
-                }
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                return await response
+                    .Content
+                    .DeserializeAsync<UserOverview>(restClient)
+                    .ConfigureAwait(false);
             }
+
+            throw await restClient
+                .BuildRequestFailedExceptionAsync(response, cancellationToken)
+                .ConfigureAwait(false);
         }        
     }
 }

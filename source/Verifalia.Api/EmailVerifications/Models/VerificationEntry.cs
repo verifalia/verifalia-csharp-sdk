@@ -53,7 +53,7 @@ namespace Verifalia.Api.EmailVerifications.Models
         public string InputData { get; set; }
 
         /// <summary>
-        /// A custom, optional string which is passed back upon completing the validation. To pass back and forth a custom value,
+        /// A custom, optional string which is passed back upon completing the verification. To pass back and forth a custom value,
         /// use the <see cref="VerificationRequestEntry.Custom"/> property of <see cref="VerificationRequestEntry"/>.
         /// </summary>
         [JsonProperty("custom")]
@@ -127,7 +127,7 @@ namespace Verifalia.Api.EmailVerifications.Models
         public bool? IsRoleAccount { get; set; }
 
         /// <summary>
-        /// The validation status for this entry.
+        /// The verification status for this entry.
         /// </summary>
         [JsonProperty("status")]
         public VerificationEntryStatus Status { get; set; }

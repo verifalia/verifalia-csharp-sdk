@@ -61,6 +61,6 @@ namespace Verifalia.Api.ClientCertificates
 #endif
         Task<ClientCertificatePagedResult> GetPageAsync(string userId, ListingCursor cursor, CancellationToken cancellationToken = default);
 
-        Task DeleteAsync(string userId, string contactMethodId, CancellationToken cancellationToken = default);
+        Task DeleteAsync(string userId, string clientCertificateId, CancellationToken cancellationToken = default);
     }
 }

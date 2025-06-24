@@ -46,7 +46,7 @@ namespace Verifalia.Api.EmailVerifications.Converters
         public override object ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
         {
             var rootObject = JObject.Load(reader);
-            var validationEntryCollection = new VerificationEntryCollection();
+            var verificationEntryCollection = new VerificationEntryCollection();
 
             // Read the key-set metadata
 
@@ -54,8 +54,8 @@ namespace Verifalia.Api.EmailVerifications.Converters
 
             if (meta != null)
             {
-                validationEntryCollection.Cursor = meta["cursor"]?.Value<string>();
-                validationEntryCollection.IsTruncated = meta["isTruncated"]?.Value<bool>() ?? false;
+                verificationEntryCollection.Cursor = meta["cursor"]?.Value<string>();
+                verificationEntryCollection.IsTruncated = meta["isTruncated"]?.Value<bool>() ?? false;
             }
 
             // Read the actual items
@@ -63,10 +63,10 @@ namespace Verifalia.Api.EmailVerifications.Converters
             using (var dataReader = rootObject["data"].CreateReader())
             {
                 var entries = serializer.Deserialize<VerificationEntry[]>(dataReader);
-                validationEntryCollection.AddRange(entries);
+                verificationEntryCollection.AddRange(entries);
             }
 
-            return validationEntryCollection;
+            return verificationEntryCollection;
         }
 
         public override bool CanConvert(Type objectType)

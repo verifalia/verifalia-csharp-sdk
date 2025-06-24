@@ -34,7 +34,7 @@ using System;
 namespace Verifalia.Api.EmailVerifications.Models
 {
     /// <summary>
-    /// The strategy employed by Verifalia to identify duplicate email addresses during a multiple items validation process.
+    /// The strategy employed by Verifalia to identify duplicate email addresses during a multiple items verification process.
     /// <remarks>Duplicated items (after the first occurrence) will have the <see cref="VerificationEntryStatus.Duplicate"/> status.</remarks>
     /// </summary>
     public class DeduplicationMode : IEquatable<DeduplicationMode>

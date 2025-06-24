@@ -35,7 +35,7 @@ using System.Threading;
 namespace Verifalia.Api.EmailVerifications.Models
 {
     /// <summary>
-    /// Base class for email validation requests.
+    /// Base class for email verification requests.
     /// </summary>
     public abstract class VerificationRequestBase
     {
@@ -49,13 +49,13 @@ namespace Verifalia.Api.EmailVerifications.Models
         public QualityLevelName? Quality { get; set; }
 
         /// <summary>
-        /// Specifies the priority (speed) of a validation job relative to the parent Verifalia account. If there are
-        /// multiple concurrent validation jobs in an account, this value allows you to adjust the processing speed of a
+        /// Specifies the priority (speed) of an email verification job relative to the parent Verifalia account. If there are
+        /// multiple concurrent verification jobs in an account, this value allows you to adjust the processing speed of a
         /// specific job in comparison to others.
         /// <remarks>The valid range for this priority spans from <see cref="VerificationPriority.Lowest"/> (0 - lowest
         /// priority) to <see cref="VerificationPriority.Highest"/> (255 - highest priority), with
         /// <see cref="VerificationPriority.Normal"/> (127) representing normal priority. If not specified, Verifalia
-        /// processes all concurrent validation jobs for an account at the same speed.
+        /// processes all concurrent verification jobs for an account at the same speed.
         /// </remarks>
         /// </summary>
         public VerificationPriority? Priority { get; set; }
@@ -77,7 +77,7 @@ namespace Verifalia.Api.EmailVerifications.Models
         public TimeSpan? Retention { get; set; }
 
         /// <summary>
-        /// Allows to assign an optional custom name to the validation job for personal reference. This name will be
+        /// Allows to assign an optional custom name to the verification job for personal reference. This name will be
         /// included in subsequent API calls and displayed in the Verifalia client area.
         /// </summary>
         public string? Name { get; set; }

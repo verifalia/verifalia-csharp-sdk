@@ -37,18 +37,18 @@ using Verifalia.Api.EmailVerifications.Models;
 namespace Verifalia.Api.EmailVerifications
 {
     /// <summary>
-    /// Provides optional configuration settings for waiting on the completion of an email validation job.
+    /// Provides optional configuration settings for waiting on the completion of an email verification job.
     /// </summary>
     public class WaitOptions
     {
         /// <summary>
-        /// Indicates that the library should automatically wait for the email validation to complete, using the default
+        /// Indicates that the library should automatically wait for the email verification to complete, using the default
         /// wait times.
         /// </summary>
         public static readonly WaitOptions Default = new();
 
         /// <summary>
-        /// Indicates that the library should not wait for the email validation to complete.
+        /// Indicates that the library should not wait for the email verification to complete.
         /// </summary>
         public static readonly WaitOptions NoWait = new()
         {
@@ -57,8 +57,8 @@ namespace Verifalia.Api.EmailVerifications
         };
     
         /// <summary>
-        /// Gets an <see cref="IProgress{ValidationOverview}"/> instance which eventually receives completion
-        /// progress updates for an email validation job.
+        /// Gets an <see cref="IProgress{T}"/> of <see cref="VerificationOverview"/> instance which eventually receives completion
+        /// progress updates for an email verification job.
         /// </summary>
         public IProgress<VerificationOverview>? Progress { get; set; }
 
@@ -85,7 +85,7 @@ namespace Verifalia.Api.EmailVerifications
 
             // TODO: For better results, consider the job age while determining the polling delay
 
-            //var jobAge = DateTime.UtcNow - validationOverview.SubmittedOn;
+            //var jobAge = DateTime.UtcNow - verificationOverview.SubmittedOn;
 
             //if (jobAge < TimeSpan.Zero)
             //{

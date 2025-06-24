@@ -32,12 +32,12 @@
 namespace Verifalia.Api.EmailVerifications.Models
 {
     /// <summary>
-    /// Provides enumerated values for the supported validation statuses for a <see cref="VerificationEntry"/>.
+    /// Provides enumerated values for the supported email verification statuses for a <see cref="VerificationEntry"/>.
     /// </summary>
     public enum VerificationEntryStatus
     {
         /// <summary>
-        /// Special unknown validation status, due to a value reported by the API which is missing in this SDK.
+        /// Special unknown verification status, due to a value reported by the API which is missing in this SDK.
         /// </summary>
         Unknown = 0,
         
@@ -152,7 +152,7 @@ namespace Verifalia.Api.EmailVerifications.Models
         LocalPartIsWellKnownRoleAccount,
 
         /// <summary>
-        /// The external mail exchanger rejected the validation request.
+        /// The external mail exchanger rejected the verification request.
         /// </summary>
         LocalSenderAddressRejected,
 

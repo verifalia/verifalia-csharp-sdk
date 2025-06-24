@@ -46,7 +46,7 @@ namespace Verifalia.Api.EmailVerifications
     /// <inheritdoc />
     internal partial class EmailVerificationsClient
     {
-        public async Task<Verification?> GetAsync(string id, WaitOptions? waitOptions = default, CancellationToken cancellationToken = default)
+        public async Task<Verification?> GetAsync(string verificationId, WaitOptions? waitOptions = null, CancellationToken cancellationToken = default)
         {
             var waitOptionsOrDefault = waitOptions ?? WaitOptions.Default;
             
@@ -56,7 +56,7 @@ namespace Verifalia.Api.EmailVerifications
 
             using var response = await restClient
                 .InvokeAsync(HttpMethod.Get,
-                    $"email-validations/{id}",
+                    $"email-validations/{verificationId}",
                     queryParams: new Dictionary<string, string>
                     {
                         {
@@ -77,20 +77,20 @@ namespace Verifalia.Api.EmailVerifications
                 case HttpStatusCode.OK:
                 case HttpStatusCode.Accepted:
                 {
-                    var partialValidation = await response
+                    var partialVerification = await response
                         .Content
                         .DeserializeAsync<PartialVerification>(restClient)
                         .ConfigureAwait(false);
 
-                    // Returns immediately if the validation has been completed or if we should not wait for it
+                    // Returns immediately if the email verification has been completed or if we should not wait for it
 
-                    if (waitOptionsOrDefault == WaitOptions.NoWait || partialValidation.Overview.Status == VerificationStatus.Completed)
+                    if (waitOptionsOrDefault == WaitOptions.NoWait || partialVerification.Overview.Status == VerificationStatus.Completed)
                     {
-                        return await RetrieveValidationFromPartialValidationAsync(partialValidation, cancellationToken)
+                        return await RetrieveVerificationFromPartialVerificationAsync(partialVerification, cancellationToken)
                             .ConfigureAwait(false);
                     }
 
-                    return await WaitForCompletionAsync<Verification>(partialValidation.Overview,
+                    return await WaitForCompletionAsync<Verification>(partialVerification.Overview,
                             waitOptionsOrDefault,
                             cancellationToken)
                         .ConfigureAwait(false);
@@ -113,7 +113,7 @@ namespace Verifalia.Api.EmailVerifications
             }
         }
 
-        private async Task<Verification> RetrieveValidationFromPartialValidationAsync(PartialVerification partialVerification, CancellationToken cancellationToken)
+        private async Task<Verification> RetrieveVerificationFromPartialVerificationAsync(PartialVerification partialVerification, CancellationToken cancellationToken)
         {
             if (partialVerification == null) throw new ArgumentNullException(nameof(partialVerification));
 
@@ -144,7 +144,7 @@ namespace Verifalia.Api.EmailVerifications
             };
         }
 
-        public async Task<VerificationOverview?> GetOverviewAsync(string id, WaitOptions? waitOptions = default, CancellationToken cancellationToken = default)
+        public async Task<VerificationOverview?> GetOverviewAsync(string verificationId, WaitOptions? waitOptions = null, CancellationToken cancellationToken = default)
         {
             var waitOptionsOrDefault = waitOptions ?? WaitOptions.Default;
             
@@ -154,7 +154,7 @@ namespace Verifalia.Api.EmailVerifications
 
             using var response = await restClient
                 .InvokeAsync(HttpMethod.Get,
-                    $"email-validations/{id}/overview",
+                    $"email-validations/{verificationId}/overview",
                     queryParams: new Dictionary<string, string>
                     {
                         {
@@ -175,23 +175,23 @@ namespace Verifalia.Api.EmailVerifications
                 case HttpStatusCode.OK:
                 case HttpStatusCode.Accepted:
                 {
-                    var validationOverview = await response
+                    var verificationOverview = await response
                         .Content
                         .DeserializeAsync<VerificationOverview>(restClient)
                         .ConfigureAwait(false);
 
-                    validationOverview.Status = response.StatusCode == HttpStatusCode.Accepted
+                    verificationOverview.Status = response.StatusCode == HttpStatusCode.Accepted
                         ? VerificationStatus.InProgress
                         : VerificationStatus.Completed;
 
-                    // Returns immediately if the validation has been completed or if we should not wait for it
+                    // Returns immediately if the email verification has been completed or if we should not wait for it
 
-                    if (waitOptions == WaitOptions.NoWait || validationOverview.Status == VerificationStatus.Completed)
+                    if (waitOptions == WaitOptions.NoWait || verificationOverview.Status == VerificationStatus.Completed)
                     {
-                        return validationOverview;
+                        return verificationOverview;
                     }
 
-                    return await WaitForCompletionAsync<VerificationOverview>(validationOverview,
+                    return await WaitForCompletionAsync<VerificationOverview>(verificationOverview,
                             waitOptionsOrDefault,
                             cancellationToken)
                         .ConfigureAwait(false);
@@ -214,19 +214,19 @@ namespace Verifalia.Api.EmailVerifications
 
 #if HAS_ASYNC_ENUMERABLE_SUPPORT
 
-        public IAsyncEnumerable<VerificationEntry> ListEntriesAsync(string validationId, VerificationEntryListingOptions? options = default, CancellationToken cancellationToken = default)
+        public IAsyncEnumerable<VerificationEntry> ListEntriesAsync(string verificationId, VerificationEntryListingOptions? options = null, CancellationToken cancellationToken = default)
         {
             return AsyncEnumerableHelper
                 .ToAsyncEnumerableAsync<VerificationEntryPagedResult, VerificationEntry, VerificationEntryListingOptions>(
-                    (listingOptions, token) => GetEntriesPageAsync(validationId, listingOptions, token),
-                    (cursor, token) => GetEntriesPageAsync(validationId, cursor, token),
+                    (listingOptions, token) => GetEntriesPageAsync(verificationId, listingOptions, token),
+                    (cursor, token) => GetEntriesPageAsync(verificationId, cursor, token),
                     options,
                     cancellationToken);
         }
 
 #endif
 
-        public async Task<VerificationEntryPagedResult> GetEntriesPageAsync(string validationId, VerificationEntryListingOptions? options = default, CancellationToken cancellationToken = default)
+        public async Task<VerificationEntryPagedResult> GetEntriesPageAsync(string verificationId, VerificationEntryListingOptions? options = null, CancellationToken cancellationToken = default)
         {
             // Generate the additional parameters, where needed
 
@@ -258,7 +258,7 @@ namespace Verifalia.Api.EmailVerifications
 
             using var response = await restClient
                 .InvokeAsync(HttpMethod.Get,
-                    $"email-validations/{validationId}/entries",
+                    $"email-validations/{verificationId}/entries",
                     queryParams: queryParams,
                     headers: new Dictionary<string, object> { { "Accept", WellKnownMimeContentTypes.ApplicationJson } },
                     cancellationToken: cancellationToken)
@@ -268,7 +268,7 @@ namespace Verifalia.Api.EmailVerifications
                 .ConfigureAwait(false);
         }
 
-        public async Task<VerificationEntryPagedResult> GetEntriesPageAsync(string validationId, ListingCursor cursor, CancellationToken cancellationToken = default)
+        public async Task<VerificationEntryPagedResult> GetEntriesPageAsync(string verificationId, ListingCursor cursor, CancellationToken cancellationToken = default)
         {
             if (cursor == null) throw new ArgumentNullException(nameof(cursor));
 
@@ -294,7 +294,7 @@ namespace Verifalia.Api.EmailVerifications
 
             using var response = await restClient
                 .InvokeAsync(HttpMethod.Get,
-                    $"email-validations/{validationId}/entries",
+                    $"email-validations/{verificationId}/entries",
                     queryParams,
                     headers: new Dictionary<string, object> { { "Accept", WellKnownMimeContentTypes.ApplicationJson } },
                     cancellationToken: cancellationToken)
@@ -319,7 +319,7 @@ namespace Verifalia.Api.EmailVerifications
                 .ConfigureAwait(false);
         }
         
-        public async Task<Stream> ExportEntriesAsync(string validationId, ExportedEntriesFormat format, VerificationEntryListingOptions? options = default, CancellationToken cancellationToken = default)
+        public async Task<Stream> ExportEntriesAsync(string verificationId, ExportedEntriesFormat format, VerificationEntryListingOptions? options = null, CancellationToken cancellationToken = default)
         {
             // Determines the acceptable MIME content type
 
@@ -337,7 +337,7 @@ namespace Verifalia.Api.EmailVerifications
 
             var response = await restClient
                 .InvokeAsync(HttpMethod.Get,
-                    $"email-validations/{validationId}/entries",
+                    $"email-validations/{verificationId}/entries",
                     headers: new Dictionary<string, object> { { "Accept", acceptableMimeContentType } },
                     cancellationToken: cancellationToken)
                 .ConfigureAwait(false);

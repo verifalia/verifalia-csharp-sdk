@@ -64,7 +64,7 @@ namespace Verifalia.Api.EmailVerifications.Models
         public bool IsCustom { get; set; }
 
         /// <summary>
-        /// The unit price for an email validation submitted using this quality level, expressed in Verifalia credits.
+        /// The unit price for an email verification submitted using this quality level, expressed in Verifalia credits.
         /// </summary>
         /// <remarks>This value can be null in the event the calling user does not have enough permissions.</remarks>
         [JsonProperty("unitPrice")]

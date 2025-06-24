@@ -63,20 +63,20 @@ namespace Verifalia.Api.EmailVerifications
 
                 if (typeof(TResult) == typeof(Verification))
                 {
-                    var validationResult = await GetAsync(verificationOverview.Id,
+                    var snapshot = await GetAsync(verificationOverview.Id,
                             cancellationToken: cancellationToken)
                         .ConfigureAwait(false);
 
-                    result = (TResult) (object) validationResult;
+                    result = (TResult) (object) snapshot;
 
                     if (result == null)
                     {
-                        // A null result means the validation has been deleted (or is expired) between a poll and the next one
+                        // A null result means the verification has been deleted (or is expired) between a poll and the next one
 
                         return null;
                     }
 
-                    resultOverview = validationResult.Overview;
+                    resultOverview = snapshot.Overview;
                 }
                 else if (typeof(TResult) == typeof(VerificationOverview))
                 {
@@ -84,7 +84,7 @@ namespace Verifalia.Api.EmailVerifications
                             cancellationToken: cancellationToken)
                         .ConfigureAwait(false);
 
-                    // A null result means the validation has been deleted (or is expired) between a poll and the next one
+                    // A null result means the verification has been deleted (or is expired) between a poll and the next one
 
                     if (resultOverview == null)
                     {
@@ -95,10 +95,10 @@ namespace Verifalia.Api.EmailVerifications
                 }
                 else
                 {
-                    throw new NotSupportedException("TResult must be either of type Validation or ValidationOverview.");
+                    throw new NotSupportedException($"{nameof(TResult)} must be either of type {nameof(Verification)} or {nameof(VerificationOverview)}.");
                 }
 
-                // Returns immediately if the validation has been completed
+                // Returns immediately if the email verification has been completed
 
                 if (resultOverview.Status == VerificationStatus.Completed)
                 {

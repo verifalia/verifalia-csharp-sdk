@@ -40,17 +40,17 @@ using Verifalia.Api.EmailVerifications;
 namespace Verifalia.Api.EmailVerifications.Models
 {
     /// <summary>
-    /// Represents an email validation request of a file to be submitted against the Verifalia API.
+    /// Represents an email verification request of a file to be submitted against the Verifalia API.
     /// </summary>
     /// <remarks>Once initialized, pass the instance of <see cref="FileVerificationRequest"/> to the
-    /// <see cref="IEmailVerificationsClient.SubmitAsync(FileVerificationRequest,WaitOptions,CancellationToken)"/> method or one of its
+    /// <see cref="IEmailVerificationsClient.RunAsync(Verifalia.Api.EmailVerifications.Models.FileVerificationRequest,Verifalia.Api.EmailVerifications.WaitOptions?,System.Threading.CancellationToken)"/> method or one of its
     /// overloads.</remarks>
     public sealed class FileVerificationRequest : VerificationRequestBase, IDisposable
     {
         private readonly bool _leaveOpen;
     
         /// <summary>
-        /// The file stream which will be submitted for validation. 
+        /// The file stream which will be submitted for email verification. 
         /// </summary>
         public Stream File { get; }
 
@@ -98,17 +98,17 @@ namespace Verifalia.Api.EmailVerifications.Models
         public string? Delimiter { get; set; }
 
         /// <summary>
-        /// Initializes a <see cref="FileVerificationRequest"/> to be submitted to the Verifalia email validation engine.
+        /// Initializes a <see cref="FileVerificationRequest"/> to be submitted to the Verifalia email verification engine.
         /// </summary>
         /// <param name="file">A <see cref="Stream"/> with the file content to submit.</param>
         /// <param name="contentType">The MIME content type of the file.</param>
         /// <param name="quality">An optional <see cref="QualityLevelName"/> referring to the expected results quality for the request.</param>
         /// <param name="deduplication">An optional <see cref="DeduplicationMode"/> to use while determining which email addresses are duplicates.</param>
-        /// <param name="priority">An optional <see cref="VerificationPriority"/> (speed) of a validation job, relative to the parent Verifalia account.
-        /// <remarks>Setting this value is useful only in the event there are multiple active concurrent validation jobs for the calling Verifalia
+        /// <param name="priority">An optional <see cref="VerificationPriority"/> (speed) of a verification job, relative to the parent Verifalia account.
+        /// <remarks>Setting this value is useful only in the event there are multiple active concurrent verification jobs for the calling Verifalia
         /// account and the current request should be treated differently than the others, with regards to the processing speed.</remarks>
         /// </param>
-        /// <param name="leaveOpen">True to leave the file object open after FileValidationRequest is disposed, false otherwise.</param>
+        /// <param name="leaveOpen">True to leave the file object open after <see cref="FileVerificationRequest" /> is disposed, false otherwise.</param>
         public FileVerificationRequest(Stream file, MediaTypeHeaderValue contentType, QualityLevelName? quality = default, DeduplicationMode? deduplication = default, VerificationPriority? priority = default, bool leaveOpen = default)
         {
             File = file ?? throw new ArgumentNullException(nameof(file));
@@ -120,7 +120,7 @@ namespace Verifalia.Api.EmailVerifications.Models
         }
         
         /// <summary>
-        /// Initializes a <see cref="FileVerificationRequest"/> to be submitted to the Verifalia email validation engine.
+        /// Initializes a <see cref="FileVerificationRequest"/> to be submitted to the Verifalia email verification engine.
         /// </summary>
         /// <param name="path">The path of the file to submit.</param>
         /// <param name="contentType">The MIME content type of the file.
@@ -128,8 +128,8 @@ namespace Verifalia.Api.EmailVerifications.Models
         /// </param>
         /// <param name="quality">An optional <see cref="QualityLevelName"/> referring to the expected results quality for the request.</param>
         /// <param name="deduplication">An optional <see cref="DeduplicationMode"/> to use while determining which email addresses are duplicates.</param>
-        /// <param name="priority">An optional <see cref="VerificationPriority"/> (speed) of a validation job, relative to the parent Verifalia account.
-        /// <remarks>Setting this value is useful only in the event there are multiple active concurrent validation jobs for the calling Verifalia
+        /// <param name="priority">An optional <see cref="VerificationPriority"/> (speed) of a verification job, relative to the parent Verifalia account.
+        /// <remarks>Setting this value is useful only in the event there are multiple active concurrent verification jobs for the calling Verifalia
         /// account and the current request should be treated differently than the others, with regards to the processing speed.</remarks>
         /// </param>
         public FileVerificationRequest(string path, MediaTypeHeaderValue? contentType = default, QualityLevelName? quality = default, DeduplicationMode? deduplication = default, VerificationPriority? priority = default)
@@ -142,7 +142,7 @@ namespace Verifalia.Api.EmailVerifications.Models
         }
 
         /// <summary>
-        /// Initializes a <see cref="FileVerificationRequest"/> to be submitted to the Verifalia email validation engine.
+        /// Initializes a <see cref="FileVerificationRequest"/> to be submitted to the Verifalia email verification engine.
         /// </summary>
         /// <param name="fileInfo">A <see cref="FileInfo"/> instance pointing to the file to submit.</param>
         /// <param name="contentType">The MIME content type of the file.
@@ -150,8 +150,8 @@ namespace Verifalia.Api.EmailVerifications.Models
         /// </param>
         /// <param name="quality">An optional <see cref="QualityLevelName"/> referring to the expected results quality for the request.</param>
         /// <param name="deduplication">An optional <see cref="DeduplicationMode"/> to use while determining which email addresses are duplicates.</param>
-        /// <param name="priority">An optional <see cref="VerificationPriority"/> (speed) of a validation job, relative to the parent Verifalia account.
-        /// <remarks>Setting this value is useful only in the event there are multiple active concurrent validation jobs for the calling Verifalia
+        /// <param name="priority">An optional <see cref="VerificationPriority"/> (speed) of a verification job, relative to the parent Verifalia account.
+        /// <remarks>Setting this value is useful only in the event there are multiple active concurrent verification jobs for the calling Verifalia
         /// account and the current request should be treated differently than the others, with regards to the processing speed.</remarks>
         /// </param>
         public FileVerificationRequest(FileInfo fileInfo, MediaTypeHeaderValue? contentType = default, QualityLevelName? quality = default, DeduplicationMode? deduplication = default, VerificationPriority? priority = default)

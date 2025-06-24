@@ -37,7 +37,7 @@ namespace Verifalia.Api.EmailVerifications.Models
     public enum VerificationOverviewListingField
     {
         /// <summary>
-        /// The date and time the validation job was created; refers to the <see cref="VerificationOverview.CreatedOn"/> field.
+        /// The date and time the email verification job was created; refers to the <see cref="VerificationOverview.CreatedOn"/> field.
         /// </summary>
         CreatedOn
     }

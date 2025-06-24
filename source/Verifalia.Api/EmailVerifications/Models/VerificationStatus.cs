@@ -37,27 +37,27 @@ namespace Verifalia.Api.EmailVerifications.Models
     public enum VerificationStatus
     {
         /// <summary>
-        /// Special unknown status, due to a value reported by the API which is missing in this SDK.
+        /// Unknown status, if the Verifalia API reports a value not included in this SDK.
         /// </summary>
         Unknown = 0,
 
         /// <summary>
-        /// The email validation job has been completed and its results are available.
+        /// The email verification job has been completed and its results are available.
         /// </summary>
         Completed,
 
         /// <summary>
-        /// The email validation job has either been deleted.
+        /// The email verification job has been deleted.
         /// </summary>
         Deleted,
 
         /// <summary>
-        /// The email validation job is expired.
+        /// The email verification job is expired.
         /// </summary>
         Expired,
         
         /// <summary>
-        /// The email validation job is being processed by Verifalia.
+        /// The email verification job is currently being processed by Verifalia.
         /// <remarks>The completion progress, if any, is available through the <see cref="VerificationOverview.Progress"/> property.</remarks>
         /// </summary>
         InProgress,

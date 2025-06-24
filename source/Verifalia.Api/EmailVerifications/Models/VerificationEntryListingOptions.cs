@@ -35,7 +35,7 @@ using Verifalia.Api.EmailVerifications.Filters;
 namespace Verifalia.Api.EmailVerifications.Models
 {
     /// <summary>
-    /// Provides options for a listing of validation entries.
+    /// Provides options for listing email verification entries.
     /// </summary>
     public class VerificationEntryListingOptions : ListingOptions
     {

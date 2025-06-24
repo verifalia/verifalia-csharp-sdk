@@ -45,7 +45,7 @@ namespace Verifalia.Api.Users
     /// <inheritdoc />
     internal partial class UsersClient
     {
-        public async Task DeleteAsync(string id, CancellationToken cancellationToken = default)
+        public async Task DeleteAsync(string userId, CancellationToken cancellationToken = default)
         {
             var restClient = _restClientFactory.Build();
 
@@ -60,14 +60,16 @@ namespace Verifalia.Api.Users
             
             using var response = await restClient
                 .InvokeAsync(HttpMethod.Delete, 
-                    $"users/{id}",
+                    $"users/{userId}",
                     headers: headers,
                     cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
 
             if (response.StatusCode == HttpStatusCode.OK)
+            {
                 return;
-            
+            }
+
             throw await restClient
                 .BuildRequestFailedExceptionAsync(response, cancellationToken)
                 .ConfigureAwait(false);

@@ -45,7 +45,7 @@ namespace Verifalia.Api.Users
     /// <inheritdoc />
     internal partial class UsersClient
     {
-        public async Task UpdateAsync(string id, Expression<Func<User, User>> changeset, string? ifMatch = null, CancellationToken cancellationToken = default)
+        public async Task UpdateAsync(string userId, Expression<Func<User, User>> changeset, string? ifMatch = null, CancellationToken cancellationToken = default)
         {
             var restClient = _restClientFactory.Build();
 
@@ -72,26 +72,20 @@ namespace Verifalia.Api.Users
             
             using var response = await restClient
                 .InvokeAsync(new HttpMethod("PATCH"), 
-                    $"users/{id}",
+                    $"users/{userId}",
                     headers: headers,
                     contentFactory: _ => Task.FromResult<HttpContent>(new StringContent(content, Encoding.UTF8, WellKnownMimeContentTypes.ApplicationJsonPatch)),
                     cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
-            
-            switch (response.StatusCode)
-            {
-                case HttpStatusCode.OK:
-                {
-                    return;
-                }
 
-                default:
-                {
-                    throw await restClient
-                        .BuildRequestFailedExceptionAsync(response, cancellationToken)
-                        .ConfigureAwait(false);
-                }
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                return;
             }
+
+            throw await restClient
+                .BuildRequestFailedExceptionAsync(response, cancellationToken)
+                .ConfigureAwait(false);
         }        
     }
 }

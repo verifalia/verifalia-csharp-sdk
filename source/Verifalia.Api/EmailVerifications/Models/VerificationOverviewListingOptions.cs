@@ -35,7 +35,7 @@ using Verifalia.Api.Filters;
 namespace Verifalia.Api.EmailVerifications.Models
 {
     /// <summary>
-    /// Provides options for a listing of validation jobs.
+    /// Provides options for listing email verification jobs.
     /// </summary>
     public class VerificationOverviewListingOptions : ListingOptions
     {

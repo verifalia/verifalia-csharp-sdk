@@ -42,56 +42,58 @@ namespace Verifalia.Api.EmailVerifications.Models
     public class VerificationOverview
     {
         /// <summary>
-        /// The unique identifier for the validation job.
+        /// The unique identifier for the email verification job.
         /// </summary>
         [JsonProperty("id")]
         public string Id { get; set; }
 
         /// <summary>
-        /// The date and time this validation job has been submitted to Verifalia.
+        /// The date and time this verification job has been submitted to Verifalia.
         /// </summary>
         [JsonProperty("submittedOn")]
         public DateTime SubmittedOn { get; set; }
 
         /// <summary>
-        /// The date and time when this validation job was ultimately completed, if applicable.
+        /// The date and time when this verification job was ultimately completed, if applicable.
         /// </summary>
         [JsonProperty("completedOn")]
         public DateTime? CompletedOn { get; set; }
 
         /// <summary>
-        /// The priority (speed) of a validation job relative to the parent Verifalia account. If there are
-        /// multiple concurrent validation jobs in an account, this value allows you to adjust the processing speed of a
+        /// The priority (speed) of this verification job relative to the parent Verifalia account. If there are
+        /// multiple concurrent verification jobs in an account, this value allows you to adjust the processing speed of a
         /// specific job in comparison to others.
         /// <remarks>The valid range for this priority spans from <see cref="VerificationPriority.Lowest"/> (0 - lowest
         /// priority) to <see cref="VerificationPriority.Highest"/> (255 - highest priority), with
         /// <see cref="VerificationPriority.Normal"/> (127) representing normal priority. If not specified, Verifalia
-        /// processes all concurrent validation jobs for an account at the same speed.
+        /// processes all concurrent verification jobs for an account at the same speed.
         /// </remarks>
         /// </summary>
         [JsonProperty("priority")]
         public VerificationPriority Priority { get; set; }
 
         /// <summary>
-        /// An optional user-defined name for the validation job, for your own reference.
+        /// An optional user-defined name for the verification job, for your own reference.
         /// </summary>
         [JsonProperty("name")]
         public string? Name { get; set; }
 
         /// <summary>
-        /// The unique identifier of the Verifalia user who submitted the validation job.
+        /// The unique identifier of the Verifalia user who submitted the verification job.
         /// </summary>
+        /// <remarks>Details of the user can be retrieved using the <see cref="Users.IUsersClient.GetAsync(string, CancellationToken)"/>
+        /// method exposed by <see cref="IVerifaliaClient.Users"/>.</remarks>
         [JsonProperty("owner")]
         public string OwnerId { get; set; }
 
         /// <summary>
-        /// The IP address of the client that submitted the validation job.
+        /// The IP address of the client that submitted the verification job.
         /// </summary>
         [JsonProperty("clientIP")]
         public IPAddress ClientIP { get; set; }
 
         /// <summary>
-        /// The date and time when the validation job was created.
+        /// The date and time when the verification job was created.
         /// </summary>
         [JsonProperty("createdOn")]
         public DateTime CreatedOn { get; set; }
@@ -121,19 +123,19 @@ namespace Verifalia.Api.EmailVerifications.Models
         public DeduplicationMode Deduplication { get; set; }
 
         /// <summary>
-        /// The processing <see cref="VerificationStatus"/> for the validation job.
+        /// The processing <see cref="VerificationStatus"/> for the verification job.
         /// </summary>
         [JsonProperty("status")]
         public VerificationStatus Status { get; set; }
 
         /// <summary>
-        /// The number of entries the validation job contains.
+        /// The number of entries (email addresses) the verification job contains.
         /// </summary>
         [JsonProperty("noOfEntries")]
         public int NoOfEntries { get; set; }
 
         /// <summary>
-        /// The completion progress of the validation job, if available.
+        /// The completion progress of the verification job, if available.
         /// </summary>
         [JsonProperty("progress")]
         public VerificationProgress? Progress { get; set; }

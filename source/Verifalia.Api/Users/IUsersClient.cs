@@ -58,12 +58,12 @@ namespace Verifalia.Api.Users
 #endif
         Task<UserPagedResult> GetPageAsync(ListingCursor cursor, CancellationToken cancellationToken = default);
         
-        Task<User?> GetAsync(string id, CancellationToken cancellationToken = default);
+        Task<User?> GetAsync(string userId, CancellationToken cancellationToken = default);
 
         Task<UserOverview> CreateAsync(User user, CancellationToken cancellationToken = default);
 
-        Task UpdateAsync(string id, Expression<Func<User, User>> changeset, string? ifMatch = null, CancellationToken cancellationToken = default);
+        Task UpdateAsync(string userId, Expression<Func<User, User>> changeset, string? ifMatch = null, CancellationToken cancellationToken = default);
 
-        Task DeleteAsync(string id, CancellationToken cancellationToken = default);
+        Task DeleteAsync(string userId, CancellationToken cancellationToken = default);
     }
 }
