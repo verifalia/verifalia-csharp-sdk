@@ -85,7 +85,7 @@ namespace Verifalia.Api.Credits
         public IAsyncEnumerable<DailyUsage> ListDailyUsagesAsync(DailyUsageListingOptions? options = null, CancellationToken cancellationToken = default)
         {
             return AsyncEnumerableHelper
-                .ToAsyncEnumerableAsync<DailyUsageListSegment, DailyUsage, DailyUsageListingOptions>(
+                .ToAsyncEnumerableAsync<DailyUsagePagedResult, DailyUsage, DailyUsageListingOptions>(
                     ListDailyUsagesSegmentedAsync,
                     ListDailyUsagesSegmentedAsync,
                     options,
@@ -94,7 +94,7 @@ namespace Verifalia.Api.Credits
 
 #endif
 
-        public async Task<DailyUsageListSegment> ListDailyUsagesSegmentedAsync(DailyUsageListingOptions? options = null, CancellationToken cancellationToken = default)
+        public async Task<DailyUsagePagedResult> ListDailyUsagesSegmentedAsync(DailyUsageListingOptions? options = null, CancellationToken cancellationToken = default)
         {
             // Generate the additional parameters, where needed
 
@@ -130,7 +130,7 @@ namespace Verifalia.Api.Credits
                 .ConfigureAwait(false);
         }
 
-        public async Task<DailyUsageListSegment> ListDailyUsagesSegmentedAsync(ListingCursor cursor, CancellationToken cancellationToken = default)
+        public async Task<DailyUsagePagedResult> ListDailyUsagesSegmentedAsync(ListingCursor cursor, CancellationToken cancellationToken = default)
         {
             if (cursor == null) throw new ArgumentNullException(nameof(cursor));
 
@@ -158,7 +158,7 @@ namespace Verifalia.Api.Credits
                 .ConfigureAwait(false);
         }
 
-        private async Task<DailyUsageListSegment> ListDailyUsageSegmentedImplAsync(IRestClient restClient, Dictionary<string, string>? queryParams, CancellationToken cancellationToken)
+        private async Task<DailyUsagePagedResult> ListDailyUsageSegmentedImplAsync(IRestClient restClient, Dictionary<string, string>? queryParams, CancellationToken cancellationToken)
         {
             using var response = await restClient
                 .InvokeAsync(HttpMethod.Get,
@@ -179,7 +179,7 @@ namespace Verifalia.Api.Credits
                 {
                     return await response
                         .Content
-                        .DeserializeAsync<DailyUsageListSegment>(restClient)
+                        .DeserializeAsync<DailyUsagePagedResult>(restClient)
                         .ConfigureAwait(false);
                 }
 

@@ -35,11 +35,11 @@ using Verifalia.Api.Credits;
 namespace Verifalia.Api.Exceptions
 {
     /// <summary>
-    /// The exception that is thrown when the credit of the requesting account is not enough to accept a given email
-    /// validation job.
+    /// This exception is thrown when the Verifalia account making the request doesn't have enough credit to process the
+    /// email verification. To add credits to your Verifalia account, please visit https://app.verifalia.com/#/credits/add
     /// </summary>
-    /// <remarks>Use the <see cref="ICreditsClient.GetBalanceAsync"/> method of <see cref="VerifaliaClient.Credits"/>
-    /// to check the available credits.</remarks>
+    /// <remarks>To check the available credits, use the <see cref="ICreditsClient.GetBalanceAsync"/> method of
+    /// <see cref="VerifaliaClient.Credits"/>.</remarks>
     public class InsufficientCreditException : VerifaliaException
     {
         public InsufficientCreditException()

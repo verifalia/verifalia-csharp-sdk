@@ -29,26 +29,28 @@
 * THE SOFTWARE.
 */
 
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace Verifalia.Api.Common.Models
 {
     /// <summary>
-    /// Includes additional information which describes a <see cref="ListSegment{TItem}"/> returned by the Verifalia API.
+    /// A single page of <see cref="TItem"/> records as returned by the Verifalia API.
+    /// Contains the list of items in this page and its metadata.
     /// </summary>
-    public class ListSegmentMeta
+    /// <typeparam name="TItem">The type of items of this page.</typeparam>
+    public abstract class PagedResult<TItem>
     {
         /// <summary>
-        /// The raw, opaque cursor string returned by the Verifalia API. Should be used in conjunction with <see cref="ListingCursor"/> or
-        /// its descendants to retrieve next or previous segments.
+        /// The metadata for this page.
         /// </summary>
-        [JsonProperty("cursor")]
-        public string Cursor { get; set; }
+        [JsonProperty("meta")]
+        public PagedResultMeta? Meta { get; set; }
 
         /// <summary>
-        /// If true, signals more data is available.
+        /// The items of type <see cref="TItem"/> included in this page.
         /// </summary>
-        [JsonProperty("isTruncated")]
-        public bool IsTruncated { get; set; }
+        [JsonProperty("data")]
+        public IReadOnlyList<TItem> Data { get; set; }
     }
 }

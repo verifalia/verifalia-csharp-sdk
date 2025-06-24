@@ -29,15 +29,16 @@
 * THE SOFTWARE.
 */
 
-using Verifalia.Api.Common.Models;
+using Newtonsoft.Json;
 
-namespace Verifalia.Api.Credits.Models
+namespace Verifalia.Api.EmailVerifications.Models
 {
-    /// <summary>
-    /// A segment of a list of <see cref="DailyUsage"/>, returned by a Verifalia API which supports key-set navigation.
-    /// </summary>
-    /// <inheritdoc />
-    public class DailyUsageListSegment : ListSegment<DailyUsage>
+    internal class PartialVerification
     {
+        [JsonProperty("overview")]
+        public VerificationOverview Overview { get; set; }
+
+        [JsonProperty("entries")]
+        public VerificationEntryPagedResult? Entries { get; set; }
     }
 }

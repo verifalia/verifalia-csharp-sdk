@@ -51,7 +51,7 @@ namespace Verifalia.Api.Common
             Func<ListingCursor, CancellationToken, Task<TList>> fetchNextSegment, TOptions? options = null,
             [EnumeratorCancellation] CancellationToken cancellationToken = default)
             where TOptions : ListingOptions
-            where TList : ListSegment<TItem>
+            where TList : PagedResult<TItem>
 #pragma warning restore VSTHRD200
         {
             ListingCursor? cursor = null;

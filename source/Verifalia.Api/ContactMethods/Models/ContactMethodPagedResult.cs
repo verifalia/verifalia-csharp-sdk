@@ -31,9 +31,13 @@
 
 using Verifalia.Api.Common.Models;
 
-namespace Verifalia.Api.Users.Models
+namespace Verifalia.Api.ContactMethods.Models
 {
-    public class UserListSegment : ListSegment<UserOverview>
+    /// <summary>
+    /// A segment of a list of <see cref="ContactMethod"/>, returned by a Verifalia API which supports key-set navigation.
+    /// </summary>
+    /// <inheritdoc />
+    public class ContactMethodPagedResult : PagedResult<ContactMethod>
     {
     }
 }

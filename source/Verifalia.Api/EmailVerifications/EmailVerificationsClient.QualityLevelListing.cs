@@ -52,7 +52,7 @@ namespace Verifalia.Api.EmailVerifications
         public IAsyncEnumerable<QualityLevel> ListQualityLevelsAsync(ListingOptions? options = default, CancellationToken cancellationToken = default)
         {
             return AsyncEnumerableHelper
-                .ToAsyncEnumerableAsync<QualityLevelListSegment, QualityLevel, ListingOptions>(
+                .ToAsyncEnumerableAsync<QualityLevelPagedResult, QualityLevel, ListingOptions>(
                     ListQualityLevelsSegmentedAsync,
                     ListQualityLevelsSegmentedAsync,
                     options,
@@ -61,7 +61,7 @@ namespace Verifalia.Api.EmailVerifications
 
 #endif
 
-        public async Task<QualityLevelListSegment> ListQualityLevelsSegmentedAsync(ListingOptions? options = default, CancellationToken cancellationToken = default)
+        public async Task<QualityLevelPagedResult> ListQualityLevelsSegmentedAsync(ListingOptions? options = default, CancellationToken cancellationToken = default)
         {
             // Generate the additional parameters, where needed
 
@@ -93,7 +93,7 @@ namespace Verifalia.Api.EmailVerifications
                 .ConfigureAwait(false);
         }
 
-        public async Task<QualityLevelListSegment> ListQualityLevelsSegmentedAsync(ListingCursor cursor, CancellationToken cancellationToken = default)
+        public async Task<QualityLevelPagedResult> ListQualityLevelsSegmentedAsync(ListingCursor cursor, CancellationToken cancellationToken = default)
         {
             if (cursor == null) throw new ArgumentNullException(nameof(cursor));
 
@@ -129,7 +129,7 @@ namespace Verifalia.Api.EmailVerifications
                 .ConfigureAwait(false);
         }
 
-        private async Task<QualityLevelListSegment> ListQualityLevelsSegmentedImplAsync(IRestClient restClient, HttpResponseMessage response, CancellationToken cancellationToken)
+        private async Task<QualityLevelPagedResult> ListQualityLevelsSegmentedImplAsync(IRestClient restClient, HttpResponseMessage response, CancellationToken cancellationToken)
         {
             switch (response.StatusCode)
             {
@@ -137,7 +137,7 @@ namespace Verifalia.Api.EmailVerifications
                 {
                     return await response
                         .Content
-                        .DeserializeAsync<QualityLevelListSegment>(restClient)
+                        .DeserializeAsync<QualityLevelPagedResult>(restClient)
                         .ConfigureAwait(false);
                 }
 

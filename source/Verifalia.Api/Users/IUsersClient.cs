@@ -50,13 +50,13 @@ namespace Verifalia.Api.Users
         [Obsolete("ListUsersAsync() is preferred in .NET Core 3.0+ because of its simpler syntax, thanks to the async enumerable support.")]
         [EditorBrowsable(EditorBrowsableState.Advanced)]
 #endif
-        Task<UserListSegment> ListSegmentedAsync(UserListingOptions? options = null, CancellationToken cancellationToken = default);
+        Task<UserPagedResult> ListSegmentedAsync(UserListingOptions? options = null, CancellationToken cancellationToken = default);
 
 #if HAS_ASYNC_ENUMERABLE_SUPPORT
         [Obsolete("ListUsersAsync() is preferred in .NET Core 3.0+ because of its simpler syntax, thanks to the async enumerable support.")]
         [EditorBrowsable(EditorBrowsableState.Advanced)]
 #endif
-        Task<UserListSegment> ListSegmentedAsync(ListingCursor cursor, CancellationToken cancellationToken = default);
+        Task<UserPagedResult> ListSegmentedAsync(ListingCursor cursor, CancellationToken cancellationToken = default);
         
         Task<User?> GetAsync(string id, CancellationToken cancellationToken = default);
 

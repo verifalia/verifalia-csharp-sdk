@@ -290,13 +290,13 @@ namespace Verifalia.Api.EmailVerifications
         /// </summary>
         /// <param name="options">The options for the listing operation.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <returns>A <see cref="VerificationOverviewListSegment"/> with the requested data and an eventual <see cref="ListSegmentMeta.Cursor"/> to be
+        /// <returns>A <see cref="VerificationOverviewPagedResult"/> with the requested data and an eventual <see cref="PagedResultMeta.Cursor"/> to be
         /// used on subsequent listing calls to the <see cref="ListSegmentedAsync(ListingCursor,CancellationToken)"/> method.</returns>
 #if HAS_ASYNC_ENUMERABLE_SUPPORT
         [Obsolete("ListAsync() is preferred in .NET Core 3.0+ because of its simpler syntax, thanks to the async enumerable support.")]
         [EditorBrowsable(EditorBrowsableState.Advanced)]
 #endif
-        Task<VerificationOverviewListSegment> ListSegmentedAsync(VerificationOverviewListingOptions? options = null, CancellationToken cancellationToken = default);
+        Task<VerificationOverviewPagedResult> ListSegmentedAsync(VerificationOverviewListingOptions? options = null, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Continues listing validation jobs.
@@ -304,13 +304,13 @@ namespace Verifalia.Api.EmailVerifications
         /// </summary>
         /// <param name="cursor">The cursor to use while traversing the list of validation jobs.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <returns>A <see cref="VerificationOverviewListSegment"/> with the requested data and an eventual <see cref="ListSegmentMeta.Cursor"/> to be
+        /// <returns>A <see cref="VerificationOverviewPagedResult"/> with the requested data and an eventual <see cref="PagedResultMeta.Cursor"/> to be
         /// used on subsequent listing calls to the <see cref="ListSegmentedAsync(ListingCursor,CancellationToken)"/> method.</returns>
 #if HAS_ASYNC_ENUMERABLE_SUPPORT
         [Obsolete("ListAsync() is preferred in .NET Core 3.0+ because of its simpler syntax, thanks to the async enumerable support.")]
         [EditorBrowsable(EditorBrowsableState.Advanced)]
 #endif
-        Task<VerificationOverviewListSegment> ListSegmentedAsync(ListingCursor cursor, CancellationToken cancellationToken = default);
+        Task<VerificationOverviewPagedResult> ListSegmentedAsync(ListingCursor cursor, CancellationToken cancellationToken = default);
 
 #if HAS_ASYNC_ENUMERABLE_SUPPORT
         /// <summary>
@@ -328,13 +328,13 @@ namespace Verifalia.Api.EmailVerifications
         /// </summary>
         /// <param name="options">The options for the listing operation.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <returns>A <see cref="QualityLevelListSegment"/> with the requested data and an eventual <see cref="ListSegmentMeta.Cursor"/> to be
+        /// <returns>A <see cref="QualityLevelPagedResult"/> with the requested data and an eventual <see cref="PagedResultMeta.Cursor"/> to be
         /// used on subsequent listing calls to the <see cref="ListQualityLevelsSegmentedAsync(ListingCursor,CancellationToken)"/> method.</returns>
 #if HAS_ASYNC_ENUMERABLE_SUPPORT
         [Obsolete("ListQualityLevelsAsync() is preferred in .NET Core 3.0+ because of its simpler syntax, thanks to the async enumerable support.")]
         [EditorBrowsable(EditorBrowsableState.Advanced)]
 #endif
-        Task<QualityLevelListSegment> ListQualityLevelsSegmentedAsync(ListingOptions? options = default, CancellationToken cancellationToken = default);
+        Task<QualityLevelPagedResult> ListQualityLevelsSegmentedAsync(ListingOptions? options = default, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Continues listing the available quality levels.
@@ -342,13 +342,13 @@ namespace Verifalia.Api.EmailVerifications
         /// </summary>
         /// <param name="cursor">The cursor to use while traversing the list of available quality levels.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <returns>A <see cref="QualityLevelListSegment"/> with the requested data and an eventual <see cref="ListSegmentMeta.Cursor"/> to be
+        /// <returns>A <see cref="QualityLevelPagedResult"/> with the requested data and an eventual <see cref="PagedResultMeta.Cursor"/> to be
         /// used on subsequent listing calls to the <see cref="ListQualityLevelsSegmentedAsync(ListingCursor,CancellationToken)"/> method.</returns>
 #if HAS_ASYNC_ENUMERABLE_SUPPORT
         [Obsolete("ListQualityLevelsAsync() is preferred in .NET Core 3.0+ because of its simpler syntax, thanks to the async enumerable support.")]
         [EditorBrowsable(EditorBrowsableState.Advanced)]
 #endif
-        Task<QualityLevelListSegment> ListQualityLevelsSegmentedAsync(ListingCursor cursor, CancellationToken cancellationToken = default);
+        Task<QualityLevelPagedResult> ListQualityLevelsSegmentedAsync(ListingCursor cursor, CancellationToken cancellationToken = default);
 
 #if HAS_ASYNC_ENUMERABLE_SUPPORT
         /// <summary>
@@ -366,13 +366,13 @@ namespace Verifalia.Api.EmailVerifications
         /// </summary>
         /// <param name="options">The options for the listing operation.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <returns>A <see cref="VerificationEntryListSegment"/> with the requested data and an eventual <see cref="ListSegmentMeta.Cursor"/> to be
+        /// <returns>A <see cref="VerificationEntryPagedResult"/> with the requested data and an eventual <see cref="PagedResultMeta.Cursor"/> to be
         /// used on subsequent listing calls to the <see cref="ListEntriesSegmentedAsync(string,ListingCursor,CancellationToken)"/> method.</returns>
 #if HAS_ASYNC_ENUMERABLE_SUPPORT
         [Obsolete("ListEntriesAsync() is preferred in .NET Core 3.0+ because of its simpler syntax, thanks to the async enumerable support.")]
         [EditorBrowsable(EditorBrowsableState.Advanced)]
 #endif
-        Task<VerificationEntryListSegment> ListEntriesSegmentedAsync(string validationId, VerificationEntryListingOptions? options = default, CancellationToken cancellationToken = default);
+        Task<VerificationEntryPagedResult> ListEntriesSegmentedAsync(string validationId, VerificationEntryListingOptions? options = default, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Continues listing the validated entries for a given validation.
@@ -380,13 +380,13 @@ namespace Verifalia.Api.EmailVerifications
         /// </summary>
         /// <param name="cursor">The cursor to use while traversing the list of validated entries.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <returns>A <see cref="VerificationEntryListSegment"/> with the requested data and an eventual <see cref="ListSegmentMeta.Cursor"/> to be
+        /// <returns>A <see cref="VerificationEntryPagedResult"/> with the requested data and an eventual <see cref="PagedResultMeta.Cursor"/> to be
         /// used on subsequent listing calls to the <see cref="ListEntriesSegmentedAsync(string,ListingCursor,CancellationToken)"/> method.</returns>
 #if HAS_ASYNC_ENUMERABLE_SUPPORT
         [Obsolete("ListEntriesAsync() is preferred in .NET Core 3.0+ because of its simpler syntax, thanks to the async enumerable support.")]
         [EditorBrowsable(EditorBrowsableState.Advanced)]
 #endif
-        Task<VerificationEntryListSegment> ListEntriesSegmentedAsync(string validationId, ListingCursor cursor, CancellationToken cancellationToken = default);
+        Task<VerificationEntryPagedResult> ListEntriesSegmentedAsync(string validationId, ListingCursor cursor, CancellationToken cancellationToken = default);
 
 #if HAS_ASYNC_ENUMERABLE_SUPPORT
         /// <summary>

@@ -37,7 +37,7 @@ namespace Verifalia.Api.EmailVerifications.Models
     /// A segment of a list of <see cref="QualityLevel"/>, returned by a Verifalia API which supports key-set navigation.
     /// </summary>
     /// <inheritdoc />
-    public class QualityLevelListSegment : ListSegment<QualityLevel>
+    public class QualityLevelPagedResult : PagedResult<QualityLevel>
     {
     }
 }

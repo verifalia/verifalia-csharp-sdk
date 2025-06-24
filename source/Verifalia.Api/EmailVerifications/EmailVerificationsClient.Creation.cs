@@ -264,7 +264,7 @@ namespace Verifalia.Api.EmailVerifications
                 {
                     var partialValidation = await response
                         .Content
-                        .DeserializeAsync<PartialValidation>(restClient)
+                        .DeserializeAsync<PartialVerification>(restClient)
                         .ConfigureAwait(false);
 
                     // Returns immediately if the validation has been completed or if we should not wait for it

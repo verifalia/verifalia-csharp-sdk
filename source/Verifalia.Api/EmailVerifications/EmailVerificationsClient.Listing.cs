@@ -52,7 +52,7 @@ namespace Verifalia.Api.EmailVerifications
         public IAsyncEnumerable<VerificationOverview> ListAsync(VerificationOverviewListingOptions? options = null, CancellationToken cancellationToken = default)
         {
             return AsyncEnumerableHelper
-                .ToAsyncEnumerableAsync<VerificationOverviewListSegment, VerificationOverview, VerificationOverviewListingOptions>(
+                .ToAsyncEnumerableAsync<VerificationOverviewPagedResult, VerificationOverview, VerificationOverviewListingOptions>(
                     ListSegmentedAsync,
                     ListSegmentedAsync,
                     options,
@@ -61,7 +61,7 @@ namespace Verifalia.Api.EmailVerifications
 
 #endif
 
-        public async Task<VerificationOverviewListSegment> ListSegmentedAsync(VerificationOverviewListingOptions? options = default, CancellationToken cancellationToken = default)
+        public async Task<VerificationOverviewPagedResult> ListSegmentedAsync(VerificationOverviewListingOptions? options = default, CancellationToken cancellationToken = default)
         {
             // Generate the additional parameters, where needed
 
@@ -131,7 +131,7 @@ namespace Verifalia.Api.EmailVerifications
                 .ConfigureAwait(false);
         }
 
-        public async Task<VerificationOverviewListSegment> ListSegmentedAsync(ListingCursor cursor, CancellationToken cancellationToken = default)
+        public async Task<VerificationOverviewPagedResult> ListSegmentedAsync(ListingCursor cursor, CancellationToken cancellationToken = default)
         {
             if (cursor == null) throw new ArgumentNullException(nameof(cursor));
 
@@ -167,7 +167,7 @@ namespace Verifalia.Api.EmailVerifications
                 .ConfigureAwait(false);
         }
 
-        private async Task<VerificationOverviewListSegment> ListSegmentedImplAsync(IRestClient restClient, HttpResponseMessage response, CancellationToken cancellationToken)
+        private async Task<VerificationOverviewPagedResult> ListSegmentedImplAsync(IRestClient restClient, HttpResponseMessage response, CancellationToken cancellationToken)
         {
             switch (response.StatusCode)
             {
@@ -175,7 +175,7 @@ namespace Verifalia.Api.EmailVerifications
                 {
                     return await response
                         .Content
-                        .DeserializeAsync<VerificationOverviewListSegment>(restClient)
+                        .DeserializeAsync<VerificationOverviewPagedResult>(restClient)
                         .ConfigureAwait(false);
                 }
 

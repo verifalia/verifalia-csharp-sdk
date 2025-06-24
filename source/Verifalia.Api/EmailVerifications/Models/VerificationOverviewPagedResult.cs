@@ -29,27 +29,15 @@
 * THE SOFTWARE.
 */
 
-using System.Collections.Generic;
-using Newtonsoft.Json;
+using Verifalia.Api.Common.Models;
 
-namespace Verifalia.Api.Common.Models
+namespace Verifalia.Api.EmailVerifications.Models
 {
     /// <summary>
-    /// A segment of a list of <see cref="TItem"/>, returned by a Verifalia API which supports key-set navigation.
+    /// A segment of a list of <see cref="VerificationOverview"/>, returned by a Verifalia API which supports key-set navigation.
     /// </summary>
-    /// <typeparam name="TItem">The type of items of this list.</typeparam>
-    public abstract class ListSegment<TItem>
+    /// <inheritdoc />
+    public class VerificationOverviewPagedResult : PagedResult<VerificationOverview>
     {
-        /// <summary>
-        /// The meta-data for this list segment.
-        /// </summary>
-        [JsonProperty("meta")]
-        public ListSegmentMeta? Meta { get; set; }
-
-        /// <summary>
-        /// The items of type <see cref="TItem"/> included in this segment.
-        /// </summary>
-        [JsonProperty("data")]
-        public IReadOnlyList<TItem> Data { get; set; }
     }
 }

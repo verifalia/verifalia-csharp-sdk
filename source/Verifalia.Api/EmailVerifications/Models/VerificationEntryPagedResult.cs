@@ -31,13 +31,13 @@
 
 using Verifalia.Api.Common.Models;
 
-namespace Verifalia.Api.ContactMethods.Models
+namespace Verifalia.Api.EmailVerifications.Models
 {
     /// <summary>
-    /// A segment of a list of <see cref="ContactMethod"/>, returned by a Verifalia API which supports key-set navigation.
+    /// A segment of a list of <see cref="VerificationEntry"/>, returned by a Verifalia API which supports key-set navigation.
     /// </summary>
     /// <inheritdoc />
-    public class ContactMethodListSegment : ListSegment<ContactMethod>
+    public class VerificationEntryPagedResult : PagedResult<VerificationEntry>
     {
     }
 }

@@ -51,7 +51,7 @@ namespace Verifalia.Api.Users
         public IAsyncEnumerable<UserOverview> ListAsync(UserListingOptions? options = null, CancellationToken cancellationToken = default)
         {
             return AsyncEnumerableHelper
-                .ToAsyncEnumerableAsync<UserListSegment, UserOverview, UserListingOptions>(
+                .ToAsyncEnumerableAsync<UserPagedResult, UserOverview, UserListingOptions>(
                     ListSegmentedAsync,
                     ListSegmentedAsync,
                     options,
@@ -60,7 +60,7 @@ namespace Verifalia.Api.Users
 
 #endif
 
-        public async Task<UserListSegment> ListSegmentedAsync(UserListingOptions? options = null, CancellationToken cancellationToken = default)
+        public async Task<UserPagedResult> ListSegmentedAsync(UserListingOptions? options = null, CancellationToken cancellationToken = default)
         {
             // Generate the additional parameters, where needed
 
@@ -117,7 +117,7 @@ namespace Verifalia.Api.Users
                 .ConfigureAwait(false);
         }
 
-        public async Task<UserListSegment> ListSegmentedAsync(ListingCursor cursor, CancellationToken cancellationToken = default)
+        public async Task<UserPagedResult> ListSegmentedAsync(ListingCursor cursor, CancellationToken cancellationToken = default)
         {
             if (cursor == null) throw new ArgumentNullException(nameof(cursor));
 
@@ -145,7 +145,7 @@ namespace Verifalia.Api.Users
                 .ConfigureAwait(false);
         }
 
-        private async Task<UserListSegment> ListUsersSegmentedImplAsync(IRestClient restClient, Dictionary<string, string>? queryParams, CancellationToken cancellationToken)
+        private async Task<UserPagedResult> ListUsersSegmentedImplAsync(IRestClient restClient, Dictionary<string, string>? queryParams, CancellationToken cancellationToken)
         {
             using var response = await restClient
                 .InvokeAsync(HttpMethod.Get,
@@ -166,7 +166,7 @@ namespace Verifalia.Api.Users
                 {
                     return await response
                         .Content
-                        .DeserializeAsync<UserListSegment>(restClient)
+                        .DeserializeAsync<UserPagedResult>(restClient)
                         .ConfigureAwait(false);
                 }
 

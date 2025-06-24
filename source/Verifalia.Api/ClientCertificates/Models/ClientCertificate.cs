@@ -31,10 +31,13 @@
 
 using System;
 using Newtonsoft.Json;
-using Verifalia.Api.ContactMethods.Converters;
 
 namespace Verifalia.Api.ClientCertificates.Models
 {
+    /// <summary>
+    /// Represents an X.509 client certificate which can be used for TLS mutual authentication (also known as Client
+    /// Certificate Authentication) within the Verifalia API.
+    /// </summary>
     public sealed class ClientCertificate
     {
         /// <summary>
@@ -43,24 +46,46 @@ namespace Verifalia.Api.ClientCertificates.Models
         [JsonProperty("id")]
         public string Id { get; set; }
 
+        /// <summary>
+        /// The name of the external entity (user) to whom the certificate is issued.
+        /// </summary>
         [JsonProperty("subject")]
         public string Subject { get; set; }
         
+        /// <summary>
+        /// The certificate authority (CA) that issued and signed the certificate.
+        /// </summary>
         [JsonProperty("issuer")]
         public string Issuer { get; set; }
 
+        /// <summary>
+        /// A hash of the certificate, used to make comparisons easier.
+        /// </summary>
         [JsonProperty("thumbprint")]
         public string Thumbprint { get; set; }
         
+        /// <summary>
+        /// Represents the public key contained in the certificate, used to verify the identity of the certificate holder
+        /// and encrypt data that only the matching private key can decrypt.
+        /// </summary>
         [JsonProperty("publicKey")]
         public string PublicKey { get; set; }
         
+        /// <summary>
+        /// The timestamp when the certificate was created in Verifalia.
+        /// </summary>
         [JsonProperty("createdOn")]
         public DateTime CreatedOn { get; set; }
         
+        /// <summary>
+        /// The timestamp indicating when the certificate becomes valid.
+        /// </summary>
         [JsonProperty("notBefore")]
         public DateTime NotBefore { get; set; }
         
+        /// <summary>
+        /// The timestamp indicating when the certificate expires.
+        /// </summary>
         [JsonProperty("notAfter")]
         public DateTime NotAfter { get; set; }
     }

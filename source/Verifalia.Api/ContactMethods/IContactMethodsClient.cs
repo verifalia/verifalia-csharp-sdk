@@ -57,13 +57,13 @@ namespace Verifalia.Api.ContactMethods
         [Obsolete("ListAsync() is preferred in .NET Core 3.0+ because of its simpler syntax, thanks to the async enumerable support.")]
         [EditorBrowsable(EditorBrowsableState.Advanced)]
 #endif
-        Task<ContactMethodListSegment> ListSegmentedAsync(string userId, ContactMethodListingOptions? options = null, CancellationToken cancellationToken = default);
+        Task<ContactMethodPagedResult> ListSegmentedAsync(string userId, ContactMethodListingOptions? options = null, CancellationToken cancellationToken = default);
 
 #if HAS_ASYNC_ENUMERABLE_SUPPORT
         [Obsolete("ListAsync() is preferred in .NET Core 3.0+ because of its simpler syntax, thanks to the async enumerable support.")]
         [EditorBrowsable(EditorBrowsableState.Advanced)]
 #endif
-        Task<ContactMethodListSegment> ListSegmentedAsync(string userId, ListingCursor cursor, CancellationToken cancellationToken = default);
+        Task<ContactMethodPagedResult> ListSegmentedAsync(string userId, ListingCursor cursor, CancellationToken cancellationToken = default);
 
         Task UpdateAsync(string userId, string contactMethodId, Expression<Func<ContactMethod, ContactMethod>> changeset, string? ifMatch = null, CancellationToken cancellationToken = default);
 

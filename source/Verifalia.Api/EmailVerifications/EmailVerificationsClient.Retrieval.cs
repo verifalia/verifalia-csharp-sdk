@@ -79,7 +79,7 @@ namespace Verifalia.Api.EmailVerifications
                 {
                     var partialValidation = await response
                         .Content
-                        .DeserializeAsync<PartialValidation>(restClient)
+                        .DeserializeAsync<PartialVerification>(restClient)
                         .ConfigureAwait(false);
 
                     // Returns immediately if the validation has been completed or if we should not wait for it
@@ -113,12 +113,12 @@ namespace Verifalia.Api.EmailVerifications
             }
         }
 
-        private async Task<Verification> RetrieveValidationFromPartialValidationAsync(PartialValidation partialValidation, CancellationToken cancellationToken)
+        private async Task<Verification> RetrieveValidationFromPartialValidationAsync(PartialVerification partialVerification, CancellationToken cancellationToken)
         {
-            if (partialValidation == null) throw new ArgumentNullException(nameof(partialValidation));
+            if (partialVerification == null) throw new ArgumentNullException(nameof(partialVerification));
 
-            var allEntries = new List<VerificationEntry>(partialValidation.Overview.NoOfEntries);
-            var currentSegment = partialValidation.Entries;
+            var allEntries = new List<VerificationEntry>(partialVerification.Overview.NoOfEntries);
+            var currentSegment = partialVerification.Entries;
 
             while (currentSegment?.Data != null)
             {
@@ -131,7 +131,7 @@ namespace Verifalia.Api.EmailVerifications
 
                 var listingCursor = new ListingCursor(currentSegment.Meta.Cursor);
 
-                currentSegment = await ListEntriesSegmentedAsync(partialValidation.Overview.Id,
+                currentSegment = await ListEntriesSegmentedAsync(partialVerification.Overview.Id,
                         listingCursor,
                         cancellationToken)
                     .ConfigureAwait(false);
@@ -139,7 +139,7 @@ namespace Verifalia.Api.EmailVerifications
 
             return new Verification
             {
-                Overview = partialValidation.Overview,
+                Overview = partialVerification.Overview,
                 Entries = allEntries
             };
         }
@@ -217,7 +217,7 @@ namespace Verifalia.Api.EmailVerifications
         public IAsyncEnumerable<VerificationEntry> ListEntriesAsync(string validationId, VerificationEntryListingOptions? options = default, CancellationToken cancellationToken = default)
         {
             return AsyncEnumerableHelper
-                .ToAsyncEnumerableAsync<VerificationEntryListSegment, VerificationEntry, VerificationEntryListingOptions>(
+                .ToAsyncEnumerableAsync<VerificationEntryPagedResult, VerificationEntry, VerificationEntryListingOptions>(
                     (listingOptions, token) => ListEntriesSegmentedAsync(validationId, listingOptions, token),
                     (cursor, token) => ListEntriesSegmentedAsync(validationId, cursor, token),
                     options,
@@ -226,7 +226,7 @@ namespace Verifalia.Api.EmailVerifications
 
 #endif
 
-        public async Task<VerificationEntryListSegment> ListEntriesSegmentedAsync(string validationId, VerificationEntryListingOptions? options = default, CancellationToken cancellationToken = default)
+        public async Task<VerificationEntryPagedResult> ListEntriesSegmentedAsync(string validationId, VerificationEntryListingOptions? options = default, CancellationToken cancellationToken = default)
         {
             // Generate the additional parameters, where needed
 
@@ -268,7 +268,7 @@ namespace Verifalia.Api.EmailVerifications
                 .ConfigureAwait(false);
         }
 
-        public async Task<VerificationEntryListSegment> ListEntriesSegmentedAsync(string validationId, ListingCursor cursor, CancellationToken cancellationToken = default)
+        public async Task<VerificationEntryPagedResult> ListEntriesSegmentedAsync(string validationId, ListingCursor cursor, CancellationToken cancellationToken = default)
         {
             if (cursor == null) throw new ArgumentNullException(nameof(cursor));
 
@@ -304,7 +304,7 @@ namespace Verifalia.Api.EmailVerifications
                 .ConfigureAwait(false);
         }
 
-        private async Task<VerificationEntryListSegment> ListEntriesSegmentedImplAsync(IRestClient restClient, HttpResponseMessage response, CancellationToken cancellationToken)
+        private async Task<VerificationEntryPagedResult> ListEntriesSegmentedImplAsync(IRestClient restClient, HttpResponseMessage response, CancellationToken cancellationToken)
         {
             switch (response.StatusCode)
             {
@@ -312,7 +312,7 @@ namespace Verifalia.Api.EmailVerifications
                 {
                     return await response
                         .Content
-                        .DeserializeAsync<VerificationEntryListSegment>(restClient)
+                        .DeserializeAsync<VerificationEntryPagedResult>(restClient)
                         .ConfigureAwait(false);
                 }
 

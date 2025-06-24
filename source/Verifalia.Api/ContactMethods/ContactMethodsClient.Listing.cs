@@ -51,25 +51,25 @@ namespace Verifalia.Api.ContactMethods
             if (userId == null) throw new ArgumentNullException(nameof(userId));
             
             return AsyncEnumerableHelper
-                .ToAsyncEnumerableAsync<ContactMethodListSegment, ContactMethod, ContactMethodListingOptions>(
-                    FetchFirstSegment, 
-                    FetchNextSegment,
+                .ToAsyncEnumerableAsync<ContactMethodPagedResult, ContactMethod, ContactMethodListingOptions>(
+                    FetchFirstSegmentAsync, 
+                    FetchNextSegmentAsync,
                     options,
                     cancellationToken);
 
-            Task<ContactMethodListSegment> FetchFirstSegment(ContactMethodListingOptions? options = null, CancellationToken cancellationToken = default)
+            Task<ContactMethodPagedResult> FetchFirstSegmentAsync(ContactMethodListingOptions? options = null, CancellationToken cancellationToken = default)
             {
                 return ListSegmentedAsync(userId, options, cancellationToken);
             }
             
-            Task<ContactMethodListSegment> FetchNextSegment(ListingCursor cursor, CancellationToken cancellationToken = default)
+            Task<ContactMethodPagedResult> FetchNextSegmentAsync(ListingCursor cursor, CancellationToken cancellationToken = default)
             {
                 return ListSegmentedAsync(userId, cursor, cancellationToken);
             }
         }
 #endif
 
-        public async Task<ContactMethodListSegment> ListSegmentedAsync(string userId, ContactMethodListingOptions? options = null, CancellationToken cancellationToken = default)
+        public async Task<ContactMethodPagedResult> ListSegmentedAsync(string userId, ContactMethodListingOptions? options = null, CancellationToken cancellationToken = default)
         {
             if (userId == null) throw new ArgumentNullException(nameof(userId));
             
@@ -97,7 +97,7 @@ namespace Verifalia.Api.ContactMethods
                 .ConfigureAwait(false);
         }
 
-        public async Task<ContactMethodListSegment> ListSegmentedAsync(string userId, ListingCursor cursor, CancellationToken cancellationToken = default)
+        public async Task<ContactMethodPagedResult> ListSegmentedAsync(string userId, ListingCursor cursor, CancellationToken cancellationToken = default)
         {
             if (cursor == null) throw new ArgumentNullException(nameof(cursor));
 
@@ -125,7 +125,7 @@ namespace Verifalia.Api.ContactMethods
                 .ConfigureAwait(false);
         }
 
-        private async Task<ContactMethodListSegment> ListSegmentedImplAsync(IRestClient restClient, string userId, Dictionary<string, string>? queryParams, CancellationToken cancellationToken)
+        private async Task<ContactMethodPagedResult> ListSegmentedImplAsync(IRestClient restClient, string userId, Dictionary<string, string>? queryParams, CancellationToken cancellationToken)
         {
             if (restClient == null) throw new ArgumentNullException(nameof(restClient));
             if (userId == null) throw new ArgumentNullException(nameof(userId));
@@ -147,7 +147,7 @@ namespace Verifalia.Api.ContactMethods
             {
                 return await response
                     .Content
-                    .DeserializeAsync<ContactMethodListSegment>(restClient)
+                    .DeserializeAsync<ContactMethodPagedResult>(restClient)
                     .ConfigureAwait(false);
             }
             

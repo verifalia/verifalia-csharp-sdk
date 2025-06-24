@@ -31,13 +31,9 @@
 
 using Verifalia.Api.Common.Models;
 
-namespace Verifalia.Api.ClientCertificates.Models
+namespace Verifalia.Api.Users.Models
 {
-    /// <summary>
-    /// A segment of a list of <see cref="ClientCertificate"/>, returned by a Verifalia API which supports key-set navigation.
-    /// </summary>
-    /// <inheritdoc />
-    public sealed class ClientCertificateListSegment : ListSegment<ClientCertificate>
+    public class UserPagedResult : PagedResult<UserOverview>
     {
     }
 }

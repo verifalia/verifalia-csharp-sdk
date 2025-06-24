@@ -40,12 +40,11 @@ namespace Verifalia.Api.BaseUrisProviders
     internal class ClientCertificateBaseUrisProvider : BaseUrisProvider
     {
         public ClientCertificateBaseUrisProvider()
-            : base(new[]
-            {
+            : base([
                 new Uri("https://api-cca-1.verifalia.com"),
                 new Uri("https://api-cca-2.verifalia.com"),
                 new Uri("https://api-cca-3.verifalia.com")
-            })
+            ])
         {
         }
     }

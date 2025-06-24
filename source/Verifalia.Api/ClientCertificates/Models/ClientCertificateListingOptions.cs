@@ -33,6 +33,10 @@ using Verifalia.Api.Common.Models;
 
 namespace Verifalia.Api.ClientCertificates.Models
 {
+    /// <summary>
+    /// Provides options for listing client certificates.
+    /// </summary>
+    /// <inheritdoc />
     public sealed class ClientCertificateListingOptions : ListingOptions
     {
     }

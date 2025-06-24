@@ -29,16 +29,16 @@
 * THE SOFTWARE.
 */
 
-using Newtonsoft.Json;
+using Verifalia.Api.Common.Models;
 
-namespace Verifalia.Api.EmailVerifications.Models
+namespace Verifalia.Api.ClientCertificates.Models
 {
-    internal class PartialValidation
+    /// <summary>
+    /// A single page of <see cref="ClientCertificate"/> records as returned by the Verifalia API.
+    /// Contains the list of client certificates in this page and the opaque cursor for fetching the next page.
+    /// </summary>    
+    /// <inheritdoc />
+    public sealed class ClientCertificatePagedResult : PagedResult<ClientCertificate>
     {
-        [JsonProperty("overview")]
-        public VerificationOverview Overview { get; set; }
-
-        [JsonProperty("entries")]
-        public VerificationEntryListSegment? Entries { get; set; }
     }
 }

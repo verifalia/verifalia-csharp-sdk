@@ -36,17 +36,16 @@ namespace Verifalia.Api.BaseUrisProviders
     /// <summary>
     /// Provides the default base URIs for the Verifalia API.
     /// </summary>
-    /// <remarks>This provider returns URIs which are incompatible with mutual TLS authentication; use <see cref="ClientCertificateBaseUrisProvider"/> if
-    /// that support is needed.</remarks>
+    /// <remarks>This provider is incompatible with mutual TLS authentication; if that support is needed, please use
+    /// <see cref="ClientCertificateBaseUrisProvider"/> instead.</remarks>
     internal class DefaultBaseUrisProvider : BaseUrisProvider
     {
         public DefaultBaseUrisProvider()
-            : base(new[]
-            {
+            : base([
                 new Uri("https://api-1.verifalia.com"),
                 new Uri("https://api-2.verifalia.com"),
                 new Uri("https://api-3.verifalia.com")
-            })
+            ])
         {
         }
     }

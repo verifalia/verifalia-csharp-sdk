@@ -29,15 +29,26 @@
 * THE SOFTWARE.
 */
 
-using Verifalia.Api.Common.Models;
+using Newtonsoft.Json;
 
-namespace Verifalia.Api.EmailVerifications.Models
+namespace Verifalia.Api.Common.Models
 {
     /// <summary>
-    /// A segment of a list of <see cref="VerificationEntry"/>, returned by a Verifalia API which supports key-set navigation.
+    /// Includes additional information which describes a <see cref="PagedResult{TItem}"/> returned by the Verifalia API.
     /// </summary>
-    /// <inheritdoc />
-    public class VerificationEntryListSegment : ListSegment<VerificationEntry>
+    public class PagedResultMeta
     {
+        /// <summary>
+        /// The raw, opaque cursor string returned by the Verifalia API. Should be used in conjunction with <see cref="ListingCursor"/> or
+        /// its descendants to retrieve next or previous segments.
+        /// </summary>
+        [JsonProperty("cursor")]
+        public string Cursor { get; set; }
+
+        /// <summary>
+        /// If true, signals more data is available.
+        /// </summary>
+        [JsonProperty("isTruncated")]
+        public bool IsTruncated { get; set; }
     }
 }
