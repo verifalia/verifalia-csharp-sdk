@@ -56,7 +56,7 @@ namespace Verifalia.Api.Users.Converters
                 }
             }
 
-            throw new ArgumentOutOfRangeException(nameof(value), value, "Unsupported user type.");
+            throw new ArgumentOutOfRangeException(nameof(value), value, "Unsupported value.");
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
@@ -65,7 +65,7 @@ namespace Verifalia.Api.Users.Converters
 
             return Mappings.TryGetValue(value, out var mappedStatus)
                 ? mappedStatus
-                : throw new NotSupportedException($"User type {value} is not supported.");
+                : throw new NotSupportedException($"Value '{value}' is not supported.");
         }
 
         public override bool CanConvert(Type objectType)
