@@ -38,7 +38,7 @@ using Verifalia.Api.Exceptions;
 namespace Verifalia.Api.Security
 {
     /// <summary>
-    /// Allows to authenticate a REST client against the Verifalia API using HTTP basic auth.
+    /// Enables authentication of a REST client against the Verifalia API using HTTP basic auth.
     /// </summary>
     public class UsernamePasswordAuthenticationProvider : IAuthenticationProvider
     {
@@ -50,13 +50,13 @@ namespace Verifalia.Api.Security
             if (String.IsNullOrEmpty(username))
             {
                 throw new ArgumentNullException(nameof(username),
-                    "username is null or empty: please visit https://verifalia.com/client-area to set up a new user, if you don't have one.");
+                    "username is null or empty: please visit https://app.verifalia.com/#/users to set up a new user, if you don't have one.");
             }
 
             if (String.IsNullOrEmpty(password))
             {
                 throw new ArgumentNullException(nameof(password),
-                    "password is null or empty: please visit https://verifalia.com/client-area to set up a new user, if you don't have one.");
+                    "password is null or empty: please visit https://app.verifalia.com/#/users to set up a new user, if you don't have one.");
             }
 
             _username = username;
@@ -82,7 +82,7 @@ namespace Verifalia.Api.Security
         {
             if (restClient == null) throw new ArgumentNullException(nameof(restClient));
             
-            throw new AuthorizationException("Can't authenticate to Verifalia using the provided username and password: please check your credentials and retry.");
+            throw new AuthorizationException("Cannot authenticate with Verifalia using the provided username and password: please check your credentials and retry.");
         }
     }
 }

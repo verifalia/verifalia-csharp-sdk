@@ -46,7 +46,7 @@ using Verifalia.Api.Exceptions;
 namespace Verifalia.Api.Security
 {
     /// <summary>
-    /// Allows to authenticate a REST client against the Verifalia API using bearer authentication.
+    /// Enables authentication of a REST client against the Verifalia API using bearer authentication.
     /// </summary>
     public class BearerAuthenticationProvider : IAuthenticationProvider
     {
@@ -77,13 +77,13 @@ namespace Verifalia.Api.Security
             if (String.IsNullOrEmpty(username))
             {
                 throw new ArgumentNullException(nameof(username),
-                    "username is null or empty: please visit https://verifalia.com/client-area to set up a new user, if you don't have one.");
+                    "username is null or empty: please visit https://app.verifalia.com/#/users to set up a new user, if you don't have one.");
             }
 
             if (String.IsNullOrEmpty(password))
             {
                 throw new ArgumentNullException(nameof(password),
-                    "password is null or empty: please visit https://verifalia.com/client-area to set up a new user, if you don't have one.");
+                    "password is null or empty: please visit https://app.verifalia.com/#/users to set up a new user, if you don't have one.");
             }
 
             _username = username;
@@ -146,8 +146,7 @@ namespace Verifalia.Api.Security
                 }
                 else
                 {
-                    throw new AuthorizationException(
-                        "Invalid credentials used while attempting to retrieve a bearer auth token.");
+                    throw new AuthorizationException("Invalid credentials used while attempting to retrieve a bearer auth token.");
                 }
             }
 
@@ -161,8 +160,7 @@ namespace Verifalia.Api.Security
 
             if (_totpTokenProvider == null)
             {
-                throw new AuthorizationException(
-                    "A multi-factor authentication is required but no token provider has been provided.");
+                throw new AuthorizationException("Multi-factor authentication is required but no token provider has been provided.");
             }
 
             for (var idxAttempt = 0; idxAttempt < MaxNoOfMfaAttempts; idxAttempt++)
@@ -208,7 +206,7 @@ namespace Verifalia.Api.Security
                 }
             }
             
-            throw new AuthorizationException($"Invalid TOTP token provided after {MaxNoOfMfaAttempts} attempt(s): aborting the authentication.");
+            throw new AuthorizationException($"Invalid TOTP token provided after {MaxNoOfMfaAttempts} attempt(s): aborting authentication.");
         }
 
         /// <inheritdoc cref="IAuthenticationProvider.HandleUnauthorizedRequestAsync(IRestClient, CancellationToken)"/>

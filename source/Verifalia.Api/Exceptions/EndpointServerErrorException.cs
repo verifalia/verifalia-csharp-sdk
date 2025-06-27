@@ -36,6 +36,7 @@ namespace Verifalia.Api.Exceptions
     /// <summary>
     /// The exception that is thrown when a Verifalia API endpoint returned a server error status code (HTTP 5xx).
     /// </summary>
+    /// <inheritdoc />
     public class EndpointServerErrorException : VerifaliaException
     {
         public EndpointServerErrorException()

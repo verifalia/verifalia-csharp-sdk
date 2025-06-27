@@ -32,9 +32,10 @@
 namespace Verifalia.Api.Filters
 {
     /// <summary>
-    /// Base class for filter predicates.
+    /// Base class for set filter predicates, used to filter data retrieved from the Verifalia API.
     /// </summary>
     /// <typeparam name="T">The type of elements in the target set.</typeparam>
+    /// <inheritdoc />
     public abstract class SetFilterPredicate<T>: FilterPredicate
     {
     }

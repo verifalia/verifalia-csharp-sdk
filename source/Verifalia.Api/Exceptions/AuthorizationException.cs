@@ -37,6 +37,7 @@ namespace Verifalia.Api.Exceptions
     /// The exception that is thrown when the supplied user credentials are invalid or the user does not have permissions
     /// to perform a certain operation.
     /// </summary>
+    /// <inheritdoc />
     public class AuthorizationException : VerifaliaException
     {
         public AuthorizationException()

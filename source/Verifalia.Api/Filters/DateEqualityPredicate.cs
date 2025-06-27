@@ -43,17 +43,7 @@ namespace Verifalia.Api.Filters
         /// <summary>
         /// The date (with no time information) to be included in the filter.
         /// </summary>
-        public DateTime Date
-        {
-            get;
-            [Obsolete("Please set the value through the DateEqualityPredicate's constructor. This setter will be removed in a future version of this SDK.")]
-            set;
-        }
-
-        [Obsolete("Please use the constructor which accepts a DateTime value. This one will be removed in a future version of this SDK.")]
-        public DateEqualityPredicate()
-        {
-        }
+        public DateTime Date { get; }
 
         /// <summary>
         /// Initializes a filter predicate used to filter dates on a specific value.

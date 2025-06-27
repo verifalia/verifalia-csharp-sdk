@@ -37,8 +37,15 @@ using Verifalia.Api.Users.Models;
 
 namespace Verifalia.Api.Users.Filters
 {
+    /// <summary>
+    /// A predicate that filters users by their <see cref="User.Type"/>.
+    /// </summary>
+    /// <inheritdoc />
     public class UserTypeMatchPredicate : FilterPredicate
     {
+        /// <summary>
+        /// Specifies the type of users to include in the matching.
+        /// </summary>
         public UserType Value { get; set; }
 
         public override IEnumerable<FilterPredicateFragment> Serialize(string fieldName)

@@ -43,22 +43,12 @@ namespace Verifalia.Api.Filters
         /// <summary>
         /// The minimum date to be included in the filter.
         /// </summary>
-        public DateTime? Since
-        {
-            get;
-            [Obsolete("Please set the value through the DateBetweenPredicate's constructor. This setter will be removed in a future version of this SDK.")]
-            set;
-        }
+        public DateTime? Since { get; }
 
         /// <summary>
         /// The maximum date to be included in the filter.
         /// </summary>
-        public DateTime? Until
-        {
-            get;
-            [Obsolete("Please set the value through the DateBetweenPredicate's constructor. This setter will be removed in a future version of this SDK.")]
-            set;
-        }
+        public DateTime? Until { get; }
 
         /// <summary>
         /// Initializes a filter predicate used to filter dates between two optional values.

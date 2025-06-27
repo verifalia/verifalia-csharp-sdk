@@ -36,6 +36,7 @@ namespace Verifalia.Api.Exceptions
     /// <summary>
     /// The exception that is thrown when all of the Verifalia API endpoints are unreachable.
     /// </summary>
+    /// <inheritdoc />
     public class ServiceUnreachableException : VerifaliaException
     {
         public ServiceUnreachableException()

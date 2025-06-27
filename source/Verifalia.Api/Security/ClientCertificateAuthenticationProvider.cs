@@ -43,7 +43,7 @@ using Verifalia.Api.Exceptions;
 namespace Verifalia.Api.Security
 {
     /// <summary>
-    /// Allows to authenticate a REST client against the Verifalia API using an X509 client certificate.
+    /// Enables authentication of a REST client against the Verifalia API using an X509 client certificate.
     /// </summary>
     public class ClientCertificateAuthenticationProvider : IAuthenticationProvider
     {
@@ -75,7 +75,7 @@ namespace Verifalia.Api.Security
 
             if (!certificate.HasPrivateKey)
             {
-                throw new ArgumentException("The given certificate does not have a private key and can't thus be used for authentication purposes.", nameof(certificate));
+                throw new ArgumentException("The given certificate does not have a private key and therefore cannot be used for authentication purposes.", nameof(certificate));
             }
 
             _certificate = certificate;
@@ -98,7 +98,7 @@ namespace Verifalia.Api.Security
         {
             if (restClient == null) throw new ArgumentNullException(nameof(restClient));
             
-            throw new AuthorizationException("Can't authenticate to Verifalia using the provided X509 certificate: please check your credentials and retry.");
+            throw new AuthorizationException("Cannot authenticate with Verifalia using the provided X509 certificate: please check your credentials and retry.");
         }
     }
 }

@@ -35,13 +35,26 @@ using Verifalia.Api.Exceptions.Models;
 
 namespace Verifalia.Api.Exceptions
 {
+    /// <summary>
+    /// This exception is thrown when a request to the Verifalia API returns an unexpected HTTP status code.
+    /// When available, it also includes the returned RFC 9457 problem details object. 
+    /// </summary>
+    /// <inheritdoc />
     public class RequestFailedException : VerifaliaException
     {
         /// <summary>
         /// The HTTP status code of the response.
         /// </summary>
         public HttpStatusCode StatusCode { get; }
+        
+        /// <summary>
+        /// The raw error response body, returned as a string.
+        /// </summary>
         public string ResponseBody { get; }
+        
+        /// <summary>
+        /// The RFC 9457 problem details object returned by the Verifalia API.
+        /// </summary>
         public Problem? Problem { get; }
 
         public RequestFailedException(HttpStatusCode statusCode, string responseBody, Problem? problem = null)

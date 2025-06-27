@@ -35,7 +35,7 @@ using System.Threading.Tasks;
 namespace Verifalia.Api.Security
 {
     /// <summary>
-    /// Represents a type which can authenticate a REST client against the Verifalia API.
+    /// Represents a type that can authenticate a REST client against the Verifalia API.
     /// </summary>
     public interface IAuthenticationProvider
     {
@@ -45,10 +45,10 @@ namespace Verifalia.Api.Security
         Task AuthenticateAsync(IRestClient restClient, CancellationToken cancellationToken);
 
         /// <summary>
-        /// Performs recovery actions (on providers which support that) with the aim of making the next authenticated
-        /// request successful. This makes sense on providers whose authentication state has a finite time duration
+        /// Performs recovery actions for providers that support it to make the next authenticated
+        /// request successful. This is useful for providers whose authentication state has a finite time duration
         /// (e.g. bearer authentication via JWT token).
-        /// </summary>
+        /// </summary>        
         Task HandleUnauthorizedRequestAsync(IRestClient restClient, CancellationToken cancellationToken);
     }
 }

@@ -40,6 +40,7 @@ namespace Verifalia.Api.Exceptions
     /// </summary>
     /// <remarks>To check the available credits, use the <see cref="ICreditsClient.GetBalanceAsync"/> method of
     /// <see cref="VerifaliaClient.Credits"/>.</remarks>
+    /// <inheritdoc />
     public class InsufficientCreditException : VerifaliaException
     {
         public InsufficientCreditException()

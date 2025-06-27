@@ -37,7 +37,7 @@ using System.Threading.Tasks;
 namespace Verifalia.Api.Security
 {
     /// <summary>
-    /// Defines a type which can provide time-based one-time password (TOTP) tokens for multi-factor authentication.
+    /// Defines a type that can provide time-based one-time password (TOTP) tokens for multi-factor authentication.
     /// </summary>
     public interface ITotpTokenProvider
     {

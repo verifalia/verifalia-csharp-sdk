@@ -38,6 +38,7 @@ namespace Verifalia.Api.Filters
     /// A filter predicate used to include certain elements from a target set of possible values.
     /// </summary>
     /// <typeparam name="T">The type of elements in the set.</typeparam>
+    /// <inheritdoc />
     public sealed class SetInclusionPredicate<T> : SetFilterPredicate<T>
     {
         private readonly T[] _values;

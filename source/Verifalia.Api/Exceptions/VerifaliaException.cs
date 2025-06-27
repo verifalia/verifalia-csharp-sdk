@@ -36,6 +36,7 @@ namespace Verifalia.Api.Exceptions
     /// <summary>
     /// The base class for exceptions thrown from the Verifalia SDK.
     /// </summary>
+    /// <inheritdoc />
     public class VerifaliaException : Exception
     {
         public VerifaliaException()

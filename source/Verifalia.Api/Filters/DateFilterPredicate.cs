@@ -34,6 +34,7 @@ namespace Verifalia.Api.Filters
     /// <summary>
     /// Base class for date filter predicates, used to filter data retrieved from the Verifalia API.
     /// </summary>
+    /// <inheritdoc />
     public abstract class DateFilterPredicate: FilterPredicate
     {
     }

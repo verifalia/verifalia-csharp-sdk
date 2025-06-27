@@ -29,8 +29,6 @@
 * THE SOFTWARE.
 */
 
-#nullable enable
-
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -40,8 +38,9 @@ using Verifalia.Api.Exceptions;
 namespace Verifalia.Api.Security
 {
     /// <summary>
-    /// Allows to authenticate a REST client against the Verifalia API using a browser appKey.
+    /// Enables authentication of a REST client against the Verifalia API using a browser app key.
     /// </summary>
+    /// <inheritdoc />
     public class AppkeyAuthenticatorProvider : IAuthenticationProvider
     {
         private readonly string _appKey;
@@ -51,7 +50,7 @@ namespace Verifalia.Api.Security
             if (String.IsNullOrEmpty(appKey))
             {
                 throw new ArgumentNullException(nameof(appKey),
-                    "appKey is null or empty: please visit https://verifalia.com/client-area to set up a new browser app, if you don't have one.");
+                    "appKey is null or empty: please visit https://app.verifalia.com/#/users to set up a new browser app, if you don't have one.");
             }
 
             _appKey = appKey;
@@ -74,7 +73,7 @@ namespace Verifalia.Api.Security
         /// <inheritdoc cref="IAuthenticationProvider.HandleUnauthorizedRequestAsync(IRestClient, CancellationToken)"/>
         public Task HandleUnauthorizedRequestAsync(IRestClient restClient, CancellationToken cancellationToken)
         {
-            throw new AuthorizationException("Can't authenticate to Verifalia using the provided appKey: please check your credentials and retry.");
+            throw new AuthorizationException("Cannot authenticate with Verifalia using the provided app key: please check your credentials and retry.");
         }
     }
 }

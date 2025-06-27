@@ -38,6 +38,7 @@ namespace Verifalia.Api.Filters
     /// A filter predicate used to exclude certain elements from a target set of possible values.
     /// </summary>
     /// <typeparam name="T">The type of elements in the set.</typeparam>
+    /// <inheritdoc />
     public sealed class SetExclusionPredicate<T> : SetFilterPredicate<T>
     {
         private readonly T[] _values;
@@ -60,16 +61,16 @@ namespace Verifalia.Api.Filters
         {
             if (_values.Length > 0)
             {
-                return new FilterPredicateFragment[]
-                {
-                    new(fieldName + ":exclude", String.Join(",", _values))
-                };
+                return
+                [
+                    new FilterPredicateFragment(fieldName + ":exclude", String.Join(",", _values))
+                ];
             }
 
 #if NETFRAMEWORK
             return new FilterPredicateFragment[0];
 #else
-            return Array.Empty<FilterPredicateFragment>();
+            return [];
 #endif
         }
     }
