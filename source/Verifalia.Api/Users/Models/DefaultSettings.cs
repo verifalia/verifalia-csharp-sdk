@@ -31,11 +31,24 @@
 
 using System;
 using Newtonsoft.Json;
+using Verifalia.Api.EmailVerifications;
 
 namespace Verifalia.Api.Users.Models
 {
+    /// <summary>
+    /// Contains default configuration settings for a user.
+    /// </summary>
     public sealed class DefaultSettings
     {
+        /// <summary>
+        /// Contains the default data retention period to observe for email verifications.
+        /// Verifalia automatically deletes email verification data after the specified retention period, starting from
+        /// the time the job is completed. If this value is set, its value overrides the default data retention period
+        /// configured at the account level. You can also override both settings when submitting an individual
+        /// verification job, if needed. Additionally, verification jobs can always be manually deleted before their
+        /// retention period expires - see the <see cref="IEmailVerificationsClient.DeleteAsync(string,System.Threading.CancellationToken)"/> method of
+        /// <see cref="IVerifaliaClient.EmailVerifications"/>.
+        /// </summary>
         [JsonProperty("retention")]
         public TimeSpan? Retention { get; set; }
     }

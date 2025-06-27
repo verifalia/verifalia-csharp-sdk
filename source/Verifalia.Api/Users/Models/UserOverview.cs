@@ -33,23 +33,51 @@ using Newtonsoft.Json;
 
 namespace Verifalia.Api.Users.Models
 {
+    /// <summary>
+    /// Represents an overview of a Verifalia user. 
+    /// </summary>
     public sealed class UserOverview
     {
+        /// <summary>
+        /// Contains the user’s display name, typically their full name.
+        /// </summary>
         [JsonProperty("displayName")]
         public string DisplayName { get; set; }
 
+        /// <summary>
+        /// Contains a hash that changes when the user's settings change, allowing for efficient caching and optimistic
+        /// concurrency control.
+        /// </summary>
         [JsonProperty("etag")]
         public string Etag { get; set; }
 
+        /// <summary>
+        /// The unique identifier of the user.
+        /// </summary>
         [JsonProperty("id")]
         public string Id { get; set; }
 
+        /// <summary>
+        /// A flag that indicates whether the user is currently active; inactive users cannot access Verifalia but still
+        /// count toward the account’s user limit.
+        /// </summary>
         [JsonProperty("isActive")]
         public bool IsActive { get; set; }
 
+        /// <summary>
+        /// Shows whether the user has been permanently deleted or not.
+        /// </summary>
         [JsonProperty("isDeleted")]
         public bool IsDeleted { get; set; }
         
+        /// <summary>
+        /// Specifies the type of user. Accepted values are:
+        /// <ul>
+        /// <li><see cref="UserType.Administrator"/> for account administrators;</li>
+        /// <li><see cref="UserType.Standard"/> for standard users;</li>
+        /// <li><see cref="UserType.BrowserApp"/> for browser apps;</li>
+        /// </ul>
+        /// </summary>
         [JsonProperty("type")]
         public UserType Type { get; set; }
     }

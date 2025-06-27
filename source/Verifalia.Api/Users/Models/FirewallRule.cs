@@ -33,18 +33,34 @@ using Newtonsoft.Json;
 
 namespace Verifalia.Api.Users.Models
 {
+    /// <summary>
+    /// Represents a firewall rule.
+    /// </summary>
     public sealed class FirewallRule
     {
+        /// <summary>
+        /// Specifies the address family of the rule, either <see cref="FirewallRuleAddressFamily.IPv4"/> or
+        /// <see cref="FirewallRuleAddressFamily.IPv6"/>.
+        /// </summary>
+        [JsonProperty("addressFamily")]
+        public FirewallRuleAddressFamily AddressFamily { get; set; }
+        
+        /// <summary>
+        /// Represents a label for the rule.
+        /// </summary>
         [JsonProperty("displayName")]
         public string DisplayName { get; set; }
 
-        [JsonProperty("addressFamily")]
-        public FirewallRuleAddressFamily AddressFamily { get; set; }
-
-        [JsonProperty("startIP")]
-        public string StartIP { get; set; }
-
+        /// <summary>
+        /// Specifies the ending IP address of the range affected by the rule.
+        /// </summary>
         [JsonProperty("endIP")]
         public string EndIP { get; set; }
+        
+        /// <summary>
+        /// Specifies the starting IP address of the range affected by the rule.
+        /// </summary>
+        [JsonProperty("startIP")]
+        public string StartIP { get; set; }
     }
 }

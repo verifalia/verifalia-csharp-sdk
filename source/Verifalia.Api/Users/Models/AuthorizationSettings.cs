@@ -33,8 +33,27 @@ using Newtonsoft.Json;
 
 namespace Verifalia.Api.Users.Models
 {
+    /// <summary>
+    /// Includes the authorization settings for the user.
+    /// </summary>
     public sealed class AuthorizationSettings
     {
+        /// <summary>
+        /// An array of strings, each representing a specific authorization rule applied to the user.
+        /// </summary>
+        /// <remarks>Each authorization rule is represented by a string which follows this format:
+        /// <code>[{effect}]resource[:operation[:scope]]</code>
+        /// where:
+        /// <ul>
+        /// <li>effect can be either an empty string (which grants permission) or a dash - (which denies permission);</li>
+        /// <li>resource[:operation[:scope]] is one of the permissions the API supports;</li>
+        /// <li>if the scope is not specified, it's assumed to apply account-wide;</li>
+        /// <li>similarly, if the operation is not specified, all operations are assumed.</li>
+        /// </ul>
+        /// You can use the <c>*</c> wildcard to match any value within a segment.
+        /// For example: <c>email-verifications:*:own</c> means the user is granted all operations on the <c>email-verifications</c>
+        /// resource, but only within their own scope.
+        /// </remarks>
         [JsonProperty("rules")]
         public string[] Rules { get; set; }
     }

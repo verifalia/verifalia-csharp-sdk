@@ -29,15 +29,27 @@
 * THE SOFTWARE.
 */
 
-using System;
-using Newtonsoft.Json;
-
 namespace Verifalia.Api.Users.Models
 {
+    /// <summary>
+    /// Contains the enumerated values of the user types supported by Verifalia.
+    /// </summary>
     public enum UserType
     {
+        /// <summary>
+        /// Administrator: has complete, unrestricted access to the Verifalia account.
+        /// </summary>
         Administrator,
+        
+        /// <summary>
+        /// Standard user: has flexible, granular permissions, ideal for coworkers or API access.
+        /// </summary>
         Standard,
+        
+        /// <summary>
+        /// Browser app: designed for public-facing web applications and our embeddable widget; uses passwordless
+        /// authentication and has fixed, limited permissions restricted to email verification only.
+        /// </summary>
         BrowserApp
     }
 }

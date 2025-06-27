@@ -33,6 +33,10 @@ using Verifalia.Api.Common.Models;
 
 namespace Verifalia.Api.Users.Models
 {
+    /// <summary>
+    /// A page of <see cref="UserOverview"/>, returned by a Verifalia API which supports key-set navigation.
+    /// </summary>
+    /// <inheritdoc />
     public class UserPagedResult : PagedResult<UserOverview>
     {
     }

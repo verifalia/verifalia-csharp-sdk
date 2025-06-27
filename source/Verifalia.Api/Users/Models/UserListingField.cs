@@ -31,9 +31,20 @@
 
 namespace Verifalia.Api.Users.Models
 {
+    /// <summary>
+    /// Provides enumerated values for the <see cref="UserOverview"/> fields which can be used for certain
+    /// listing operations.
+    /// </summary>
     public enum UserListingField
     {
+        /// <summary>
+        /// The date and time the user was created.
+        /// </summary>
         CreatedOn,
+        
+        /// <summary>
+        /// The display name of the user; refers to the <see cref="UserOverview.DisplayName"/> field.
+        /// </summary>
         DisplayName
     }
 }

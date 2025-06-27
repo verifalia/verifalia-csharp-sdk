@@ -29,18 +29,30 @@
 * THE SOFTWARE.
 */
 
-using Verifalia.Api.Filters;
 using Verifalia.Api.Common.Models;
 using Verifalia.Api.Users.Filters;
 
 namespace Verifalia.Api.Users.Models
 {
+    /// <summary>
+    /// The options for a user listing operation against the Verifalia API.
+    /// </summary>
+    /// <inheritdoc />
     public class UserListingOptions : ListingOptions
     {
+        /// <summary>
+        /// If set to true, the API will also return deleted users.
+        /// </summary>
+        public bool IncludeDeleted { get; set; }
+
+        /// <summary>
+        /// The field used to order the resulting listing.
+        /// </summary>
         public UserListingField OrderBy { get; set; }
         
-        public bool IncludeDeleted { get; set; }
-        
-        public UserTypeMatchPredicate? UserTypeFilter { get; set; }
+        /// <summary>
+        /// Specifies the type of users to retrieve.
+        /// </summary>
+        public UserTypeMatchPredicate? Type { get; set; }
     }
 }

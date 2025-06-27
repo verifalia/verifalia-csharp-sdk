@@ -33,11 +33,26 @@ using Newtonsoft.Json;
 
 namespace Verifalia.Api.Users.Models
 {
+    /// <summary>
+    /// Includes settings for trusted HTTP origins enforcement; applies only to browser apps.
+    /// </summary>
     public sealed class TrustedOriginSettings
     {
+        /// <summary>
+        /// A flag that, when true, causes the API to validate the HTTP origin of each request based on the defined expressions.
+        /// </summary>
         [JsonProperty("isEnabled")]
         public bool IsEnabled { get; set; }
 
+        /// <summary>
+        /// An array of wildcard expressions (strings) that define the allowed HTTP origins.
+        /// </summary>
+        /// <remarks>Verifalia supports the following wildcards:
+        /// <ul>
+        /// <li><c>*</c> matches any sequence of characters, including none;</li>
+        /// <li><c>?</c> matches any single character.</li>
+        /// </ul>
+        /// </remarks>
         [JsonProperty("expressions")]
         public string[]? Expressions { get; set; }
     }

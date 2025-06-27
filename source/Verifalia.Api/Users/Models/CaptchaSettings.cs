@@ -33,11 +33,20 @@ using Newtonsoft.Json;
 
 namespace Verifalia.Api.Users.Models
 {
+    /// <summary>
+    /// Contains settings related to CAPTCHA enforcement for email verification requests made by the user. 
+    /// </summary>
     public sealed class CaptchaSettings
     {
+        /// <summary>
+        /// A flag which, when set to true, enforces that all email verifications for this user require a valid CAPTCHA response.
+        /// </summary>
         [JsonProperty("isEnabled")]
         public bool IsEnabled { get; set; }
         
+        /// <summary>
+        /// Contains CAPTCHA provider settings, omitted if there are no configured CAPTCHA providers. 
+        /// </summary>
         [JsonProperty("providers")]
         public CaptchaProvidersSettings? Providers { get; set; }
     }

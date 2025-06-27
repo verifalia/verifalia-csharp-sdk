@@ -33,11 +33,20 @@ using Newtonsoft.Json;
 
 namespace Verifalia.Api.Users.Models
 {
+    /// <summary>
+    /// Contains settings related to API request firewall rules.
+    /// </summary>
     public sealed class FirewallSettings
     {
+        /// <summary>
+        /// A flag that, when set to true, enforces firewall rule checks on all API requests made by the user.
+        /// </summary>
         [JsonProperty("isEnabled")]
         public bool IsEnabled { get; set; }
 
+        /// <summary>
+        /// An array of objects representing firewall rules.
+        /// </summary>
         [JsonProperty("rules")]
         public FirewallRule[] Rules { get; set; }
     }

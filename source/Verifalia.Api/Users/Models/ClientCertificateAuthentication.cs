@@ -34,21 +34,15 @@ using Newtonsoft.Json;
 namespace Verifalia.Api.Users.Models
 {
     /// <summary>
-    /// Contains settings for integrating hCaptcha.
+    /// Represents the settings related to X.509 client certificate authentication; applies only to standard users.
     /// </summary>
-    /// <remarks>For additional details, see hCaptcha documentation at https://docs.hcaptcha.com/</remarks>
-    public sealed class HCaptchaSettings
+    /// <remarks>To manage client certificates, use the methods exposed by <see cref="IVerifaliaClient.ClientCertificates"/>.</remarks>
+    public sealed class ClientCertificateAuthentication
     {
         /// <summary>
-        /// Represents the secret key which authorizes communication between Verifalia and hCaptcha.
+        /// A flag that controls whether the user can authenticate using their X.509 client certificates.
         /// </summary>
-        [JsonProperty("secretKey")]
-        public string? SecretKey { get; set; }
-
-        /// <summary>
-        /// Represents the site key that restricts token redemption.
-        /// </summary>
-        [JsonProperty("siteKey")]
-        public string? SiteKey { get; set; }        
+        [JsonProperty("isEnabled")]
+        public bool IsEnabled { get; set; }
     }
 }

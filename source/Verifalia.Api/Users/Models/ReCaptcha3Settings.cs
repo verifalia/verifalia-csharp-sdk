@@ -33,11 +33,22 @@ using Newtonsoft.Json;
 
 namespace Verifalia.Api.Users.Models
 {
+    /// <summary>
+    /// Contains settings for integrating Google reCAPTCHA v3.
+    /// </summary>
+    /// <remarks>For additional details, see reCAPTCHA v3 documentation at https://developers.google.com/recaptcha/docs/v3</remarks>
     public sealed class ReCaptcha3Settings
     {
+        /// <summary>
+        /// Represents the secret key which authorizes communication between Verifalia and Google.
+        /// </summary>
         [JsonProperty("secretKey")]
         public string? SecretKey { get; set; }
         
+        /// <summary>
+        /// A value between 0 and 1 that sets the minimum acceptable score; lower scores indicate a higher likelihood
+        /// of bot-like behavior. If not specified, Verifalia defaults to the Google-recommended minimum score of 0.5.
+        /// </summary>
         [JsonProperty("minScore")]
         public decimal? MinimumScore { get; set; }
     }

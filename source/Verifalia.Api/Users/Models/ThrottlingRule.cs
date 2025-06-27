@@ -33,15 +33,28 @@ using Newtonsoft.Json;
 
 namespace Verifalia.Api.Users.Models
 {
+    /// <summary>
+    /// An object representing a throttling rule. 
+    /// </summary>
     public sealed class ThrottlingRule
     {
+        /// <summary>
+        /// Represents the maximum number of jobs allowed during the specified period.
+        /// </summary>
         [JsonProperty("limit")]
         public int Limit { get; set; }
 
-        [JsonProperty("scope")]
-        public ThrottlingScope Scope { get; set; }
-
+        /// <summary>
+        /// Indicates the time window for the limit. Accepted values are <see cref="ThrottlingPeriod.Minute"/>,
+        /// <see cref="ThrottlingPeriod.Hour"/>, or <see cref="ThrottlingPeriod.Day"/>.
+        /// </summary>
         [JsonProperty("period")]
         public ThrottlingPeriod Period { get; set; }
+        
+        /// <summary>
+        /// Defines the rule’s scope. Accepted values are <see cref="ThrottlingScope.Global"/> or <see cref="ThrottlingScope.IPAddress"/>.
+        /// </summary>
+        [JsonProperty("scope")]
+        public ThrottlingScope Scope { get; set; }
     }
 }

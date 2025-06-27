@@ -31,8 +31,15 @@
 
 namespace Verifalia.Api
 {
+    /// <summary>
+    /// Defines methods that an <see cref="IRestClient"/> factory must implement.
+    /// </summary>
     public interface IRestClientFactory
     {
+        /// <summary>
+        /// Builds a new <see cref="IRestClient"/> object.
+        /// </summary>
+        /// <returns>A <see cref="IRestClient"/> object.</returns>
         IRestClient Build();
     }
 }

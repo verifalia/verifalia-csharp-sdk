@@ -38,39 +38,40 @@ using Verifalia.Api.Users;
 namespace Verifalia.Api
 {
     /// <summary>
-    /// HTTPS-based REST client for Verifalia.
+    /// <see cref="IVerifaliaClient"/> is not meant to be used directly; it defines the features exposed by the Verifalia client
+    /// and allows other services to use Verifalia as a runtime dependency.
     /// </summary>
     public interface IVerifaliaClient
     {
         /// <summary>
-        /// Gets or sets the version of the Verifalia API to use when making requests; defaults to the latest API version supported
+        /// Gets or sets the version of the Verifalia API to use when making requests. Defaults to the latest API version supported
         /// by this SDK.
-        /// <remarks>Warning: changing this value may affect the stability of the SDK itself.</remarks>
         /// </summary>
+        /// <remarks>Warning: Changing this value may affect the stability of the SDK.</remarks>
         string ApiVersion { get; set; }
 
         /// <summary>
-        /// Allows to manage the X.509 client certificates of the Verifalia account.
+        /// Provides access to manage the X.509 client certificates of the Verifalia account.
         /// </summary>
         IClientCertificatesClient ClientCertificates { get; }
         
         /// <summary>
-        /// Allows to manage the contact methods of the Verifalia account.
+        /// Provides access to manage the contact methods of the Verifalia account.
         /// </summary>
         IContactMethodsClient ContactMethods { get; }
         
         /// <summary>
-        /// Allows to manage the credits for the Verifalia account.
+        /// Provides access to manage the credits for the Verifalia account.
         /// </summary>
         ICreditsClient Credits { get; }
 
         /// <summary>
-        /// Allows to verify email addresses and manage email verification jobs using the Verifalia service.
+        /// Provides access to verify email addresses and manage email verification jobs using the Verifalia service.
         /// </summary>
         IEmailVerificationsClient EmailVerifications { get; }
 
         /// <summary>
-        /// Allows to manage the users and browser apps of the Verifalia account, as well as their security and configuration settings.
+        /// Provides access to manage the users and browser apps of the Verifalia account, as well as their security and configuration settings.
         /// </summary>
         IUsersClient Users { get; }
     }

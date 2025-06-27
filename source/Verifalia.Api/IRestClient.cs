@@ -40,6 +40,9 @@ using Verifalia.Api.Exceptions;
 
 namespace Verifalia.Api
 {
+    /// <summary>
+    /// Defines methods for performing requests to the Verifalia RESTful API.
+    /// </summary>
     public interface IRestClient : IDisposable
     {
         [CLSCompliant(false)]

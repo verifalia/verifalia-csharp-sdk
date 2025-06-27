@@ -29,15 +29,26 @@
 * THE SOFTWARE.
 */
 
-using System;
-using Newtonsoft.Json;
-
 namespace Verifalia.Api.Users.Models
 {
+    /// <summary>
+    /// Contains the enumerated values of the periods supported by a Verifalia throttling rule.
+    /// </summary>
     public enum ThrottlingPeriod
     {
+        /// <summary>
+        /// Represents a period of one day.
+        /// </summary>
         Day,
+        
+        /// <summary>
+        /// Represents a period of one hour.
+        /// </summary>
         Hour,
+        
+        /// <summary>
+        /// Represents a period of one minute.
+        /// </summary>
         Minute
     }
 }

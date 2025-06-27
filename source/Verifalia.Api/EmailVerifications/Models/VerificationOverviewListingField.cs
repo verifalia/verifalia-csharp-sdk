@@ -32,7 +32,8 @@
 namespace Verifalia.Api.EmailVerifications.Models
 {
     /// <summary>
-    /// Provides enumerated values for the <see cref="VerificationOverview"/> fields.
+    /// Provides enumerated values for the <see cref="VerificationOverview"/> fields which can be used for certain
+    /// listing operations.
     /// </summary>
     public enum VerificationOverviewListingField
     {

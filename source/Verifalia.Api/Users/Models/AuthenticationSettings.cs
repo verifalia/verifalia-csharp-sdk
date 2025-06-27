@@ -33,9 +33,29 @@ using Newtonsoft.Json;
 
 namespace Verifalia.Api.Users.Models
 {
+    /// <summary>
+    /// Includes the authentication methods available to the user.
+    /// </summary>
     public sealed class AuthenticationSettings
     {
+        /// <summary>
+        /// Represents the settings related to X.509 client certificate authentication; applies only to standard users.
+        /// </summary>
+        [JsonProperty("certificate")]
+        public ClientCertificateAuthentication? ClientCertificateAuthentication { get; set; }
+        
+        /// <summary>
+        /// Contains the settings related to username-password authentication.
+        /// </summary>
         [JsonProperty("password")]
         public UsernamePasswordAuthentication? UsernamePasswordAuthentication { get; set; }
+        
+        /// <summary>
+        /// The ID of the contact method to be used for password recovery. If this field is omitted, the user does
+        /// not have a configured recovery contact method and password recovery is unavailable.
+        /// </summary>
+        /// <remarks>To manage contact methods, use the methods exposed by <see cref="IVerifaliaClient.ContactMethods"/>.</remarks>
+        [JsonProperty("recoveryContactMethod")]
+        public string? RecoveryContactMethodId { get; set; }
     }
 }

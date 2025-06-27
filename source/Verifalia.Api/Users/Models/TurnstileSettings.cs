@@ -33,8 +33,15 @@ using Newtonsoft.Json;
 
 namespace Verifalia.Api.Users.Models
 {
+    /// <summary>
+    /// Contains settings for integrating Cloudflare Turnstile.
+    /// </summary>
+    /// <remarks>For additional details, see Turnstile documentation at https://developers.cloudflare.com/turnstile/</remarks>
     public sealed class TurnstileSettings
     {
+        /// <summary>
+        /// Represents the secret key which authorizes communication between Verifalia and Cloudflare.
+        /// </summary>
         [JsonProperty("secretKey")]
         public string? SecretKey { get; set; }
     }

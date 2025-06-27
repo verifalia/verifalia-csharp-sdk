@@ -88,9 +88,9 @@ namespace Verifalia.Api.Users
                     queryParams["includeDeleted"] = "true";
                 }
                 
-                if (options.UserTypeFilter != null)
+                if (options.Type != null)
                 {
-                    foreach (var fragment in options.UserTypeFilter.Serialize("type"))
+                    foreach (var fragment in options.Type.Serialize("type"))
                     {
                         queryParams[fragment.Key] = fragment.Value;
                     }
@@ -167,6 +167,8 @@ namespace Verifalia.Api.Users
                     .DeserializeAsync<UserPagedResult>(restClient)
                     .ConfigureAwait(false);
             }
+            
+            // Unexpected status code
 
             throw await restClient
                 .BuildRequestFailedExceptionAsync(response, cancellationToken)

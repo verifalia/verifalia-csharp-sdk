@@ -29,14 +29,21 @@
 * THE SOFTWARE.
 */
 
-using System;
-using Newtonsoft.Json;
-
 namespace Verifalia.Api.Users.Models
 {
+    /// <summary>
+    /// Contains the enumerated values of the scopes supported by a Verifalia throttling rule.
+    /// </summary>
     public enum ThrottlingScope
     {
+        /// <summary>
+        /// Represents the global scope.
+        /// </summary>
         Global,
+        
+        /// <summary>
+        /// Represents a scope defined by the IP address of the caller.
+        /// </summary>
         IPAddress
     }
 }

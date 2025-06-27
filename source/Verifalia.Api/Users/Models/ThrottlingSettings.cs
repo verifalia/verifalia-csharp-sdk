@@ -33,12 +33,22 @@ using Newtonsoft.Json;
 
 namespace Verifalia.Api.Users.Models
 {
+    /// <summary>
+    /// Contains rate-limiting settings for email verification jobs.
+    /// </summary>
     public sealed class ThrottlingSettings
     {
-        [JsonProperty("rules")]
-        public ThrottlingRule[] Rules { get; set; }
-
+        /// <summary>
+        /// Specifies the maximum number of entries (email addresses) allowed per email verification submission; if
+        /// omitted, there is no limit.
+        /// </summary>
         [JsonProperty("maxEntriesPerJob", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int? MaxEntriesPerJob { get; set; }
+
+        /// <summary>
+        /// An array of objects representing throttling rules.
+        /// </summary>
+        [JsonProperty("rules")]
+        public ThrottlingRule[]? Rules { get; set; }
     }
 }

@@ -44,7 +44,36 @@ using Verifalia.Api.Users;
 
 namespace Verifalia.Api
 {
-    /// <inheritdoc cref="IVerifaliaClient"/>
+    /// <summary>
+    /// Represents the main entry point of the Verifalia SDK for .NET, a library that enables interaction with the
+    /// Verifalia API quickly and easily. Verifalia is a fast and accurate email verification service, which offers several
+    /// unique integration options and advanced configuration: this class exposes all the features of the SDK through a fluent
+    /// model, where each property exposes a set of methods that refer to a specific feature.
+    /// <ul>
+    /// <li><see cref="ClientCertificates"/> enables management of X.509 client certificates</li>
+    /// <li><see cref="ContactMethods"/> enables management of contact methods</li>
+    /// <li><see cref="Credits"/> enables management of credits and their usage consumption</li>
+    /// <li><see cref="EmailVerifications"/> enables email address verification and management of email verification jobs</li>
+    /// <li><see cref="Users"/> enables management of users and browser apps, along with their security and configuration settings</li>
+    /// </ul>
+    /// <example>
+    /// For instance, to verify an email address or run an email verification, you would call one of the
+    /// <see cref="IEmailVerificationsClient.RunAsync(string,Verifalia.Api.EmailVerifications.Models.QualityLevelName?,Verifalia.Api.EmailVerifications.WaitOptions?,System.Threading.CancellationToken)"/> method overloads of the <see cref="EmailVerifications"/> property.
+    /// <code>
+    /// var verifalia = new VerifaliaClient(/* ... */);
+    /// var verification = await verifalia.EmailVerifications.RunAsync("batman@gmail.com");
+    /// </code>
+    /// </example>
+    /// <example>
+    /// Similarly, to retrieve the credit balance of your account, you would call the <see cref="ICreditsClient.GetBalanceAsync"/>
+    /// method of the <see cref="Credits"/> property:
+    /// <code>
+    /// var verifalia = new VerifaliaClient(/* ... */);
+    /// var balance = await verifalia.Credits.GetBalanceAsync();
+    /// </code>
+    /// </example>
+    /// </summary>
+    /// <inheritdoc cref="IVerifaliaClient"/>    
     public class VerifaliaClient : IRestClientFactory, IVerifaliaClient, IDisposable
     {
         /// <summary>
@@ -62,7 +91,6 @@ namespace Verifalia.Api
         // ReSharper disable once MemberCanBePrivate.Global
         internal MultiplexedRestClient? CachedRestClient; // Marked as internal for unit testing purposes
 
-        /// <inheritdoc cref="IVerifaliaClient.ApiVersion"/>
         public string ApiVersion
         {
             get => _apiVersion;
@@ -76,71 +104,67 @@ namespace Verifalia.Api
             }
         }
 
-        /// <inheritdoc cref="IVerifaliaClient.ClientCertificates"/>
         public IClientCertificatesClient ClientCertificates
         {
             get;
         }
         
-        /// <inheritdoc cref="IVerifaliaClient.Credits"/>
         public IContactMethodsClient ContactMethods
         {
             get;
         }
         
-        /// <inheritdoc cref="IVerifaliaClient.Credits"/>
         public ICreditsClient Credits
         {
             get;
         }
 
-        /// <inheritdoc cref="IVerifaliaClient.EmailVerifications"/>
         public IEmailVerificationsClient EmailVerifications
         {
             get;
         }
         
-        /// <inheritdoc cref="IVerifaliaClient.Users"/>
         public IUsersClient Users
         {
             get;
         }
         
         /// <summary>
-        /// Initializes a new HTTPS-based REST client for Verifalia with the specified username and password.
-        /// <remarks>While authenticating with your Verifalia main account credentials is possible, it is strongly advised
-        /// to create one or more users (formerly known as sub-accounts) with just the required permissions, for improved
-        /// security. To create a new user or manage existing ones, please visit https://verifalia.com/client-area#/users </remarks>
+        /// Initializes a new <see cref="VerifaliaClient"/> with the specified username and password.
         /// </summary>
+        /// <remarks>While authenticating with your Verifalia main account credentials is possible, it is strongly recommended
+        /// to create one or more users with just the required permissions, for improved
+        /// security. To create a new user or manage existing ones, please visit https://app.verifalia.com/#/users</remarks>
         public VerifaliaClient(string username, string password, Uri[]? baseUris = null)
             : this(new UsernamePasswordAuthenticationProvider(username, password), baseUris)
         {
         }
 
 #if HAS_CLIENT_CERTIFICATES_SUPPORT
-
         /// <summary>
-        /// Initializes a new HTTPS-based REST client for Verifalia with the specified client certificate (for enterprise-grade
+        /// Initializes a new <see cref="VerifaliaClient"/> with the specified client certificate (for enterprise-grade
         /// mutual TLS authentication).
-        /// <remarks>TLS client certificate authentication is available to premium plans only.</remarks>
-        /// <remarks>It is strongly advised to create one or more users (formerly known as sub-accounts) with just the required
-        /// permissions,
-        /// for improved security. To create a new user or manage existing ones, please visit https://verifalia.com/client-area#/users
-        /// </remarks>
         /// </summary>
+        /// <remarks>
+        /// It is strongly recommended to create one or more users (formerly known as sub-accounts) with just the required
+        /// permissions for improved security. To create a new user or manage existing ones, please visit https://app.verifalia.com/#/users
+        /// </remarks>
+        /// <remarks>
+        /// TLS client certificate authentication is available to premium plans only.
+        /// To upgrade your plan please visit https://app.verifalia.com/#/account/change-plan
+        /// </remarks>
         public VerifaliaClient(X509Certificate2 clientCertificate, Uri[]? baseUris = null)
             : this(new ClientCertificateAuthenticationProvider(clientCertificate), baseUris == null ? new ClientCertificateBaseUrisProvider() : new BaseUrisProvider(baseUris))
         {
         }
-
 #endif
 
         /// <summary>
-        /// Initializes a new HTTPS-based REST client for Verifalia with the specified authentication provider.
-        /// <remarks>While authenticating with your Verifalia main account credentials is possible, it is strongly advised
-        /// to create one or more users (formerly known as sub-accounts) with just the required permissions, for improved
-        /// security. To create a new user or manage existing ones, please visit https://verifalia.com/client-area#/users </remarks>
+        /// Initializes a new <see cref="VerifaliaClient"/> with the specified authentication provider.
         /// </summary>
+        /// <remarks>While authenticating with your Verifalia main account credentials is possible, it is strongly recommended
+        /// to create one or more users (formerly known as sub-accounts) with just the required permissions, for improved
+        /// security. To create a new user or manage existing ones, please visit https://app.verifalia.com/#/users</remarks>
         public VerifaliaClient(IAuthenticationProvider authenticationProvider, Uri[]? baseUris = null)
             : this(authenticationProvider, baseUris == null ? new DefaultBaseUrisProvider() : new BaseUrisProvider(baseUris))
         {
@@ -164,8 +188,8 @@ namespace Verifalia.Api
         }
 
         /// <summary>
-        /// Builds a REST client which peeks a random Verifalia API endpoint and automatically retries on the others, in the event
-        /// of a network (or server error) failure.
+        /// Creates an <see cref="IRestClient"/> instance that selects a random Verifalia API endpoint and automatically retries on other endpoints
+        /// in the event of a network or server error failure.
         /// </summary>
         IRestClient IRestClientFactory.Build()
         {

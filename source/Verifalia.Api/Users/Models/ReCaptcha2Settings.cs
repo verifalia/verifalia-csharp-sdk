@@ -33,8 +33,15 @@ using Newtonsoft.Json;
 
 namespace Verifalia.Api.Users.Models
 {
+    /// <summary>
+    /// Contains settings for integrating Google reCAPTCHA v2.
+    /// </summary>
+    /// <remarks>For additional details, see reCAPTCHA v2 documentation at https://developers.google.com/recaptcha/docs/display</remarks>
     public sealed class ReCaptcha2Settings
     {
+        /// <summary>
+        /// Represents the secret key which authorizes communication between Verifalia and Google.
+        /// </summary>
         [JsonProperty("secretKey")]
         public string? SecretKey { get; set; }
     }

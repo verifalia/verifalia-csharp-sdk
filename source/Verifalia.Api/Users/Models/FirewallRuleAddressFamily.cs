@@ -31,9 +31,21 @@
 
 namespace Verifalia.Api.Users.Models
 {
+    /// <summary>
+    /// Contains the enumerated values of the address families supported by a Verifalia firewall rule.
+    /// </summary>
     public enum FirewallRuleAddressFamily
     {
+        /// <summary>
+        /// IPv4.
+        /// </summary>
+        // ReSharper disable once InconsistentNaming
         IPv4,
+        
+        /// <summary>
+        /// IPv6.
+        /// </summary>
+        // ReSharper disable once InconsistentNaming
         IPv6
     }
 }

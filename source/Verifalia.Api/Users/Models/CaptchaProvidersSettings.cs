@@ -33,20 +33,35 @@ using Newtonsoft.Json;
 
 namespace Verifalia.Api.Users.Models
 {
+    /// <summary>
+    /// Contains CAPTCHA provider settings.
+    /// </summary>
     public sealed class CaptchaProvidersSettings
     {
+        /// <summary>
+        /// Contains settings for integrating hCaptcha, omitted if hCaptcha is not configured. 
+        /// </summary>
         [JsonProperty("hCaptcha")]
-        public HCaptchaSettings HCaptcha { get; set; }
+        public HCaptchaSettings? HCaptcha { get; set; }
         
+        /// <summary>
+        /// Contains settings for integrating Google reCAPTCHA v2, omitted if Google reCAPTCHA v2 is not configured.
+        /// </summary>
         // ReSharper disable once InconsistentNaming
         [JsonProperty("reCaptchaV2")]
-        public ReCaptcha2Settings ReCaptchaV2 { get; set; }
+        public ReCaptcha2Settings? ReCaptchaV2 { get; set; }
         
+        /// <summary>
+        /// Contains settings for integrating Google reCAPTCHA v3, omitted if Google reCAPTCHA v3 is not configured.
+        /// </summary>
         // ReSharper disable once InconsistentNaming
         [JsonProperty("reCaptchaV3")]
-        public ReCaptcha3Settings ReCaptchaV3 { get; set; }
+        public ReCaptcha3Settings? ReCaptchaV3 { get; set; }
         
+        /// <summary>
+        /// Contains settings for integrating Cloudflare Turnstile, omitted if Cloudflare Turnstile is not configured.
+        /// </summary>
         [JsonProperty("turnstile")]
-        public TurnstileSettings Turnstile { get; set; }
+        public TurnstileSettings? Turnstile { get; set; }
     }
 }

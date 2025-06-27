@@ -82,6 +82,8 @@ namespace Verifalia.Api.Users
             {
                 return;
             }
+            
+            // Unexpected status code
 
             throw await restClient
                 .BuildRequestFailedExceptionAsync(response, cancellationToken)

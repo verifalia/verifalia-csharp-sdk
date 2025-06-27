@@ -33,17 +33,35 @@ using Newtonsoft.Json;
 
 namespace Verifalia.Api.Users.Models
 {
+    /// <summary>
+    /// Contains the settings related to username-password authentication. Passwordless authentication is
+    /// treated as username-password authentication with an empty password.
+    /// </summary>
     public sealed class UsernamePasswordAuthentication
     {
+        /// <summary>
+        /// When set to true, the user can authenticate using a username and password.
+        /// </summary>
         [JsonProperty("isEnabled")]
         public bool IsEnabled { get; set; }
         
+        /// <summary>
+        /// A flag that controls whether multi-factor authentication (MFA) is required when using username-password authentication.
+        /// </summary>
         [JsonProperty("isMfaRequired")]
         public bool IsMfaRequired { get; set; }
         
+        /// <summary>
+        /// Represents the user's username; for browser apps, this is the publishable browser app key. If username-password
+        /// authentication is not enabled, this field may be omitted.
+        /// </summary>
         [JsonProperty("username")]
         public string Username { get; set; }
         
+        /// <summary>
+        /// The password of the user.
+        /// </summary>
+        /// <remarks>This property is only used while creating or updating users.</remarks>
         [JsonProperty("password")]
         public string? Password { get; set; }
     }

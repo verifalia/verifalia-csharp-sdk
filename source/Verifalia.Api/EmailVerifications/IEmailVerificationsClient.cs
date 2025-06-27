@@ -212,9 +212,11 @@ namespace Verifalia.Api.EmailVerifications
 
         /// <summary>
         /// Runs an email verification by uploading a file with the emails to verify, with support for the following formats:
-        /// - plain text files (.txt), with one email address per line
-        /// - comma-separated values (.csv), tab-separated values (.tsv) and other delimiter-separated values files
-        /// - Microsoft Excel spreadsheets (.xls and .xlsx)
+        /// <ul>
+        /// <li>plain text files (.txt), with one email address per line;</li>
+        /// <li>comma-separated values (.csv), tab-separated values (.tsv) and other delimiter-separated values files;</li>
+        /// <li>Microsoft Excel spreadsheets (.xls and .xlsx).</li>
+        /// </ul>
         /// </summary>
         /// <remarks>
         /// By default, this method waits for the completion of the email verification job before returning. Pass a <see cref="WaitOptions"/> to request
@@ -232,9 +234,11 @@ namespace Verifalia.Api.EmailVerifications
 
         /// <summary>
         /// Runs an email verification by uploading a file with the emails to verify, with support for the following formats:
-        /// - plain text files (.txt), with one email address per line
-        /// - comma-separated values (.csv), tab-separated values (.tsv) and other delimiter-separated values files
-        /// - Microsoft Excel spreadsheets (.xls and .xlsx)
+        /// <ul>
+        /// <li>plain text files (.txt), with one email address per line;</li>
+        /// <li>comma-separated values (.csv), tab-separated values (.tsv) and other delimiter-separated values files;</li>
+        /// <li>Microsoft Excel spreadsheets (.xls and .xlsx).</li>
+        /// </ul>
         /// </summary>
         /// <remarks>
         /// By default, this method waits for the completion of the email verification job before returning. Pass a <see cref="WaitOptions"/> to request
@@ -252,9 +256,11 @@ namespace Verifalia.Api.EmailVerifications
 
         /// <summary>
         /// Runs an email verification by providing a stream with the emails to verify, with support for the following formats:
-        /// - plain text files (.txt), with one email address per line
-        /// - comma-separated values (.csv), tab-separated values (.tsv) and other delimiter-separated values files
-        /// - Microsoft Excel spreadsheets (.xls and .xlsx)
+        /// <ul>
+        /// <li>plain text files (.txt), with one email address per line;</li>
+        /// <li>comma-separated values (.csv), tab-separated values (.tsv) and other delimiter-separated values files;</li>
+        /// <li>Microsoft Excel spreadsheets (.xls and .xlsx).</li>
+        /// </ul>
         /// </summary>
         /// <remarks>
         /// By default, this method waits for the completion of the email verification job before returning. Pass a <see cref="WaitOptions"/> to request
@@ -272,9 +278,11 @@ namespace Verifalia.Api.EmailVerifications
 
         /// <summary>
         /// Runs an email verification by uploading a file with the emails to verify, with support for the following formats:
-        /// - plain text files (.txt), with one email address per line
-        /// - comma-separated values (.csv), tab-separated values (.tsv) and other delimiter-separated values files
-        /// - Microsoft Excel spreadsheets (.xls and .xlsx)
+        /// <ul>
+        /// <li>plain text files (.txt), with one email address per line;</li>
+        /// <li>comma-separated values (.csv), tab-separated values (.tsv) and other delimiter-separated values files;</li>
+        /// <li>Microsoft Excel spreadsheets (.xls and .xlsx).</li>
+        /// </ul>
         /// </summary>
         /// <remarks>
         /// By default, this method waits for the completion of the email verification job before returning. Pass a <see cref="WaitOptions"/> to request

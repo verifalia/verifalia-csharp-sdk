@@ -70,6 +70,8 @@ namespace Verifalia.Api.Users
                     .DeserializeAsync<UserOverview>(restClient)
                     .ConfigureAwait(false);
             }
+            
+            // Unexpected status code
 
             throw await restClient
                 .BuildRequestFailedExceptionAsync(response, cancellationToken)
