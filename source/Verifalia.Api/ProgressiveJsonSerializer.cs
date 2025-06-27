@@ -61,10 +61,9 @@ namespace Verifalia.Api
             // Email-verifications
 
             _serializer.Converters.Add(new VerificationStatusConverter());
-            _serializer.Converters.Add(new VerificationEntryCollectionConverter());
             _serializer.Converters.Add(new VerificationEntryStatusConverter());
             _serializer.Converters.Add(new VerificationPriorityConverter());
-            _serializer.Converters.Add(new VerificationQualityConverter());
+            _serializer.Converters.Add(new QualityLevelNameConverter());
             _serializer.Converters.Add(new IPAddressConverter());
             _serializer.Converters.Add(new DeduplicationModeConverter());
             _serializer.Converters.Add(new VerificationEntryClassificationConverter());
