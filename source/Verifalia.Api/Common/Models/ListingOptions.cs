@@ -30,29 +30,29 @@
 */
 
 using System;
+using System.Linq;
 
 namespace Verifalia.Api.Common.Models
 {
     /// <summary>
-    /// The options for a listing operation against the Verifalia API.
+    /// Options for listing operation against the Verifalia API.
     /// </summary>
     public class ListingOptions
     {
         private int _limit;
 
         /// <summary>
-        /// The direction of the listing.
+        /// The direction of the listing operation.
         /// </summary>
         public Direction Direction { get; set; }
 
         /// <summary>
         /// The maximum number of items to return with a listing request.
-        /// <remarks>The Verifalia API may choose to override the specified limit if it is either too small or too big.</remarks>
-        /// <remarks>Under async enumerable methods available in this SDK on .NET Core 3.0+, a single listing operations
-        /// may automatically perform different listing requests to the Verifalia API: this value limits the number of items
+        /// <remarks>The Verifalia API may adjust this limit if it is either too small or too big.
+        /// Also, for async enumerable methods available in this SDK on .NET Core 3.0+, a single listing operation
+        /// may automatically perform multiple requests to the Verifalia API: this value limits the number of items
         /// returned by each API request, not the overall total number of returned items. To limit the total number of returned
-        /// items, use one of the LINQ methods exposed by the <a href="https://www.nuget.org/packages/System.Interactive/">System.Interactive</a>
-        /// package, like Take().</remarks>
+        /// items, use one of the LINQ methods like <see cref="Enumerable.Take{TSource}"/>.</remarks>
         /// </summary>
         public int Limit
         {

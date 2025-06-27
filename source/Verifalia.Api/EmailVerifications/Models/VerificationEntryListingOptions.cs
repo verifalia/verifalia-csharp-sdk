@@ -37,8 +37,12 @@ namespace Verifalia.Api.EmailVerifications.Models
     /// <summary>
     /// Provides options for listing email verification entries.
     /// </summary>
+    /// <inheritdoc />
     public class VerificationEntryListingOptions : ListingOptions
     {
+        /// <summary>
+        /// A filter that specifies a list of included and excluded verification entry statuses.
+        /// </summary>
         public VerificationEntryStatusMatchPredicate? StatusFilter { get; set; }
     }
 }

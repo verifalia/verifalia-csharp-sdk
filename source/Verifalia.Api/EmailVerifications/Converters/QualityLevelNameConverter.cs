@@ -29,28 +29,33 @@
 * THE SOFTWARE.
 */
 
-using System.Collections.Generic;
+using System;
+using System.Globalization;
 using Newtonsoft.Json;
-using Verifalia.Api.Common.Models;
+using Verifalia.Api.EmailVerifications.Models;
 
-namespace Verifalia.Api.EmailVerifications.Models
+namespace Verifalia.Api.EmailVerifications.Converters
 {
     /// <summary>
-    /// A collection of <see cref="VerificationEntry"/>.
+    /// A custom JSON converter for the <see cref="QualityLevelName"/> type.
     /// </summary>
-    public class VerificationEntryCollection : List<VerificationEntry>
+    /// <inheritdoc />
+    internal sealed class QualityLevelNameConverter : JsonConverter
     {
-        /// <summary>
-        /// The raw, opaque cursor string returned by the Verifalia API. Should be used in conjunction with <see cref="ListingCursor"/> or
-        /// its descendants to retrieve next or previous segments.
-        /// </summary>
-        [JsonProperty("cursor")]
-        public string Cursor { get; set; }
+        public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
+        {
+            writer.WriteValue(((QualityLevelName)value).NameOrId);
+        }
 
-        /// <summary>
-        /// If true, signals more data is available.
-        /// </summary>
-        [JsonProperty("isTruncated")]
-        public bool IsTruncated { get; set; }
+        public override object ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
+        {
+            var value = Convert.ToString(reader.Value, CultureInfo.InvariantCulture);
+            return new QualityLevelName(value);
+        }
+
+        public override bool CanConvert(Type objectType)
+        {
+            return objectType == typeof(QualityLevelName);
+        }
     }
 }

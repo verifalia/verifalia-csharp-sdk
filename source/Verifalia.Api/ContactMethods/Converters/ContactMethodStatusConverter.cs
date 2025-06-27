@@ -37,6 +37,9 @@ using Verifalia.Api.ContactMethods.Models;
 
 namespace Verifalia.Api.ContactMethods.Converters
 {
+    /// <summary>
+    /// Represents a JSON converter for contact method statuses.
+    /// </summary>
     internal sealed class ContactMethodStatusConverter : JsonConverter
     {
         private static readonly Dictionary<string, ContactMethodStatus> Mappings = new(StringComparer.OrdinalIgnoreCase)

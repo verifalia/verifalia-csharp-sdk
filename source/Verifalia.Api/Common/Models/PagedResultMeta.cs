@@ -34,19 +34,20 @@ using Newtonsoft.Json;
 namespace Verifalia.Api.Common.Models
 {
     /// <summary>
-    /// Includes additional information which describes a <see cref="PagedResult{TItem}"/> returned by the Verifalia API.
+    /// This class provides additional information about a paginated result that is returned by the Verifalia API.
     /// </summary>
     public class PagedResultMeta
     {
         /// <summary>
-        /// The raw, opaque cursor string returned by the Verifalia API. Should be used in conjunction with <see cref="ListingCursor"/> or
-        /// its descendants to retrieve next or previous segments.
+        /// The raw, opaque cursor string provided by the Verifalia API for navigation between pages of data. You can
+        /// use this cursor in combination with the <see cref="ListingCursor"/> or its subclasses to access subsequent
+        /// or previous segments of data.
         /// </summary>
         [JsonProperty("cursor")]
-        public string Cursor { get; set; }
+        public string? Cursor { get; set; }
 
         /// <summary>
-        /// If true, signals more data is available.
+        /// Indicates if there is more data available to retrieve.
         /// </summary>
         [JsonProperty("isTruncated")]
         public bool IsTruncated { get; set; }

@@ -30,12 +30,8 @@
 */
 
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Threading;
-using System.Linq;
 using System.Net.Http.Headers;
-using Verifalia.Api.EmailVerifications;
 
 namespace Verifalia.Api.EmailVerifications.Models
 {
@@ -45,12 +41,13 @@ namespace Verifalia.Api.EmailVerifications.Models
     /// <remarks>Once initialized, pass the instance of <see cref="FileVerificationRequest"/> to the
     /// <see cref="IEmailVerificationsClient.RunAsync(Verifalia.Api.EmailVerifications.Models.FileVerificationRequest,Verifalia.Api.EmailVerifications.WaitOptions?,System.Threading.CancellationToken)"/> method or one of its
     /// overloads.</remarks>
+    /// <inheritdoc cref="VerificationRequestBase"/>
     public sealed class FileVerificationRequest : VerificationRequestBase, IDisposable
     {
         private readonly bool _leaveOpen;
     
         /// <summary>
-        /// The file stream which will be submitted for email verification. 
+        /// The file stream being submitted for email verification.
         /// </summary>
         public Stream File { get; }
 
@@ -109,7 +106,7 @@ namespace Verifalia.Api.EmailVerifications.Models
         /// account and the current request should be treated differently than the others, with regards to the processing speed.</remarks>
         /// </param>
         /// <param name="leaveOpen">True to leave the file object open after <see cref="FileVerificationRequest" /> is disposed, false otherwise.</param>
-        public FileVerificationRequest(Stream file, MediaTypeHeaderValue contentType, QualityLevelName? quality = default, DeduplicationMode? deduplication = default, VerificationPriority? priority = default, bool leaveOpen = default)
+        public FileVerificationRequest(Stream file, MediaTypeHeaderValue contentType, QualityLevelName? quality = null, DeduplicationMode? deduplication = null, VerificationPriority? priority = null, bool leaveOpen = false)
         {
             File = file ?? throw new ArgumentNullException(nameof(file));
             ContentType = contentType ?? throw new ArgumentNullException(nameof(contentType));
@@ -132,7 +129,7 @@ namespace Verifalia.Api.EmailVerifications.Models
         /// <remarks>Setting this value is useful only in the event there are multiple active concurrent verification jobs for the calling Verifalia
         /// account and the current request should be treated differently than the others, with regards to the processing speed.</remarks>
         /// </param>
-        public FileVerificationRequest(string path, MediaTypeHeaderValue? contentType = default, QualityLevelName? quality = default, DeduplicationMode? deduplication = default, VerificationPriority? priority = default)
+        public FileVerificationRequest(string path, MediaTypeHeaderValue? contentType = null, QualityLevelName? quality = null, DeduplicationMode? deduplication = null, VerificationPriority? priority = null)
             : this(new FileInfo(path),
                 contentType,
                 quality,
@@ -154,7 +151,7 @@ namespace Verifalia.Api.EmailVerifications.Models
         /// <remarks>Setting this value is useful only in the event there are multiple active concurrent verification jobs for the calling Verifalia
         /// account and the current request should be treated differently than the others, with regards to the processing speed.</remarks>
         /// </param>
-        public FileVerificationRequest(FileInfo fileInfo, MediaTypeHeaderValue? contentType = default, QualityLevelName? quality = default, DeduplicationMode? deduplication = default, VerificationPriority? priority = default)
+        public FileVerificationRequest(FileInfo fileInfo, MediaTypeHeaderValue? contentType = null, QualityLevelName? quality = null, DeduplicationMode? deduplication = null, VerificationPriority? priority = null)
         {
             if (fileInfo == null) throw new ArgumentNullException(nameof(fileInfo));
 
@@ -174,16 +171,15 @@ namespace Verifalia.Api.EmailVerifications.Models
         {
             // TODO: Cache the following MediaTypeHeaderValue instances
 
-            switch (extension)
+            return extension switch
             {
-                case ".txt": return MediaTypeHeaderValue.Parse(WellKnownMimeContentTypes.TextPlain);
-                case ".csv": return MediaTypeHeaderValue.Parse(WellKnownMimeContentTypes.TextCsv);
-                case ".tsv":
-                case ".tab": return MediaTypeHeaderValue.Parse(WellKnownMimeContentTypes.TextTsv);
-                case ".xls": return MediaTypeHeaderValue.Parse(WellKnownMimeContentTypes.ExcelXls);
-                case ".xlsx": return MediaTypeHeaderValue.Parse(WellKnownMimeContentTypes.ExcelXlsx);
-                default: return null;
-            }
+                ".txt" => MediaTypeHeaderValue.Parse(WellKnownMimeContentTypes.TextPlain),
+                ".csv" => MediaTypeHeaderValue.Parse(WellKnownMimeContentTypes.TextCsv),
+                ".tsv" or ".tab" => MediaTypeHeaderValue.Parse(WellKnownMimeContentTypes.TextTsv),
+                ".xls" => MediaTypeHeaderValue.Parse(WellKnownMimeContentTypes.ExcelXls),
+                ".xlsx" => MediaTypeHeaderValue.Parse(WellKnownMimeContentTypes.ExcelXlsx),
+                _ => null
+            };
         }
 
         /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>

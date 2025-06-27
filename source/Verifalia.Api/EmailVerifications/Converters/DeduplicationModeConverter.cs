@@ -36,7 +36,11 @@ using Verifalia.Api.EmailVerifications.Models;
 
 namespace Verifalia.Api.EmailVerifications.Converters
 {
-    internal class DeduplicationModeConverter : JsonConverter
+    /// <summary>
+    /// A custom JSON converter for the <see cref="DeduplicationMode"/> type.
+    /// </summary>
+    /// <inheritdoc />
+    internal sealed class DeduplicationModeConverter : JsonConverter
     {
         public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
         {

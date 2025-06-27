@@ -35,8 +35,7 @@ using Newtonsoft.Json;
 namespace Verifalia.Api.EmailVerifications.Models
 {
     /// <summary>
-    /// A single item of a <see cref="VerificationRequest"/> containing an email address to verify, specified by way
-    /// of the <see cref="InputData"/> property.
+    /// Represents a single item in a <see cref="VerificationRequest"/> that contains an email address to verify.
     /// </summary>
     public class VerificationRequestEntry
     {
@@ -51,10 +50,11 @@ namespace Verifalia.Api.EmailVerifications.Models
 
         /// <summary>
         /// An optional, custom string which is passed back upon completing the verification job.
-        /// <remarks>Setting this value is useful in the event you wish to have a custom reference of this <see cref="VerificationRequestEntry"/>
-        /// with something else (for example, a record in your database).</remarks>
-        /// <remarks>This value accepts a string with a maximum length of 50 characters.</remarks>
         /// </summary>
+        /// <remarks>
+        /// This value is useful when you need to associate this <see cref="VerificationRequestEntry"/> 
+        /// with something else, such as a record in your database. Maximum length is 50 characters.
+        /// </remarks>
         [JsonProperty("custom", DefaultValueHandling = DefaultValueHandling.Ignore, NullValueHandling = NullValueHandling.Ignore)]
         public string? Custom
         {
@@ -76,7 +76,7 @@ namespace Verifalia.Api.EmailVerifications.Models
         /// <summary>
         /// Initializes a new <see cref="VerificationRequestEntry"/>.
         /// </summary>
-        /// <param name="inputData">The input data string (which should be an email address) to verify.</param>
+        /// <param name="inputData">The email address to verify.</param>
         /// <param name="custom">An optional, custom string which is passed back upon completing the verification job.</param>
         public VerificationRequestEntry(string inputData, string? custom = null)
         {

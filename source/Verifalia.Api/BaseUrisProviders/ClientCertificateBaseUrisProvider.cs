@@ -35,8 +35,10 @@ namespace Verifalia.Api.BaseUrisProviders
 {
     /// <summary>
     /// Provides base URIs for the Verifalia API endpoints which support mutual TLS authentication - a feature available
-    /// to premium plans only, see https://verifalia.com/pricing
+    /// to premium plans only.
     /// </summary>
+    /// <remarks>To upgrade your Verifalia account to a premium plan, please visit https://app.verifalia.com/#/account/change-plan</remarks>
+    /// <inheritdoc />
     internal class ClientCertificateBaseUrisProvider : BaseUrisProvider
     {
         public ClientCertificateBaseUrisProvider()

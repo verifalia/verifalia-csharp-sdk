@@ -35,28 +35,29 @@ using Verifalia.Api.Filters;
 namespace Verifalia.Api.EmailVerifications.Models
 {
     /// <summary>
-    /// Provides options for listing email verification jobs.
+    /// The options for an email verification job listing operation against the Verifalia API.
     /// </summary>
+    /// <inheritdoc />
     public class VerificationOverviewListingOptions : ListingOptions
     {
         /// <summary>
-        /// The field to order the resulting listing by.
+        /// The field used to order the resulting listing.
         /// </summary>
         public VerificationOverviewListingField OrderBy { get; set; }
 
         /// <summary>
-        /// Allows to filter the resulting list by the creation date of its <see cref="VerificationOverview"/> items.
+        /// Filters the resulting list by the creation date of its <see cref="VerificationOverview"/> items.
         /// </summary>
         public DateFilterPredicate? CreatedOn { get; set; }
         
         /// <summary>
-        /// Allows to filter the resulting list by the ID of its owner; if present, the API will return only the jobs
+        /// Filters the resulting list by the ID of its owner; if present, the API will return only the jobs
         /// submitted by the specified user.
         /// </summary>
         public StringEqualityPredicate? Owner { get; set; }
 
         /// <summary>
-        /// Allows to filter the results by their <see cref="VerificationStatus"/>.
+        /// Filters the results by their <see cref="VerificationStatus"/>.
         /// </summary>
         public SetFilterPredicate<VerificationStatus>? Statuses { get; set; }        
     }

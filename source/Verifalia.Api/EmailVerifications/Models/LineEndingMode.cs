@@ -4,7 +4,7 @@ using Newtonsoft.Json.Converters;
 namespace Verifalia.Api.EmailVerifications.Models
 {
     /// <summary>
-    /// The line-ending mode for an input text file provided to the Verifalia API for verification.
+    /// Represents the mode for handling line endings in input text files.
     /// </summary>
     [JsonConverter(typeof(StringEnumConverter))]
     public enum LineEndingMode

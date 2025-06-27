@@ -34,14 +34,15 @@ using System;
 namespace Verifalia.Api.EmailVerifications.Models
 {
     /// <summary>
-    /// Provides optional configuration settings for invoking a completion callback upon the completion of an email verification job.
+    /// This class provides configuration settings for invoking a callback URI upon the completion of an email
+    /// verification job.
     /// </summary>
     public sealed class CompletionCallback
     {
         private Uri _uri;
 
         /// <summary>
-        /// An URL that Verifalia will invoke once the results for the email verification job are ready.
+        /// The URL that Verifalia will invoke once the results for the email verification job are ready.
         /// </summary>
         public Uri Uri
         {
@@ -53,19 +54,22 @@ namespace Verifalia.Api.EmailVerifications.Models
                 _uri = value;
             }
         }
-        
+
         /// <summary>
-        /// If set, allows the specification of a schema version that Verifalia will follow when invoking the callback. If
-        /// unset, the default callback schema version available to the target API version will be used.
+        /// Allows setting a schema version for the callback. If not specified, the default schema version available
+        /// in the target API version will be used.
         /// </summary>
         public string? Version { get; set; }
 
         /// <summary>
-        /// If set to true, skips the server certificate validation for the external callback server. This is useful for
+        /// Determines whether to skip server certificate validation when making the callback request. This is useful for
         /// testing purposes during development, especially when the callback server uses a self-signed certificate.
         /// </summary>
         public bool SkipServerCertificateValidation { get; set; }
 
+        /// <summary>
+        /// Represents a callback configuration for invoking a URI upon completion of an email verification job.
+        /// </summary>
         public CompletionCallback(Uri uri)
         {
             EnsureValidCallbackUri(uri);

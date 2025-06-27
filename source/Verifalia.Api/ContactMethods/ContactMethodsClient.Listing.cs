@@ -43,7 +43,7 @@ using Verifalia.Api.ContactMethods.Models;
 namespace Verifalia.Api.ContactMethods
 {
     /// <inheritdoc />
-    internal sealed partial class ContactMethodsClient : IContactMethodsClient
+    internal sealed partial class ContactMethodsClient
     {
 #if HAS_ASYNC_ENUMERABLE_SUPPORT
         public IAsyncEnumerable<ContactMethod> ListAsync(string userId, ContactMethodListingOptions? options = null, CancellationToken cancellationToken = default)

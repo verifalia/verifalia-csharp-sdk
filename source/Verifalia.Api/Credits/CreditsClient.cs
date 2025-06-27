@@ -37,7 +37,6 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Verifalia.Api.Credits.Models;
-using Verifalia.Api.Exceptions;
 using Verifalia.Api.Common;
 using Verifalia.Api.Common.Models;
 
@@ -172,24 +171,18 @@ namespace Verifalia.Api.Credits
                     },
                     cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
-            
-            switch (response.StatusCode)
-            {
-                case HttpStatusCode.OK:
-                {
-                    return await response
-                        .Content
-                        .DeserializeAsync<DailyUsagePagedResult>(restClient)
-                        .ConfigureAwait(false);
-                }
 
-                default:
-                {
-                    throw await restClient
-                        .BuildRequestFailedExceptionAsync(response, cancellationToken)
-                        .ConfigureAwait(false);
-                }
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                return await response
+                    .Content
+                    .DeserializeAsync<DailyUsagePagedResult>(restClient)
+                    .ConfigureAwait(false);
             }
+
+            throw await restClient
+                .BuildRequestFailedExceptionAsync(response, cancellationToken)
+                .ConfigureAwait(false);
         }
     }
 }

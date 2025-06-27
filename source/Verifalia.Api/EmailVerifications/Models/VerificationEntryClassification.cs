@@ -38,33 +38,37 @@ namespace Verifalia.Api.EmailVerifications.Models
     /// </summary>
     /// <remarks>Use one of <see cref="Deliverable"/>, <see cref="Risky"/>, <see cref="Undeliverable"/> or <see cref="Unknown"/>
     /// values if you don't have a custom classification.</remarks>
+    /// <inheritdoc />
     public class VerificationEntryClassification : IEquatable<VerificationEntryClassification>
     {
         /// <summary>
         /// Gets the name of the <see cref="VerificationEntryClassification"/>.
-        /// <remarks>The default classifications are available by way of the <see cref="Deliverable"/>, <see cref="Risky"/>,
+        /// <remarks>Well known classifications are available by way of the <see cref="Deliverable"/>, <see cref="Risky"/>,
         /// <see cref="Undeliverable"/> and <see cref="Unknown"/> properties.</remarks>
         /// </summary>
         public string Name { get; }
 
         /// <summary>
-        /// A <see cref="VerificationEntry" /> marked as <see cref="Deliverable"/> refers to an <see cref="VerificationEntry.EmailAddress"/> which is deliverable.
+        /// A <see cref="VerificationEntry" /> marked as <see cref="Deliverable"/> refers to an <see cref="VerificationEntry.EmailAddress"/>
+        /// that can be successfully sent to.
         /// </summary>
         public static VerificationEntryClassification Deliverable => new("Deliverable");
 
         /// <summary>
-        /// A <see cref="VerificationEntry" /> marked as <see cref="Risky"/> refers to an <see cref="VerificationEntry.EmailAddress"/> which could be no longer valid.
+        /// A <see cref="VerificationEntry" /> marked as <see cref="Risky"/> refers to an <see cref="VerificationEntry.EmailAddress"/>
+        /// which could be no longer valid or has temporary issues with delivery.
         /// </summary>
         public static VerificationEntryClassification Risky => new("Risky");
 
         /// <summary>
         /// A <see cref="VerificationEntry" /> marked as <see cref="Undeliverable"/> refers to an <see cref="VerificationEntry.EmailAddress"/>
-        /// which is either invalid or no longer deliverable.
+        /// that is either invalid or can no longer be delivered.
         /// </summary>
         public static VerificationEntryClassification Undeliverable => new("Undeliverable");
 
         /// <summary>
-        /// A <see cref="VerificationEntry" /> marked as <see cref="Unknown"/> contains an email address whose deliverability is unknown.
+        /// A <see cref="VerificationEntry" /> marked as <see cref="Unknown"/> contains an email address whose deliverability
+        /// is unknown.
         /// </summary>
         public static VerificationEntryClassification Unknown => new("Unknown");
 

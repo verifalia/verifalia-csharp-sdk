@@ -57,27 +57,26 @@ namespace Verifalia.Api.EmailVerifications
         };
     
         /// <summary>
-        /// Gets an <see cref="IProgress{T}"/> of <see cref="VerificationOverview"/> instance which eventually receives completion
-        /// progress updates for an email verification job.
-        /// </summary>
+        /// Gets an <see cref="IProgress{T}"/> instance that receives completion progress updates for an email verification job.
+        /// </summary>        
         public IProgress<VerificationOverview>? Progress { get; set; }
 
         /// <summary>
         /// Defines how much time to ask the Verifalia API to wait for the completion of the job on the server side,
         /// during the initial job submission request.
-        /// </summary>
+        /// </summary>        
         public TimeSpan SubmissionWaitTime { get; set; } = TimeSpan.FromSeconds(30);
-        
+
         /// <summary>
         /// Defines how much time to ask the Verifalia API to wait for the completion of the job on the server side,
         /// during any of the polling requests.
-        /// </summary>
+        /// </summary>        
         public TimeSpan PollWaitTime { get; set; } = TimeSpan.FromSeconds(30);
 
         /// <summary>
-        /// Waits for the next polling interval of the specified <see cref="VerificationOverview"/>.
+        /// Waits for the appropriate delay before the next polling attempt for the specified verification job.
         /// </summary>
-        /// <param name="verificationOverview">The <see cref="VerificationOverview"/> for which to wait for the next polling interval.</param>
+        /// <param name="verificationOverview">The verification job for which to calculate and wait the polling delay.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         public virtual Task WaitForNextPollAsync(VerificationOverview verificationOverview, CancellationToken cancellationToken)
         {

@@ -37,7 +37,11 @@ using Verifalia.Api.EmailVerifications.Models;
 
 namespace Verifalia.Api.EmailVerifications.Converters
 {
-    internal class VerificationEntryStatusConverter : JsonConverter
+    /// <summary>
+    /// A custom JSON converter for the <see cref="VerificationEntryStatus"/> type.
+    /// </summary>
+    /// <inheritdoc />
+    internal sealed class VerificationEntryStatusConverter : JsonConverter
     {
         internal static readonly Dictionary<string, VerificationEntryStatus> Mappings = new(StringComparer.OrdinalIgnoreCase)
         {

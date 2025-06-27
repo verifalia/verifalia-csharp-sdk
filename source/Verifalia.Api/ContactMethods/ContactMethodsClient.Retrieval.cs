@@ -44,7 +44,7 @@ namespace Verifalia.Api.ContactMethods
     /// <inheritdoc />
     internal sealed partial class ContactMethodsClient
     {
-        public async Task<ContactMethod> GetAsync(string userId, string contactMethodId, CancellationToken cancellationToken = default)
+        public async Task<ContactMethod?> GetAsync(string userId, string contactMethodId, CancellationToken cancellationToken = default)
         {
             if (userId == null) throw new ArgumentNullException(nameof(userId));
             if (contactMethodId == null) throw new ArgumentNullException(nameof(contactMethodId));
@@ -65,19 +65,30 @@ namespace Verifalia.Api.ContactMethods
                     cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
 
-            if (response.StatusCode == HttpStatusCode.OK)
+            switch (response.StatusCode)
             {
-                return await response
-                    .Content
-                    .DeserializeAsync<ContactMethod>(restClient)
-                    .ConfigureAwait(false);
-            }
-            
-            // Unexpected error
+                case HttpStatusCode.OK:
+                {
+                    return await response
+                        .Content
+                        .DeserializeAsync<ContactMethod>(restClient)
+                        .ConfigureAwait(false);
+                }
 
-            throw await restClient
-                .BuildRequestFailedExceptionAsync(response, cancellationToken)
-                .ConfigureAwait(false);
+                case HttpStatusCode.NotFound:
+                {
+                    return null;
+                }
+
+                default:
+                {
+                    // Unexpected error
+
+                    throw await restClient
+                        .BuildRequestFailedExceptionAsync(response, cancellationToken)
+                        .ConfigureAwait(false);
+                }
+            }
         }
     }
 }

@@ -47,7 +47,7 @@ namespace Verifalia.Api.EmailVerifications
 
             do
             {
-                // Fires a progress, since we are not yet completed
+                // Fire a progress report, since we are not yet completed
 
                 waitOptions.Progress?.Report(resultOverview);
 
@@ -98,7 +98,7 @@ namespace Verifalia.Api.EmailVerifications
                     throw new NotSupportedException($"{nameof(TResult)} must be either of type {nameof(Verification)} or {nameof(VerificationOverview)}.");
                 }
 
-                // Returns immediately if the email verification has been completed
+                // Return immediately if the email verification has been completed
 
                 if (resultOverview.Status == VerificationStatus.Completed)
                 {

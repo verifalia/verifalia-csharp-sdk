@@ -38,11 +38,14 @@ using Newtonsoft.Json;
 
 namespace Verifalia.Api.Common.JsonPatch
 {
+    /// <summary>
+    /// Visitor class for traversing LINQ <see cref="Expression"/> and building JSON Patch operations / documents.
+    /// </summary>
     internal sealed class JsonPatchExpressionVisitor : ExpressionVisitor
     {
         private readonly List<Operation> _operations = [];
 
-        public Operation[] BuildJsonPatchDocument<T>(Expression<Func<T, T>> lambda)
+        internal Operation[] BuildJsonPatchDocument<T>(Expression<Func<T, T>> lambda)
         {
             if (lambda.Body is MemberInitExpression init)
             {
@@ -60,28 +63,39 @@ namespace Verifalia.Api.Common.JsonPatch
         {
             foreach (var binding in init.Bindings.OfType<MemberAssignment>())
             {
-                // derive the JSON name (honoring [JsonProperty])
+                // Derive the JSON name (honoring [JsonProperty])
+                
                 var jsonName = GetJsonPropertyName(binding.Member);
                 var currentPath = $"{pathPrefix}/{jsonName}";
 
                 switch (binding.Expression)
                 {
-                    case ConstantExpression c:
-                        // simple literal
-                        _operations.Add(new Operation(OperationType.Replace, currentPath, c.Value));
+                    case ConstantExpression constantExpression:
+                    {
+                        // Simple literal
+                        
+                        _operations.Add(new Operation(OperationType.Replace, currentPath, constantExpression.Value));
                         break;
+                    }
 
                     case MemberInitExpression childInit:
-                        // nested object → recurse
+                    {
+                        // Nested object: recurse
+                        
                         VisitMemberInit(childInit, currentPath);
                         break;
+                    }
 
                     default:
-                        // any other expression → compile & evaluate
+                    {
+                        // Any other expression: compile and evaluate
+                        
                         var lambda = Expression.Lambda(binding.Expression);
                         var value = lambda.Compile().DynamicInvoke();
+                        
                         _operations.Add(new Operation(OperationType.Replace, currentPath, value));
                         break;
+                    }
                 }
             }
         }

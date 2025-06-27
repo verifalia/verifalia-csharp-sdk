@@ -40,28 +40,30 @@ using System.ComponentModel;
 namespace Verifalia.Api.Credits
 {
     /// <summary>
-    /// Manages credit packs, daily free credits and usage consumption for the Verifalia account.
+    /// Interface defining methods for interacting with credits balance and usage consumption in the Verifalia API.
     /// </summary>
     public interface ICreditsClient
     {
         /// <summary>
-        /// Returns the current credits balance for the Verifalia account.
+        /// Retrieves the current Verifalia account balance.
         /// </summary>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>The balance of the credits, including available credit packs and free credits.</returns>
         Task<Balance> GetBalanceAsync(CancellationToken cancellationToken = default);
 
 #if HAS_ASYNC_ENUMERABLE_SUPPORT
         /// <summary>
-        /// Lists the daily usages of the credits for the Verifalia account.
+        /// Retrieves the daily usage of credits for the Verifalia account.
         /// </summary>
+        /// <param name="options">Options for filtering and sorting the results. Use null to retrieve all records.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         IAsyncEnumerable<DailyUsage> ListDailyUsagesAsync(DailyUsageListingOptions? options = null, CancellationToken cancellationToken = default);
 #endif
 
         /// <summary>
-        /// Begins listing the daily usages of the credits for the Verifalia account.
+        /// Retrieves the first page of daily usage of credits for the Verifalia account.
         /// </summary>
-        /// <param name="options">The options for the listing operation.</param>
+        /// <param name="options">Options for filtering and sorting the results; use null to retrieve all records.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
 #if HAS_ASYNC_ENUMERABLE_SUPPORT
         [Obsolete("ListDailyUsageAsync() is preferred in .NET Core 3.0+ because of its simpler syntax, thanks to the async enumerable support.")]
@@ -70,9 +72,9 @@ namespace Verifalia.Api.Credits
         Task<DailyUsagePagedResult> GetDailyUsagesPageAsync(DailyUsageListingOptions? options = null, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Continues listing the daily usages of the credits for the Verifalia account.
+        /// Retrieves a page of daily usage of credits for the Verifalia account.
         /// </summary>
-        /// <param name="cursor">The cursor to use while traversing the list of daily usages.</param>
+        /// <param name="cursor">A cursor object containing pagination information to fetch this page.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
 #if HAS_ASYNC_ENUMERABLE_SUPPORT
         [Obsolete("ListDailyUsageAsync() is preferred in .NET Core 3.0+ because of its simpler syntax, thanks to the async enumerable support.")]

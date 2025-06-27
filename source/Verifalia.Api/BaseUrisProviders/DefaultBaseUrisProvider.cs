@@ -38,6 +38,7 @@ namespace Verifalia.Api.BaseUrisProviders
     /// </summary>
     /// <remarks>This provider is incompatible with mutual TLS authentication; if that support is needed, please use
     /// <see cref="ClientCertificateBaseUrisProvider"/> instead.</remarks>
+    /// <inheritdoc />
     internal class DefaultBaseUrisProvider : BaseUrisProvider
     {
         public DefaultBaseUrisProvider()

@@ -41,14 +41,14 @@ using Verifalia.Api.Common.Models;
 namespace Verifalia.Api.Common
 {
     /// <summary>
-    /// Internal helper for .NET Core 3+ IAsyncEnumerable support.
+    /// Internal helper class for .NET Core 3+ IAsyncEnumerable support.
     /// </summary>
     internal static class AsyncEnumerableHelper
     {
 #pragma warning disable VSTHRD200
         internal static async IAsyncEnumerable<TItem> ToAsyncEnumerableAsync<TList, TItem, TOptions>(
-            Func<TOptions?, CancellationToken, Task<TList>> fetchFirstSegment,
-            Func<ListingCursor, CancellationToken, Task<TList>> fetchNextSegment, TOptions? options = null,
+            Func<TOptions?, CancellationToken, Task<TList>> fetchFirstPage,
+            Func<ListingCursor, CancellationToken, Task<TList>> fetchNextPage, TOptions? options = null,
             [EnumeratorCancellation] CancellationToken cancellationToken = default)
             where TOptions : ListingOptions
             where TList : PagedResult<TItem>
@@ -60,18 +60,18 @@ namespace Verifalia.Api.Common
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                // Retrieve the first (or its subsequent) result list segment
+                // Retrieve the first (or its subsequent) result page
 
                 TList segment;
 
                 if (cursor == null)
                 {
-                    segment = await fetchFirstSegment(options, cancellationToken)
+                    segment = await fetchFirstPage(options, cancellationToken)
                         .ConfigureAwait(false);
                 }
                 else
                 {
-                    segment = await fetchNextSegment(cursor, cancellationToken)
+                    segment = await fetchNextPage(cursor, cancellationToken)
                         .ConfigureAwait(false);
                 }
 
@@ -82,7 +82,7 @@ namespace Verifalia.Api.Common
                     yield return item;
                 }
 
-                // Stop processing if this is the last segment
+                // Stop processing if this is the last page
 
                 if (!segment.Meta.IsTruncated)
                 {

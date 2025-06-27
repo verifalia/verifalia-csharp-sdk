@@ -29,7 +29,6 @@
 * THE SOFTWARE.
 */
 
-using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -44,7 +43,7 @@ namespace Verifalia.Api.EmailVerifications
         {
             var resource = $"email-validations/{verificationId}";
 
-            // Sends the request to the Verifalia servers
+            // Send the request to the Verifalia servers
 
             var restClient = _restClientFactory.Build();
 

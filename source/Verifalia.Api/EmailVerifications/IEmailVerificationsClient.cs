@@ -42,45 +42,66 @@ using Verifalia.Api.EmailVerifications.Models;
 namespace Verifalia.Api.EmailVerifications
 {
     /// <summary>
-    /// Allows to submit, retrieve, list and delete email verifications.
-    /// <remarks>The features of this type are exposed by way of the <see cref="VerifaliaClient.EmailVerifications">EmailVerifications property</see>
-    /// of <see cref="VerifaliaClient">VerifaliaRestClient</see>.</remarks>
+    /// Enables you to run, retrieve, list, and delete email verifications.
     /// </summary>
+    /// <remarks>The features of this type are exposed through the <see cref="VerifaliaClient.EmailVerifications">EmailVerifications property</see>
+    /// of <see cref="VerifaliaClient">VerifaliaClient</see>.</remarks>
     public interface IEmailVerificationsClient
     {
         /// <summary>
-        /// Submits a new email verification for processing.
+        /// Verifies an email address.
+        /// </summary>
         /// <remarks>
-        /// By default, this method waits for the completion of the email verification job: pass a <see cref="WaitOptions"/> to request
+        /// By default, this method waits for the completion of the email verification job before returning. Pass a <see cref="WaitOptions"/> to request
         /// a different waiting behavior.
         /// </remarks>
-        /// </summary>
         /// <example>
-        /// This sample shows how to call the <see cref="RunAsync"/> method and wait
+        /// This sample shows how to call the <see cref="RunAsync(string,Verifalia.Api.EmailVerifications.Models.QualityLevelName?,Verifalia.Api.EmailVerifications.WaitOptions?,System.Threading.CancellationToken)"/> method and wait
         /// for the completion of the submitted job.
         /// <code>
-        /// var verification = await RunAsync("batman@gmail.com");
+        /// var verifalia = new VerifaliaClient(/* ... */);
+        /// 
+        /// var verification = await verifalia
+        ///     .EmailVerifications
+        ///     .RunAsync("batman@gmail.com");
+        /// 
+        /// // Display part of the verification results in the console window
+        /// 
+        /// var entry = verification.Entries.Single();
+        /// Console.WriteLine($"Result: {entry.Classification} ({entry.Status})");
         /// </code>
         /// </example>
         /// <param name="emailAddress">An email address to verify.</param>
         /// <param name="quality">The desired results quality for this email verification.</param>
         /// <param name="waitOptions">Defines the options that specify how to wait for the completion of the email verification job.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <returns>A <see cref="Verification"/> object representing the submitted email verification job.</returns>
+        /// <returns>A <see cref="Verification"/> object representing the submitted email verification job and, when completed, its
+        /// verification results.</returns>            
         Task<Verification> RunAsync(string emailAddress, QualityLevelName? quality = null, WaitOptions? waitOptions = null, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Submits a new email verification for processing.
+        /// Verifies multiple email addresses.
+        /// </summary>
         /// <remarks>
-        /// By default, this method waits for the completion of the email verification job: pass a <see cref="WaitOptions"/> to request
+        /// By default, this method waits for the completion of the email verification job before returning. Pass a <see cref="WaitOptions"/> to request
         /// a different waiting behavior.
         /// </remarks>
-        /// </summary>
         /// <example>
         /// This sample shows how to call the <see cref="RunAsync(System.Collections.Generic.IEnumerable{string},Verifalia.Api.EmailVerifications.Models.QualityLevelName?,Verifalia.Api.EmailVerifications.Models.DeduplicationMode?,Verifalia.Api.EmailVerifications.WaitOptions?,System.Threading.CancellationToken)"/> method and wait
         /// for the completion of the submitted job.
         /// <code>
-        /// var verification = await RunAsync(new [] { "batman@gmail.com", "walt@a1acarwash.com" });
+        /// var verifalia = new VerifaliaClient(/* ... */);
+        /// 
+        /// var verification = await verifalia
+        ///     .EmailVerifications
+        ///     .RunAsync(["batman@gmail.com", "walt@a1acarwash.com"]);
+        ///
+        /// // Display part of the verification results in the console window
+        ///
+        /// foreach (var entry in verification.Entries)
+        /// {
+        ///     Console.WriteLine($"{entry.InputData} => {entry.Classification} ({entry.Status})");
+        /// }
         /// </code>
         /// </example>
         /// <param name="emailAddresses">An enumerable collection of email addresses to verify.</param>
@@ -88,42 +109,64 @@ namespace Verifalia.Api.EmailVerifications
         /// <param name="deduplication">The strategy to follow while determining which email addresses are duplicates.</param>
         /// <param name="waitOptions">Defines the options that specify how to wait for the completion of the email verification job.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <returns>A <see cref="Verification"/> object representing the submitted email verification job.</returns>
+        /// <returns>A <see cref="Verification"/> object representing the submitted email verification job and, when completed, its
+        /// verification results.</returns>
         Task<Verification> RunAsync(IEnumerable<string> emailAddresses, QualityLevelName? quality = null, DeduplicationMode? deduplication = null, WaitOptions? waitOptions = null, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Submits a new email verification for processing.
+        /// Runs an email verification for a single entry.
+        /// </summary>
         /// <remarks>
-        /// By default, this method waits for the completion of the email verification job: pass a <see cref="WaitOptions"/> to request
+        /// By default, this method waits for the completion of the email verification job before returning. Pass a <see cref="WaitOptions"/> to request
         /// a different waiting behavior.
         /// </remarks>
-        /// </summary>
         /// <example>
         /// This sample shows how to call the <see cref="RunAsync(Verifalia.Api.EmailVerifications.Models.VerificationRequestEntry,Verifalia.Api.EmailVerifications.Models.QualityLevelName?,Verifalia.Api.EmailVerifications.WaitOptions?,System.Threading.CancellationToken)"/> method and wait
         /// for the completion of the submitted job.
         /// <code>
-        /// var verification = await RunAsync(new VerificationRequestEntry("batman@gmail.com"));
+        /// var verifalia = new VerifaliaClient(/* ... */);
+        /// 
+        /// var verification = await verifalia
+        ///     .EmailVerifications
+        ///     .RunAsync(new VerificationRequestEntry("batman@gmail.com"));
+        /// 
+        /// // Display part of the verification results in the console window
+        ///
+        /// var entry = verification.Entries.Single();
+        /// Console.WriteLine($"Result: {entry.Classification} ({entry.Status})");
         /// </code>
         /// </example>
-        /// <param name="entry">A <see cref="VerificationRequestEntry"/> to verify.</param>
+        /// <param name="entry">A verification entry <see cref="VerificationRequestEntry"/> to run.</param>
         /// <param name="quality">The desired results quality for this email verification.</param>
         /// <param name="waitOptions">Defines the options that specify how to wait for the completion of the email verification job.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <returns>A <see cref="Verification"/> object representing the submitted email verification job.</returns>
+        /// <returns>A <see cref="Verification"/> object representing the submitted email verification job and, when completed, its
+        /// verification results.</returns>
         Task<Verification> RunAsync(VerificationRequestEntry entry, QualityLevelName? quality = null, WaitOptions? waitOptions = null, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Submits a new email verification for processing.
+        /// Runs an email verification for multiple entries.
+        /// </summary>
         /// <remarks>
-        /// By default, this method waits for the completion of the email verification job: pass a <see cref="WaitOptions"/> to request
+        /// By default, this method waits for the completion of the email verification job before returning. Pass a <see cref="WaitOptions"/> to request
         /// a different waiting behavior.
         /// </remarks>
-        /// </summary>
         /// <example>
         /// This sample shows how to call the <see cref="RunAsync(System.Collections.Generic.IEnumerable{Verifalia.Api.EmailVerifications.Models.VerificationRequestEntry},Verifalia.Api.EmailVerifications.Models.QualityLevelName?,Verifalia.Api.EmailVerifications.Models.DeduplicationMode?,Verifalia.Api.EmailVerifications.WaitOptions?,System.Threading.CancellationToken)"/> method and wait
         /// for the completion of the submitted job.
         /// <code>
-        /// var verification = await RunAsync(new[] { new VerificationRequestEntry("batman@gmail.com") });
+        /// var verifalia = new VerifaliaClient(/* ... */);
+        /// 
+        /// var verification = await verifalia
+        ///     .EmailVerifications
+        ///     .RunAsync([new VerificationRequestEntry("batman@gmail.com"), new VerificationRequestEntry("walt@a1acarwash.com")]);
+        /// 
+        /// // Display part of the verification results in the console window
+        ///
+        /// foreach (var entry in verification.Entries)
+        /// {
+        ///     Console.WriteLine($"{entry.InputData} => {entry.Classification} ({entry.Status})");
+        /// }
         /// </code>
         /// </example>
         /// <param name="entries">An enumerable collection of <see cref="VerificationRequestEntry"/> to verify.</param>
@@ -131,144 +174,175 @@ namespace Verifalia.Api.EmailVerifications
         /// <param name="deduplication">The strategy to follow while determining which email addresses are duplicates.</param>
         /// <param name="waitOptions">Defines the options that specify how to wait for the completion of the email verification job.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <returns>A <see cref="Verification"/> object representing the submitted email verification job.</returns>
+        /// <returns>A <see cref="Verification"/> object representing the submitted email verification job and, when completed, its
+        /// verification results.</returns>
         Task<Verification> RunAsync(IEnumerable<VerificationRequestEntry> entries, QualityLevelName? quality = null, DeduplicationMode? deduplication = null, WaitOptions? waitOptions = null, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Submits a new email verification for processing.
+        /// Runs an email verification.
+        /// </summary>
         /// <remarks>
-        /// By default, this method waits for the completion of the email verification job: pass a <see cref="WaitOptions"/> to request
+        /// By default, this method waits for the completion of the email verification job before returning. Pass a <see cref="WaitOptions"/> to request
         /// a different waiting behavior.
         /// </remarks>
-        /// </summary>
         /// <example>
         /// This sample shows how to call the <see cref="RunAsync(Verifalia.Api.EmailVerifications.Models.VerificationRequest,Verifalia.Api.EmailVerifications.WaitOptions?,System.Threading.CancellationToken)"/> method and wait
         /// for the completion of the submitted job.
         /// <code>
-        /// var verification = await RunAsync(new VerificationRequest(new[] { "batman@gmail.com" });
+        /// var verifalia = new VerifaliaClient(/* ... */);
+        /// 
+        /// var verification = await verifalia
+        ///     .EmailVerifications
+        ///     .RunAsync(new VerificationRequest(["batman@gmail.com", "walt@a1acarwash.com"]));
+        /// 
+        /// // Display part of the verification results in the console window
+        ///
+        /// foreach (var entry in verification.Entries)
+        /// {
+        ///     Console.WriteLine($"{entry.InputData} => {entry.Classification} ({entry.Status})");
+        /// }
         /// </code>
         /// </example>
-        /// <param name="request">A <see cref="VerificationRequest"/> to submit for verification.</param>
+        /// <param name="request">An email verification request <see cref="VerificationRequest"/> to run.</param>
         /// <param name="waitOptions">Defines the options that specify how to wait for the completion of the email verification job.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <returns>A <see cref="Verification"/> object representing the submitted email verification job.</returns>
+        /// <returns>A <see cref="Verification"/> object representing the submitted email verification job and, when completed, its
+        /// verification results.</returns>
         Task<Verification> RunAsync(VerificationRequest request, WaitOptions? waitOptions = null, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Submits a new email verification for processing through a file, with support for the following formats:
+        /// Runs an email verification by uploading a file with the emails to verify, with support for the following formats:
         /// - plain text files (.txt), with one email address per line
         /// - comma-separated values (.csv), tab-separated values (.tsv) and other delimiter-separated values files
         /// - Microsoft Excel spreadsheets (.xls and .xlsx)
+        /// </summary>
         /// <remarks>
-        /// By default, this method waits for the completion of the email verification job: pass a <see cref="WaitOptions"/> to request
+        /// By default, this method waits for the completion of the email verification job before returning. Pass a <see cref="WaitOptions"/> to request
         /// a different waiting behavior.
         /// </remarks>
-        /// </summary>
-        /// <param name="file">An array of bytes with the content of the file to submit for verification.</param>
+        /// <param name="file">An array of bytes with the content of the file to upload for verification.</param>
         /// <param name="contentType">The MIME content type of the file.</param>
         /// <param name="quality">The desired results quality for this email verification.</param>
         /// <param name="deduplication">The strategy to follow while determining which email addresses are duplicates.</param>
         /// <param name="waitOptions">Defines the options that specify how to wait for the completion of the email verification job.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <returns>A <see cref="Verification"/> object representing the submitted email verification job.</returns>
+        /// <returns>A <see cref="Verification"/> object representing the submitted email verification job and, when completed, its
+        /// verification results.</returns>
         Task<Verification> RunAsync(byte[] file, MediaTypeHeaderValue contentType, QualityLevelName? quality = null, DeduplicationMode? deduplication = null, WaitOptions? waitOptions = null, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Submits a new email verification for processing through a file, with support for the following formats:
+        /// Runs an email verification by uploading a file with the emails to verify, with support for the following formats:
         /// - plain text files (.txt), with one email address per line
         /// - comma-separated values (.csv), tab-separated values (.tsv) and other delimiter-separated values files
         /// - Microsoft Excel spreadsheets (.xls and .xlsx)
+        /// </summary>
         /// <remarks>
-        /// By default, this method waits for the completion of the email verification job: pass a <see cref="WaitOptions"/> to request
+        /// By default, this method waits for the completion of the email verification job before returning. Pass a <see cref="WaitOptions"/> to request
         /// a different waiting behavior.
         /// </remarks>
-        /// </summary>
-        /// <param name="fileInfo">A <see cref="FileInfo"/> instance pointing to the file to submit.</param>
-        /// <param name="contentType">The MIME content type of the file.
-        /// <remarks>If <see langword="null" /> (default value), the library attempts to guess the content type of the file based on its extension.</remarks>
-        /// </param>
+        /// <param name="fileInfo">A <see cref="FileInfo"/> instance pointing to the file to submit for verification.</param>
+        /// <param name="contentType">The MIME content type of the file. If <see langword="null" /> (default value), the library attempts to guess the content type of the file based on its extension.</param>
         /// <param name="quality">The desired results quality for this email verification.</param>
         /// <param name="deduplication">The strategy to follow while determining which email addresses are duplicates.</param>
         /// <param name="waitOptions">Defines the options that specify how to wait for the completion of the email verification job.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <returns>A <see cref="Verification"/> object representing the submitted email verification job.</returns>
+        /// <returns>A <see cref="Verification"/> object representing the submitted email verification job and, when completed, its
+        /// verification results.</returns>
         Task<Verification> RunAsync(FileInfo fileInfo, MediaTypeHeaderValue? contentType = null, QualityLevelName? quality = null, DeduplicationMode? deduplication = null, WaitOptions? waitOptions = null, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Submits a new email verification for processing through a file, with support for the following formats:
+        /// Runs an email verification by providing a stream with the emails to verify, with support for the following formats:
         /// - plain text files (.txt), with one email address per line
         /// - comma-separated values (.csv), tab-separated values (.tsv) and other delimiter-separated values files
         /// - Microsoft Excel spreadsheets (.xls and .xlsx)
+        /// </summary>
         /// <remarks>
-        /// By default, this method waits for the completion of the email verification job: pass a <see cref="WaitOptions"/> to request
+        /// By default, this method waits for the completion of the email verification job before returning. Pass a <see cref="WaitOptions"/> to request
         /// a different waiting behavior.
         /// </remarks>
-        /// </summary>
-        /// <param name="file">A <see cref="Stream"/> with the file content to submit.</param>
+        /// <param name="file">A <see cref="Stream"/> with the file content to submit for verification.</param>
         /// <param name="contentType">The MIME content type of the file.</param>
         /// <param name="quality">The desired results quality for this email verification.</param>
         /// <param name="deduplication">The strategy to follow while determining which email addresses are duplicates.</param>
         /// <param name="waitOptions">Defines the options that specify how to wait for the completion of the email verification job.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <returns>A <see cref="Verification"/> object representing the submitted email verification job.</returns>
+        /// <returns>A <see cref="Verification"/> object representing the submitted email verification job and, when completed, its
+        /// verification results.</returns>
         Task<Verification> RunAsync(Stream file, MediaTypeHeaderValue contentType, QualityLevelName? quality = null, DeduplicationMode? deduplication = null, WaitOptions? waitOptions = null, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Submits a new email verification for processing through a file, with support for the following formats:
+        /// Runs an email verification by uploading a file with the emails to verify, with support for the following formats:
         /// - plain text files (.txt), with one email address per line
         /// - comma-separated values (.csv), tab-separated values (.tsv) and other delimiter-separated values files
         /// - Microsoft Excel spreadsheets (.xls and .xlsx)
+        /// </summary>
         /// <remarks>
-        /// By default, this method waits for the completion of the email verification job: pass a <see cref="WaitOptions"/> to request
+        /// By default, this method waits for the completion of the email verification job before returning. Pass a <see cref="WaitOptions"/> to request
         /// a different waiting behavior.
         /// </remarks>
-        /// </summary>
         /// <param name="request">A <see cref="FileVerificationRequest"/> describing the verification request for a file.</param>
         /// <param name="waitOptions">Defines the options that specify how to wait for the completion of the email verification job.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <returns>A <see cref="Verification"/> object representing the submitted email verification job.</returns>
+        /// <returns>A <see cref="Verification"/> object representing the submitted email verification job and, when completed, its
+        /// verification results.</returns>
         Task<Verification> RunAsync(FileVerificationRequest request, WaitOptions? waitOptions = null, CancellationToken cancellationToken = default);
         
         /// <summary>
         /// Returns an email verification job that was previously submitted for processing.
-        /// <remarks>In the event retrieving the whole verification job data is not needed and getting just the <see cref="VerificationOverview"/>
-        /// would be enough, use the <see cref="GetOverviewAsync"/> method instead.</remarks>
         /// </summary>
         /// <remarks>
-        /// By default, this method waits for the eventual completion of the email verification job: pass a
-        /// <see cref="WaitOptions"/> to request a different waiting behavior.
+        /// By default, this method waits for the completion of the email verification job before returning. Pass a <see cref="WaitOptions"/> to request
+        /// a different waiting behavior. If retrieving the whole verification job data is not needed and getting just the <see cref="VerificationOverview"/>
+        /// would be enough, use the <see cref="GetOverviewAsync"/> method instead.
         /// </remarks>
         /// <example>
         /// This sample shows how to call the <see cref="GetAsync"/> method and wait for the completion of the submitted job.
         /// <code>
-        /// var verification = await GetAsync("c93e972a-7632-4493-aaf8-7523a605a78d");
+        /// var verifalia = new VerifaliaClient(/* ... */);
+        /// 
+        /// var verification = await verifalia
+        ///     .EmailVerifications
+        ///     .GetAsync("c93e972a-7632-4493-aaf8-7523a605a78d");
+        /// 
+        /// // Display part of the verification results in the console window
+        ///
+        /// foreach (var entry in verification.Entries)
+        /// {
+        ///     Console.WriteLine($"{entry.InputData} => {entry.Classification} ({entry.Status})");
+        /// }
         /// </code>
         /// </example>
-        /// <param name="verificationId">The ID of the email verification job to retrieve.
-        /// <remarks>This value is available by way of the <see cref="VerificationOverview.Id"/> property of <see cref="Verification.Overview"/>.</remarks>
-        /// </param>
+        /// <param name="verificationId">The ID of the email verification job to retrieve. This value is available by way of the <see cref="VerificationOverview.Id"/> property of <see cref="Verification.Overview"/>.</param>
         /// <param name="waitOptions">Defines the options that specify how to wait for the completion of the email verification job.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <returns>A <see cref="Verification"/> object representing the requested email verification job.</returns>
+        /// <returns>A <see cref="Verification"/> object representing the submitted email verification job and, when completed, its
+        /// verification results.</returns>        
         Task<Verification?> GetAsync(string verificationId, WaitOptions? waitOptions = null, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Returns a lightweight <see cref="VerificationOverview"/> of an email verification job that was previously submitted for processing.
-        /// <remarks>To retrieve the whole job data, including its results, use the <see cref="GetAsync"/> method instead.</remarks>
+        /// Returns a lightweight <see cref="VerificationOverview"/> of an email verification job that was previously submitted for processing,
+        /// including details about the job but not its entries.
         /// </summary>
         /// <remarks>
-        /// By default, this method waits for the eventual completion of the email verification job: pass a
-        /// <see cref="WaitOptions"/> to request a different waiting behavior.
+        /// By default, this method waits for the completion of the email verification job before returning. Pass a <see cref="WaitOptions"/> to request
+        /// a different waiting behavior. To retrieve the whole job data, including its results, use the <see cref="GetAsync"/> method instead.
         /// </remarks>
         /// <example>
         /// This sample shows how to call the <see cref="GetOverviewAsync"/> method and wait for the completion of the submitted job.
         /// <code>
-        /// var verification = await GetOverviewAsync("c93e972a-7632-4493-aaf8-7523a605a78d");
+        /// var verifalia = new VerifaliaClient(/* ... */);
+        /// 
+        /// var verificationOverview = await verifalia
+        ///     .EmailVerifications
+        ///     .GetOverviewAsync("c93e972a-7632-4493-aaf8-7523a605a78d");
+        /// 
+        /// // Display part of the verification overview details in the console window
+        ///
+        /// Console.WriteLine($"Name: {verificationOverview.Name}");
+        /// Console.WriteLine($"Completed on: {verificationOverview.CompletedOn}");
         /// </code>
         /// </example>
-        /// <param name="verificationId">The ID of the email verification job to retrieve the overview for.
-        /// <remarks>This value is available by way of the <see cref="VerificationOverview.Id"/> property of <see cref="Verification.Overview"/>.</remarks>
-        /// </param>
+        /// <param name="verificationId">The ID of the email verification job to retrieve the overview for. This value is available by way of the <see cref="VerificationOverview.Id"/> property of <see cref="Verification.Overview"/>.</param>
         /// <param name="waitOptions">Defines the options that specify how to wait for the completion of the email verification job.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>A <see cref="VerificationOverview"/> object representing the overview for the requested email verification job.</returns>
@@ -277,16 +351,14 @@ namespace Verifalia.Api.EmailVerifications
         /// <summary>
         /// Deletes an email verification job that was previously submitted for processing.
         /// </summary>
-        /// <param name="verificationId">The unique identifier of the email verification job to be deleted.
-        /// <remarks>This value is available by way of the <see cref="VerificationOverview.Id"/> property of <see cref="Verification.Overview"/>.</remarks>
-        /// </param>
+        /// <param name="verificationId">The unique identifier of the email verification job to be deleted. This value is available by way of the <see cref="VerificationOverview.Id"/> property of <see cref="Verification.Overview"/>.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         Task DeleteAsync(string verificationId, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Begins listing email verification jobs according to the specified options and user permissions.
-        /// <remarks>Use the <see cref="GetPageAsync(Verifalia.Api.Common.Models.ListingCursor,System.Threading.CancellationToken)"/> method to continue listing.</remarks>
+        /// Retrieves the first page of email verification jobs according to the specified options.
         /// </summary>
+        /// <remarks>Use the <see cref="GetPageAsync(Verifalia.Api.Common.Models.ListingCursor,System.Threading.CancellationToken)"/> method to retrieve the other pages.</remarks>
         /// <param name="options">The options for the listing operation.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>A <see cref="VerificationOverviewPagedResult"/> with the requested data and an eventual <see cref="PagedResultMeta.Cursor"/> to be
@@ -298,9 +370,9 @@ namespace Verifalia.Api.EmailVerifications
         Task<VerificationOverviewPagedResult> GetPageAsync(VerificationOverviewListingOptions? options = null, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Continues listing email verification jobs.
-        /// <remarks>To begin a listing use the <see cref="GetPageAsync"/> method.</remarks>
+        /// Retrieves a page of email verification jobs according to the specified options.
         /// </summary>
+        /// <remarks>To retrieve the first page use the <see cref="GetPageAsync(Verifalia.Api.EmailVerifications.Models.VerificationOverviewListingOptions?,System.Threading.CancellationToken)"/> method.</remarks>
         /// <param name="cursor">The cursor to use while traversing the list of verification jobs.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>A <see cref="VerificationOverviewPagedResult"/> with the requested data and an eventual <see cref="PagedResultMeta.Cursor"/> to be
@@ -313,7 +385,7 @@ namespace Verifalia.Api.EmailVerifications
 
 #if HAS_ASYNC_ENUMERABLE_SUPPORT
         /// <summary>
-        /// Lists email verification jobs according to the specified options and user permissions.
+        /// Lists email verification jobs according to the specified options.
         /// </summary>
         /// <param name="options">The options for the listing operation.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
@@ -322,9 +394,9 @@ namespace Verifalia.Api.EmailVerifications
 #endif
 
         /// <summary>
-        /// Begins listing the available quality levels.
-        /// <remarks>Use the <see cref="GetQualityLevelsPageAsync(Verifalia.Api.Common.Models.ListingCursor,System.Threading.CancellationToken)"/> method to continue listing.</remarks>
+        /// Retrieves the first page of available quality levels.
         /// </summary>
+        /// <remarks>Use the <see cref="GetQualityLevelsPageAsync(Verifalia.Api.Common.Models.ListingCursor,System.Threading.CancellationToken)"/> method to retrieve the other pages.</remarks>
         /// <param name="options">The options for the listing operation.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>A <see cref="QualityLevelPagedResult"/> with the requested data and an eventual <see cref="PagedResultMeta.Cursor"/> to be
@@ -336,9 +408,9 @@ namespace Verifalia.Api.EmailVerifications
         Task<QualityLevelPagedResult> GetQualityLevelsPageAsync(ListingOptions? options = null, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Continues listing the available quality levels.
-        /// <remarks>To begin a listing use the <see cref="GetQualityLevelsPageAsync"/> method.</remarks>
+        /// Retrieves a page of available quality levels.
         /// </summary>
+        /// <remarks>To retrieve the first page use the <see cref="GetQualityLevelsPageAsync(Verifalia.Api.Common.Models.ListingOptions?,System.Threading.CancellationToken)"/> method.</remarks>
         /// <param name="cursor">The cursor to use while traversing the list of available quality levels.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>A <see cref="QualityLevelPagedResult"/> with the requested data and an eventual <see cref="PagedResultMeta.Cursor"/> to be
@@ -360,9 +432,10 @@ namespace Verifalia.Api.EmailVerifications
 #endif
 
         /// <summary>
-        /// Begins listing the validated entries for a given email verification job.
-        /// <remarks>Use the <see cref="GetEntriesPageAsync"/> method to continue listing.</remarks>
+        /// Retrieves the first page of entries from a completed email verification job.
         /// </summary>
+        /// <remarks>Use the <see cref="GetEntriesPageAsync(string,Verifalia.Api.EmailVerifications.Models.VerificationEntryListingOptions?,System.Threading.CancellationToken)"/> method to retrieve the other pages.</remarks>
+        /// <param name="verificationId">The unique ID of the verification job to list the entries for.</param>
         /// <param name="options">The options for the listing operation.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>A <see cref="VerificationEntryPagedResult"/> with the requested data and an eventual <see cref="PagedResultMeta.Cursor"/> to be
@@ -374,10 +447,11 @@ namespace Verifalia.Api.EmailVerifications
         Task<VerificationEntryPagedResult> GetEntriesPageAsync(string verificationId, VerificationEntryListingOptions? options = null, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Continues listing the validated entries for a given email verification job.
-        /// <remarks>To begin a listing use the <see cref="GetEntriesPageAsync(string,Verifalia.Api.EmailVerifications.Models.VerificationEntryListingOptions?,System.Threading.CancellationToken)"/> method.</remarks>
+        /// Retrieves a page of entries from a completed email verification job.
         /// </summary>
-        /// <param name="cursor">The cursor to use while traversing the list of validated entries.</param>
+        /// <remarks>To get the first page use the <see cref="GetEntriesPageAsync(string,Verifalia.Api.EmailVerifications.Models.VerificationEntryListingOptions?,System.Threading.CancellationToken)"/> method.</remarks>
+        /// <param name="verificationId">The unique ID of the verification job to list the entries for.</param>
+        /// <param name="cursor">The cursor to use while traversing the list of entries.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>A <see cref="VerificationEntryPagedResult"/> with the requested data and an eventual <see cref="PagedResultMeta.Cursor"/> to be
         /// used on subsequent listing calls to the <see cref="GetEntriesPageAsync"/> method.</returns>
@@ -389,7 +463,7 @@ namespace Verifalia.Api.EmailVerifications
 
 #if HAS_ASYNC_ENUMERABLE_SUPPORT
         /// <summary>
-        /// Lists the entries for a given completed email verification job.
+        /// Lists the entries for a completed email verification job.
         /// </summary>
         /// <param name="verificationId">The unique ID of the verification job to list the entries for.</param>
         /// <param name="options">The options for the listing operation.</param>

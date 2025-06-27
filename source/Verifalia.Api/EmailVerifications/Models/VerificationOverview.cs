@@ -37,69 +37,67 @@ using Newtonsoft.Json;
 namespace Verifalia.Api.EmailVerifications.Models
 {
     /// <summary>
-    /// Overview information for a <see cref="Verification"/>.
+    /// Contains summary information about an email verification job submitted to the Verifalia API.
     /// </summary>
     public class VerificationOverview
     {
         /// <summary>
-        /// The unique identifier for the email verification job.
+        /// A server-generated unique identifier for the email verification job.
         /// </summary>
         [JsonProperty("id")]
         public string Id { get; set; }
 
         /// <summary>
-        /// The date and time this verification job has been submitted to Verifalia.
+        /// Date and time when the verification job was submitted to Verifalia.
         /// </summary>
         [JsonProperty("submittedOn")]
         public DateTime SubmittedOn { get; set; }
 
         /// <summary>
-        /// The date and time when this verification job was ultimately completed, if applicable.
+        /// Date and time when the verification job completed processing (if applicable).
         /// </summary>
         [JsonProperty("completedOn")]
         public DateTime? CompletedOn { get; set; }
 
         /// <summary>
-        /// The priority (speed) of this verification job relative to the parent Verifalia account. If there are
+        /// Processing priority relative to other jobs in the same account. If there are
         /// multiple concurrent verification jobs in an account, this value allows you to adjust the processing speed of a
         /// specific job in comparison to others.
-        /// <remarks>The valid range for this priority spans from <see cref="VerificationPriority.Lowest"/> (0 - lowest
+        /// <remarks>Priority ranges from <see cref="VerificationPriority.Lowest"/> (0 - lowest
         /// priority) to <see cref="VerificationPriority.Highest"/> (255 - highest priority), with
-        /// <see cref="VerificationPriority.Normal"/> (127) representing normal priority. If not specified, Verifalia
-        /// processes all concurrent verification jobs for an account at the same speed.
+        /// <see cref="VerificationPriority.Normal"/> (127) as default.
         /// </remarks>
         /// </summary>
         [JsonProperty("priority")]
         public VerificationPriority Priority { get; set; }
 
         /// <summary>
-        /// An optional user-defined name for the verification job, for your own reference.
+        /// Optional user-defined reference name for the verification job.
         /// </summary>
         [JsonProperty("name")]
         public string? Name { get; set; }
 
         /// <summary>
-        /// The unique identifier of the Verifalia user who submitted the verification job.
+        /// Unique identifier of the Verifalia user that submitted the job.
         /// </summary>
-        /// <remarks>Details of the user can be retrieved using the <see cref="Users.IUsersClient.GetAsync(string, CancellationToken)"/>
-        /// method exposed by <see cref="IVerifaliaClient.Users"/>.</remarks>
+        /// <remarks>User details can be retrieved using <see cref="Users.IUsersClient.GetAsync(string, CancellationToken)"/>.</remarks>
         [JsonProperty("owner")]
         public string OwnerId { get; set; }
 
         /// <summary>
-        /// The IP address of the client that submitted the verification job.
+        /// Originating IP address of the job submission request.
         /// </summary>
         [JsonProperty("clientIP")]
         public IPAddress ClientIP { get; set; }
 
         /// <summary>
-        /// The date and time when the verification job was created.
+        /// Date and time when the verification job was created.
         /// </summary>
         [JsonProperty("createdOn")]
         public DateTime CreatedOn { get; set; }
 
         /// <summary>
-        /// A reference to the <see cref="QualityLevel"/> against which this job was validated.
+        /// A reference to the <see cref="QualityLevel"/> against which this job was submitted.
         /// Quality levels determine how Verifalia validates  email addresses, including whether and how the automatic
         /// reprocessing logic occurs (for transient statuses) and the verification timeouts settings.
         /// </summary>

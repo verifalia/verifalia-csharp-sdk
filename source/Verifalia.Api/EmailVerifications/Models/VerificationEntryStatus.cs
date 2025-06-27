@@ -37,32 +37,32 @@ namespace Verifalia.Api.EmailVerifications.Models
     public enum VerificationEntryStatus
     {
         /// <summary>
-        /// Special unknown verification status, due to a value reported by the API which is missing in this SDK.
+        /// An unknown status due to a value reported by the API that is missing from this SDK.
         /// </summary>
         Unknown = 0,
         
         /// <summary>
-        /// The at sign symbol (@), used to separate the local part from the domain part of the address, has not been found.
+        /// The at sign symbol (@), used to separate the local part from the domain part of the address, was not found.
         /// </summary>
         AtSignNotFound,
 
         /// <summary>
-        /// A connection error occurred while verifying the external mail exchanger rejects nonexistent email addresses.
+        /// A connection error occurred while verifying that the external mail exchanger rejects nonexistent email addresses.
         /// </summary>
         CatchAllConnectionFailure,
         
         /// <summary>
-        /// A timeout occurred while verifying fake e-mail address rejection for the mail server.
+        /// A timeout occurred while verifying fake email address rejection for the mail server.
         /// </summary>
         CatchAllValidationTimeout,
 
         /// <summary>
-        /// Verification failed because of a socket connection error occurred while querying the DNS server.
+        /// A socket connection error occurred while querying the DNS server, preventing successful email verification.
         /// </summary>
         DnsConnectionFailure,
 
         /// <summary>
-        /// A timeout has occurred while querying the DNS server(s) for records about the email address domain.
+        /// The request timed out while querying the DNS server(s) for records about the email address domain.
         /// </summary>
         DnsQueryTimeout,
 
@@ -72,13 +72,12 @@ namespace Verifalia.Api.EmailVerifications.Models
         DomainDoesNotExist,
 
         /// <summary>
-        /// The domain has a NULL MX (RFC 7505) resource record and can't thus accept email messages.
+        /// The domain has a NULL MX (RFC 7505) resource record and cannot accept email messages.
         /// </summary>
         DomainHasNullMx,
 
         /// <summary>
-        /// The domain of the email address does not have any valid DNS record and couldn't accept messages from another
-        /// host on the Internet.
+        /// The domain of the email address does not have any valid DNS records, preventing successful verification.
         /// </summary>
         DomainIsMisconfigured,
         
@@ -88,61 +87,58 @@ namespace Verifalia.Api.EmailVerifications.Models
         DomainIsWellKnownDea,
 
         /// <summary>
-        /// The domain part of the email address is not compliant with the IETF standards.
+        /// The domain part of the email address does not comply with IETF standards.
         /// </summary>
         DomainPartCompliancyFailure,
         
         /// <summary>
-        /// An invalid sequence of two adjacent dots has been found.
+        /// An invalid sequence of two adjacent dots was found, indicating an incorrect email format.
         /// </summary>
         DoubleDotSequence,
 
         /// <summary>
-        /// The item is a duplicate of another email address in the list.
+        /// The item is a duplicate of another email address in the list, as indicated by the <see cref="VerificationEntry.DuplicateOf"/> property.
         /// </summary>
-        /// <remarks>To find out the entry this item is a duplicate of, check the <see cref="VerificationEntry.DuplicateOf"/> property for the <see cref="VerificationEntry"/>
-        /// instance which exposes this status code</remarks>
         Duplicate,
 
         /// <summary>
-        /// The email address has an invalid total length.
+        /// The email address has an invalid total length, making it impossible to verify.
         /// </summary>
         InvalidAddressLength,
 
         /// <summary>
-        /// An invalid character has been detected in the provided sequence.
+        /// An invalid character was detected in the provided sequence, indicating an incorrect email format.
         /// </summary>
         InvalidCharacterInSequence,
 
         /// <summary>
-        /// An invalid quoted word with no content has been found.
+        /// An invalid quoted word with no content was found, indicating an incorrect email format.
         /// </summary>
         InvalidEmptyQuotedWord,
 
         /// <summary>
-        /// An invalid folding white space (FWS) sequence has been found.
+        /// An invalid folding white space (FWS) sequence was found, indicating an incorrect email format.
         /// </summary>
         InvalidFoldingWhiteSpaceSequence,
 
         /// <summary>
-        /// The local part of the e-mail address has an invalid length.
+        /// The local part of the e-mail address has an invalid length, making it impossible to verify.
         /// </summary>
         InvalidLocalPartLength,
 
         /// <summary>
-        /// A new word boundary start has been detected at an invalid position.
+        /// A new word boundary start was detected at an invalid position, indicating an incorrect email format.
         /// </summary>
         InvalidWordBoundaryStart,
 
         /// <summary>
-        /// The email address is not compliant with the additional syntax rules of the email service provider
-        /// which should eventually manage it.
+        /// The email address does not comply with the additional syntax rules of the email service provider that manages it.
         /// </summary>
         IspSpecificSyntaxFailure,
 
         /// <summary>
-        /// The external mail exchanger responsible for the email address under test rejected the local endpoint, probably because
-        /// of its own policy rules.
+        /// The external mail exchanger responsible for the email address under test rejected the local endpoint, likely
+        /// due to policy rules.
         /// </summary>
         LocalEndPointRejected,
 
@@ -157,12 +153,12 @@ namespace Verifalia.Api.EmailVerifications.Models
         LocalSenderAddressRejected,
 
         /// <summary>
-        /// A connection error occurred while validating the mailbox for the e-mail address.
+        /// A connection error occurred while validating the mailbox for the email address.
         /// </summary>
         MailboxConnectionFailure,
 
         /// <summary>
-        /// The mailbox for the e-mail address does not exist.
+        /// The mailbox for the email address does not exist.
         /// </summary>
         MailboxDoesNotExist,
 
@@ -193,7 +189,7 @@ namespace Verifalia.Api.EmailVerifications.Models
         MailExchangerIsHoneypot,
         
         /// <summary>
-        /// The mail exchanger responsible for the email address is parked / inactive.
+        /// The mail exchanger responsible for the email address is parked or inactive.
         /// </summary>
         MailExchangerIsParked,
 
@@ -209,7 +205,7 @@ namespace Verifalia.Api.EmailVerifications.Models
         ServerDoesNotSupportInternationalMailboxes,
         
         /// <summary>
-        /// The external mail exchanger accepts fake, non existent, email addresses; therefore the provided email address MAY be nonexistent too.
+        /// The external mail exchanger accepts fake, nonexistent email addresses; therefore the provided email address may be nonexistent too.
         /// </summary>
         ServerIsCatchAll,
 
@@ -224,28 +220,28 @@ namespace Verifalia.Api.EmailVerifications.Models
         SmtpConnectionFailure,
 
         /// <summary>
-        /// A timeout has occurred while connecting to the mail exchanger which serves the email address domain.
+        /// A timeout has occurred while connecting to the mail exchanger that serves the email address domain.
         /// </summary>
         SmtpConnectionTimeout,
 
         /// <summary>
-        /// The mail exchanger responsible for the email address under test replied one or more non-standard SMTP replies which
+        /// The mail exchanger responsible for the email address under test replied with one or more non-standard SMTP responses that
         /// caused the SMTP session to be aborted.
         /// </summary>
         SmtpDialogError,
 
         /// <summary>
-        /// The email address has been successfully validated.
+        /// The email address has been successfully verified: it is deliverable and can accept email messages.
         /// </summary>
         Success,
 
         /// <summary>
-        /// The domain literal of the email address couldn't accept messages from the Internet.
+        /// The domain literal of the email address cannot accept messages from the Internet.
         /// </summary>
         UnacceptableDomainLiteral,
 
         /// <summary>
-        /// The number of parenthesis used to open comments is not equal to the one used to close them.
+        /// The number of parentheses used to open comments is not equal to the number used to close them.
         /// </summary>
         UnbalancedCommentParenthesis,
 
@@ -255,7 +251,7 @@ namespace Verifalia.Api.EmailVerifications.Models
         UnexpectedQuotedPairSequence,
 
         /// <summary>
-        /// One or more unhandled exceptions have been thrown during the verification process and something went wrong
+        /// One or more unhandled exceptions were thrown during the verification process and something went wrong
         /// on the Verifalia side.
         /// </summary>
         UnhandledException,

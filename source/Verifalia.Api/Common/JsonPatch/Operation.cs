@@ -34,6 +34,10 @@ using Newtonsoft.Json;
 
 namespace Verifalia.Api.Common.JsonPatch
 {
+    /// <summary>
+    /// Represents a JSON Patch operation, which is used to describe a single modification
+    /// to be made to a JSON document.
+    /// </summary>
     internal sealed class Operation
     {
         [JsonProperty("op")]

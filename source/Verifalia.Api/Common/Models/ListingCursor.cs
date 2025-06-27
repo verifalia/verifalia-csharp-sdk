@@ -34,8 +34,9 @@ using System;
 namespace Verifalia.Api.Common.Models
 {
     /// <summary>
-    /// A cursor to be used while traversing a list of items which provides key-set navigation.
+    /// A cursor used to traverse a list of items, providing key-set navigation.
     /// </summary>
+    /// <inheritdoc />
     public class ListingCursor : ListingOptions
     {
         /// <summary>
@@ -44,7 +45,7 @@ namespace Verifalia.Api.Common.Models
         public string Cursor { get; }
 
         /// <summary>
-        /// Initializes a cursor to be used while traversing a list of items which provides key-set navigation.
+        /// Initializes a cursor to traverse a list of items with key-set navigation.
         /// </summary>
         /// <param name="cursor">The raw, opaque cursor string returned by the Verifalia API.</param>
         public ListingCursor(string cursor)

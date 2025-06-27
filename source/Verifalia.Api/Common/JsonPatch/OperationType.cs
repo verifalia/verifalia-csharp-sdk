@@ -31,6 +31,9 @@
 
 namespace Verifalia.Api.Common.JsonPatch
 {
+    /// <summary>
+    /// Enumerates the types of supported operations that can be performed on a JSON Patch document.
+    /// </summary>
     internal enum OperationType
     {
         Replace

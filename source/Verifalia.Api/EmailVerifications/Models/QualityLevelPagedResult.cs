@@ -34,7 +34,7 @@ using Verifalia.Api.Common.Models;
 namespace Verifalia.Api.EmailVerifications.Models
 {
     /// <summary>
-    /// A segment of a list of <see cref="QualityLevel"/>, returned by a Verifalia API which supports key-set navigation.
+    /// A page of <see cref="QualityLevel"/>, returned by a Verifalia API which supports key-set navigation.
     /// </summary>
     /// <inheritdoc />
     public class QualityLevelPagedResult : PagedResult<QualityLevel>

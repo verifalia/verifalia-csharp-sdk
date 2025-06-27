@@ -36,6 +36,9 @@ using Newtonsoft.Json.Converters;
 
 namespace Verifalia.Api.Common.Converters
 {
+    /// <summary>
+    /// Converts a DateTime to and from ISO 8601 date format.
+    /// </summary>
     internal class Iso8601DateConverter : DateTimeConverterBase
     {
         private const string DateFormat = "yyyy-MM-dd";

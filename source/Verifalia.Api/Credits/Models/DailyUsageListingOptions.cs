@@ -37,11 +37,12 @@ namespace Verifalia.Api.Credits.Models
     /// <summary>
     /// The options for a daily usage listing operation against the Verifalia API.
     /// </summary>
+    /// <inheritdoc />
     public class DailyUsageListingOptions : ListingOptions
     {
         /// <summary>
-        /// If set, apply a filter against the daily usage dates, before returning their usage records. Use  either <see cref="DateEqualityPredicate"/>
-        /// to specify an exact date to match or <see cref="DateBetweenPredicate"/> to set a range of dates.
+        /// If set, apply a filter to the daily usage dates. Use  either <see cref="DateEqualityPredicate"/> to specify
+        /// an exact date to match or <see cref="DateBetweenPredicate"/> to set a range of dates.
         /// </summary>
         public DateFilterPredicate? DateFilter { get; set; }
     }

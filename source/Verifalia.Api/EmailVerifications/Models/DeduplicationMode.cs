@@ -34,27 +34,27 @@ using System;
 namespace Verifalia.Api.EmailVerifications.Models
 {
     /// <summary>
-    /// The strategy employed by Verifalia to identify duplicate email addresses during a multiple items verification process.
-    /// <remarks>Duplicated items (after the first occurrence) will have the <see cref="VerificationEntryStatus.Duplicate"/> status.</remarks>
+    /// Defines the strategy Verifalia uses to detect duplicate email addresses when processing multiple entries.
     /// </summary>
-    public class DeduplicationMode : IEquatable<DeduplicationMode>
+    /// <remarks>Any email address that appears more than once (after the first occurrence) will be marked as <see cref="VerificationEntryStatus.Duplicate"/>.</remarks>
+    /// <inheritdoc />
+    public sealed class DeduplicationMode : IEquatable<DeduplicationMode>
     {
         internal string NameOrId { get; }
 
         /// <summary>
-        /// Duplicates detection is turned off.
+        /// Turns off duplicates detection.
         /// </summary>
         public static DeduplicationMode Off => new("Off");
 
         /// <summary>
-        /// Uses an algorithm with strict safe rules to accurately identify duplicates, ensuring the absence of false
-        /// positives.
+        /// Uses strict rules to accurately identify duplicates, minimizing false positives.
         /// </summary>
         public static DeduplicationMode Safe => new("Safe");
 
         /// <summary>
-        /// Detects duplicates by applying relaxed rules that assume modern configurations of target email service
-        /// providers, excluding the broader options allowed by RFCs from the '80s.
+        /// Applies relaxed rules that assume modern configurations of target email service providers, excluding the
+        /// broader options allowed by RFCs from the '80s.
         /// </summary>
         public static DeduplicationMode Relaxed => new("Relaxed");
 

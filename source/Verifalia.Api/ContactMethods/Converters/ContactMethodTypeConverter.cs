@@ -36,6 +36,9 @@ using Verifalia.Api.ContactMethods.Models;
 
 namespace Verifalia.Api.ContactMethods.Converters
 {
+    /// <summary>
+    /// Represents a converter for ContactMethodType values.
+    /// </summary>
     internal sealed class ContactMethodTypeConverter : JsonConverter
     {
         public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)

@@ -35,6 +35,10 @@ using Verifalia.Api.ContactMethods.Converters;
 
 namespace Verifalia.Api.ContactMethods.Models
 {
+    /// <summary>
+    /// Represents a contact method used by Verifalia to send notifications for the owning user; notifications include
+    /// system alerts, commercial document updates, and news.
+    /// </summary>
     public sealed class ContactMethod
     {
         /// <summary>
@@ -44,30 +48,53 @@ namespace Verifalia.Api.ContactMethods.Models
         [JsonProperty("id")]
         public string Id { get; set; }
 
+        /// <summary>
+        /// A hash that changes whenever the contact method's settings are modified, useful for caching and optimistic
+        /// concurrency control.
+        /// </summary>
         /// <remarks>This property is ignored when creating a new contact method.</remarks>
         [JsonProperty("etag")]
         public string Etag { get; set; }
 
+        /// <summary>
+        /// Indicates the type of contact method.
+        /// </summary>
         [JsonProperty("type")]
         [JsonConverter(typeof(ContactMethodTypeConverter))]
         public ContactMethodType Type { get; set; }
 
+        /// <summary>
+        /// Indicates the current status of the contact method.
+        /// </summary>
         /// <remarks>This property is ignored when creating a new contact method.</remarks>
         [JsonProperty("status")]
         [JsonConverter(typeof(ContactMethodStatusConverter))]
         public ContactMethodStatus Status { get; set; }
 
+        /// <summary>
+        /// The timestamp when the contact method was created in Verifalia.
+        /// </summary>
         /// <remarks>This property is ignored when creating a new contact method.</remarks>
         [JsonProperty("createdOn")]
         public DateTime CreatedOn { get; set; }
 
+        /// <summary>
+        /// The timestamp when the contact method was activated; if null, the contact method has not been activated.
+        /// </summary>
         /// <remarks>This property is ignored when creating a new contact method.</remarks>
         [JsonProperty("activatedOn")]
         public DateTime? ActivatedOn { get; set; }
-        
+
+        /// <summary>
+        /// A human-friendly label for the contact method. This text is used in the Verifalia client area for management
+        /// purposes and appears in an email’s header to help identify the recipient.
+        /// </summary>
         [JsonProperty("displayName")]
         public string DisplayName { get; set; }
         
+        /// <summary>
+        /// The email address associated with the contact method (only if <see cref="Type"/> is <see cref="ContactMethodType.Email"/>).
+        /// </summary>
         [JsonProperty("emailAddress")]
         public string? EmailAddress { get; set; }
     }

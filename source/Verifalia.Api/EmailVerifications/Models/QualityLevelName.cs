@@ -39,26 +39,27 @@ namespace Verifalia.Api.EmailVerifications.Models
     /// </summary>
     /// <remarks>Use one of <see cref="Standard"/>, <see cref="High"/> or <see cref="Extreme"/> values or a custom quality level ID
     /// if you have one (custom quality levels are available to premium plans only).</remarks>
+    /// <inheritdoc />
     public class QualityLevelName : IEquatable<QualityLevelName>
     {
         internal string NameOrId { get; }
 
         /// <summary>
-        /// The Standard quality level. Suitable for most businesses, provides good results for the vast majority of email addresses;
-        /// features a single verification pass and 5 second anti-tarpit time; less suitable for validating email addresses with temporary
-        /// issues (mailbox over quota, greylisting, etc.) and slower mail exchangers.
+        /// The Standard quality level. Ideal for most businesses, provides good results for general use; features a single
+        /// email verification pass and 5 second anti-tarpit time; less suitable for verifying email addresses with
+        /// temporary issues (e.g. mailbox over quota, greylisting, etc.) and slower mail exchangers.
         /// </summary>
         public static QualityLevelName Standard => new("Standard");
 
         /// <summary>
-        /// The High quality level. Much higher quality, featuring 3 verification passes and 50 seconds of anti-tarpit time, so you can
-        /// even verify most email addresses with temporary issues, or slower mail exchangers.
+        /// The High quality level. Much higher quality, featuring 3 verification passes and 50 seconds of anti-tarpit time,
+        /// ideal for verifying most email addresses with temporary issues or slower mail exchangers.
         /// </summary>
         public static QualityLevelName High => new("High");
 
         /// <summary>
-        /// The Extreme quality level. Unbeatable, top-notch quality for professionals who need the best results the industry can offer:
-        /// performs email verification at the highest level, with 9 verification passes and 2 minutes of anti-tarpit time.
+        /// The Extreme quality level. The highest level of email verification available, featuring 9 verification passes
+        /// and 2 minutes of anti-tarpit time, ideal for professionals who need the best results the industry can offer.
         /// </summary>
         public static QualityLevelName Extreme => new("Extreme");
 

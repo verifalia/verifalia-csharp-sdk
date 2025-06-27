@@ -29,13 +29,12 @@
 * THE SOFTWARE.
 */
 
-using System;
 using Newtonsoft.Json;
 
 namespace Verifalia.Api.EmailVerifications.Models
 {
     /// <summary>
-    /// The details of a quality level.
+    /// Represents the details of a quality level.
     /// </summary>
     public class QualityLevel
     {
@@ -66,12 +65,11 @@ namespace Verifalia.Api.EmailVerifications.Models
         /// <summary>
         /// The unit price for an email verification submitted using this quality level, expressed in Verifalia credits.
         /// </summary>
-        /// <remarks>This value can be null in the event the calling user does not have enough permissions.</remarks>
         [JsonProperty("unitPrice")]
-        public decimal? UnitPrice { get; set; }
+        public decimal UnitPrice { get; set; }
 
         /// <summary>
-        /// If true, this quality level is unavailable for the account plan.
+        /// If true, this quality level is unavailable to the Verifalia account.
         /// </summary>
         [JsonProperty("isUnavailable")]
         public bool IsUnavailable { get; set; }

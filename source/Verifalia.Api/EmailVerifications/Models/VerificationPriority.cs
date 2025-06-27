@@ -35,28 +35,30 @@ using System.Globalization;
 namespace Verifalia.Api.EmailVerifications.Models
 {
     /// <summary>
-    /// The priority (speed) of an email verification job, relative to the parent Verifalia account. In the event of an account
-    /// with many concurrent verification jobs, this value allows to increase the processing speed of a job with respect to the others.
-    /// <remarks>The allowed range of values spans from <see cref="Lowest"/> (0 - lowest priority) to <see cref="Highest"/>
-    /// (255 - highest priority), where the midway value  <see cref="Normal"/> (127) means normal priority; if not specified,
-    /// Verifalia processes all the concurrent verification jobs for an account using the same speed.</remarks>
+    /// The priority (speed) of an email verification job relative to other jobs in the parent Verifalia account. 
+    /// When an account has many concurrent verification jobs, this value allows you to increase the processing 
+    /// speed of a job relative to the others.
+    /// <remarks>The allowed range of values ranges from <see cref="Lowest"/> (0 - lowest priority) to <see cref="Highest"/>
+    /// (255 - highest priority), where the middle value <see cref="Normal"/> (127) represents normal priority. If not specified,
+    /// Verifalia processes all concurrent verification jobs for an account at the same speed.</remarks>
     /// </summary>
+    /// <inheritdoc />
     public class VerificationPriority : IEquatable<VerificationPriority>
     {
         internal byte Value { get; }
 
         /// <summary>
-        /// The lowest possible processing priority (speed) for an email verification job.
+        /// The lowest possible processing priority for an email verification job.
         /// </summary>
         public static readonly VerificationPriority Lowest = new(0);
 
         /// <summary>
-        /// Normal processing priority (speed) for an email verification job.
+        /// Normal processing priority for an email verification job.
         /// </summary>
         public static readonly VerificationPriority Normal = new(127);
 
         /// <summary>
-        /// The highest possible processing priority (speed) for an email verification job.
+        /// The highest possible processing priority for an email verification job.
         /// </summary>
         public static readonly VerificationPriority Highest = new(255);
 

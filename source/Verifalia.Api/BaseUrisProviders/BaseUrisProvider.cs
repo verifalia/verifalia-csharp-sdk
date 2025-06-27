@@ -52,6 +52,10 @@ namespace Verifalia.Api.BaseUrisProviders
             _uris = uris;
         }
 
+
+        /// <summary>
+        /// Provides URIs for the Verifalia API.
+        /// </summary>
         public Uri[] ProvideBaseUris()
         {
             return _uris;

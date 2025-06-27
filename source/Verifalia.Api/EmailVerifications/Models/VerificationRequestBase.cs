@@ -40,9 +40,9 @@ namespace Verifalia.Api.EmailVerifications.Models
     public abstract class VerificationRequestBase
     {
         /// <summary>
-        /// A reference to the expected results quality level for this request. Quality levels determine how Verifalia validates
+        /// The expected results quality level for this request. Quality levels determine how Verifalia validates
         /// email addresses, including whether and how the automatic reprocessing logic occurs (for transient statuses) and the
-        /// verification timeouts settings.
+        /// verification timeout settings.
         /// <remarks>Use one of <see cref="QualityLevelName.Standard"/>, <see cref="QualityLevelName.High"/> or <see cref="QualityLevelName.Extreme"/>
         /// values or a custom quality level ID if you have one (custom quality levels are available to premium plans only).</remarks>
         /// </summary>
@@ -77,14 +77,14 @@ namespace Verifalia.Api.EmailVerifications.Models
         public TimeSpan? Retention { get; set; }
 
         /// <summary>
-        /// Allows to assign an optional custom name to the verification job for personal reference. This name will be
+        /// Gets or sets an optional custom name for the verification job for personal reference. This name will be
         /// included in subsequent API calls and displayed in the Verifalia client area.
         /// </summary>
         public string? Name { get; set; }
 
         /// <summary>
-        /// Allows to define an optional URL which Verifalia will invoke once the results for this job are ready.
-        /// </summary>
+        /// Gets or sets an optional URL which Verifalia will invoke once the results for this job are ready.
+        /// </summary>        
         public CompletionCallback? CompletionCallback { get; set; }
     }
 }

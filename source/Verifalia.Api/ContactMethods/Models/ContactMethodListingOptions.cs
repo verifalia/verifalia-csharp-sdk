@@ -33,6 +33,10 @@ using Verifalia.Api.Common.Models;
 
 namespace Verifalia.Api.ContactMethods.Models
 {
+    /// <summary>
+    /// Options for listing contact methods.
+    /// </summary>
+    /// <inheritdoc />
     public class ContactMethodListingOptions : ListingOptions
     {
     }

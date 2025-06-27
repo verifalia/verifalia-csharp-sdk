@@ -38,15 +38,16 @@ using Verifalia.Api.EmailVerifications;
 namespace Verifalia.Api.EmailVerifications.Models
 {
     /// <summary>
-    /// Represents an email verification request to be submitted against the Verifalia API.
+    /// Represents an email verification request to be submitted to the Verifalia API.
     /// </summary>
     /// <remarks>Once initialized, pass the instance of <see cref="VerificationRequest"/> to the
     /// <see cref="IEmailVerificationsClient.RunAsync(Verifalia.Api.EmailVerifications.Models.VerificationRequest,Verifalia.Api.EmailVerifications.WaitOptions?,System.Threading.CancellationToken)"/> method or one of its
     /// overloads.</remarks>
+    /// <inheritdoc />
     public class VerificationRequest : VerificationRequestBase
     {
         /// <summary>
-        /// One or more <see cref="VerificationRequestEntry"/> containing the email addresses to verify.
+        /// One or more <see cref="VerificationRequestEntry"/> entries containing the email addresses to verify.
         /// </summary>
         public IReadOnlyCollection<VerificationRequestEntry> Entries { get; }
 
@@ -54,13 +55,13 @@ namespace Verifalia.Api.EmailVerifications.Models
         /// Initializes a <see cref="VerificationRequest"/> to be submitted to the Verifalia email verification engine.
         /// </summary>
         /// <param name="emailAddresses">One or more email addresses to verify.</param>
-        /// <param name="quality">An optional <see cref="QualityLevelName"/> referring to the expected results quality for the request.</param>
-        /// <param name="deduplication">An optional <see cref="DeduplicationMode"/> to use while determining which email addresses are duplicates.</param>
+        /// <param name="quality">An optional <see cref="QualityLevelName"/> that specifies the expected quality level for the verification results.</param>
+        /// <param name="deduplication">An optional <see cref="DeduplicationMode"/> to use when determining which email addresses are duplicates.</param>
         /// <param name="priority">An optional <see cref="VerificationPriority"/> (speed) of a verification job, relative to the parent Verifalia account.
-        /// <remarks>Setting this value is useful only in the event there are multiple active concurrent verification jobs for the calling Verifalia
-        /// account and the current request should be treated differently than the others, with regards to the processing speed.</remarks>
+        /// Setting the priority is useful only when there are multiple active concurrent verification jobs for the calling Verifalia
+        /// account and the current request should be processed differently than the others with regard to processing speed.
         /// </param>
-        public VerificationRequest(IEnumerable<string> emailAddresses, QualityLevelName? quality = default, DeduplicationMode? deduplication = default, VerificationPriority? priority = default)
+        public VerificationRequest(IEnumerable<string> emailAddresses, QualityLevelName? quality = null, DeduplicationMode? deduplication = null, VerificationPriority? priority = null)
             : this(emailAddresses.Select(emailAddress => new VerificationRequestEntry(emailAddress)), quality, deduplication, priority)
         {
         }
@@ -68,14 +69,14 @@ namespace Verifalia.Api.EmailVerifications.Models
         /// <summary>
         /// Initializes a <see cref="VerificationRequest"/> to be submitted to the Verifalia email verification engine.
         /// </summary>
-        /// <param name="entries">One or more <see cref="VerificationRequestEntry"/> to verify.</param>
-        /// <param name="quality">An optional <see cref="QualityLevelName"/> referring to the expected results quality for the request.</param>
-        /// <param name="deduplication">An optional <see cref="DeduplicationMode"/> to use while determining which email addresses are duplicates.</param>
+        /// <param name="entries">One or more <see cref="VerificationRequestEntry"/> entries to verify.</param>
+        /// <param name="quality">An optional <see cref="QualityLevelName"/> that specifies the expected quality level for the verification results.</param>
+        /// <param name="deduplication">An optional <see cref="DeduplicationMode"/> to use when determining which email addresses are duplicates.</param>
         /// <param name="priority">An optional <see cref="VerificationPriority"/> (speed) of a verification job, relative to the parent Verifalia account.
-        /// <remarks>Setting this value is useful only in the event there are multiple active concurrent verification jobs for the calling Verifalia
-        /// account and the current request should be treated differently than the others, with regards to the processing speed.</remarks>
+        /// Setting the priority is useful only when there are multiple active concurrent verification jobs for the calling Verifalia
+        /// account and the current request should be processed differently than the others with regard to processing speed.
         /// </param>
-        public VerificationRequest(IEnumerable<VerificationRequestEntry> entries, QualityLevelName? quality = default, DeduplicationMode? deduplication = default, VerificationPriority? priority = default)
+        public VerificationRequest(IEnumerable<VerificationRequestEntry> entries, QualityLevelName? quality = null, DeduplicationMode? deduplication = null, VerificationPriority? priority = null)
         {
             var enumeratedEntries = entries.ToArray();
 

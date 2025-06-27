@@ -30,14 +30,6 @@
 */
 
 using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Net.Http;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using Verifalia.Api.ContactMethods.Models;
-using Verifalia.Api.Exceptions;
 
 namespace Verifalia.Api.ContactMethods
 {

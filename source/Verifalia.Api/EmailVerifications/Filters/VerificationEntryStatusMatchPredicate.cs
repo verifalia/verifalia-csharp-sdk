@@ -38,9 +38,21 @@ using Verifalia.Api.Filters;
 
 namespace Verifalia.Api.EmailVerifications.Filters
 {
+    /// <summary>
+    /// A predicate that filters verification entries by their <see cref="VerificationEntry.Status"/>, matching a list
+    /// of included and excluded statuses.
+    /// </summary>
+    /// <inheritdoc />
     public class VerificationEntryStatusMatchPredicate : FilterPredicate
     {
+        /// <summary>
+        /// Specifies the verification entry status values to include in the filter.
+        /// </summary>
         public VerificationEntryStatus[]? IncludedValues { get; set; }
+
+        /// <summary>
+        /// Specifies the verification entry statuses that should be excluded from matching.
+        /// </summary>
         public VerificationEntryStatus[]? ExcludedValues { get; set; }
 
         public override IEnumerable<FilterPredicateFragment> Serialize(string fieldName)

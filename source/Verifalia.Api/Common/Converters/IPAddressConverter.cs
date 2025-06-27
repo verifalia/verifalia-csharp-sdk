@@ -36,6 +36,9 @@ using Newtonsoft.Json;
 
 namespace Verifalia.Api.Common.Converters
 {
+    /// <summary>
+    /// Converts IP addresses to and from JSON.
+    /// </summary>
     internal class IPAddressConverter : JsonConverter
     {
         public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)

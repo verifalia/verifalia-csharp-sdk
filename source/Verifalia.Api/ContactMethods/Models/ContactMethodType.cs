@@ -33,10 +33,17 @@ using System;
 
 namespace Verifalia.Api.ContactMethods.Models
 {
+    /// <summary>
+    /// Represents the type of a contact method.
+    /// </summary>
+    /// <inheritdoc />
     public class ContactMethodType : IEquatable<ContactMethodType>
     {
         internal string Value { get; }
 
+        /// <summary>
+        /// Represents an email address.
+        /// </summary>
         public static ContactMethodType Email => new("Email");
 
         private ContactMethodType()

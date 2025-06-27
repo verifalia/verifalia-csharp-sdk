@@ -98,7 +98,7 @@ namespace Verifalia.Api.EmailVerifications
                     deduplication = request.Deduplication?.NameOrId,
                     priority = request.Priority?.Value,
                     name = request.Name,
-                    // Strips the milliseconds portion from the specified retention period, if any
+                    // Strip the milliseconds portion from the specified retention period, if any
                     retention = request.Retention == null
                         ? null
                         : new TimeSpan(request.Retention.Value.Days,
@@ -184,7 +184,7 @@ namespace Verifalia.Api.EmailVerifications
                     deduplication = request.Deduplication?.NameOrId,
                     priority = request.Priority?.Value,
                     name = request.Name,
-                    // Strips the milliseconds portion from the specified retention period, if any
+                    // Strip the milliseconds portion from the specified retention period, if any
                     retention = request.Retention == null
                         ? null
                         : new TimeSpan(request.Retention.Value.Days,
@@ -267,7 +267,7 @@ namespace Verifalia.Api.EmailVerifications
                         .DeserializeAsync<PartialVerification>(restClient)
                         .ConfigureAwait(false);
 
-                    // Returns immediately if the verification has been completed or if we should not wait for it
+                    // Return immediately if the verification has been completed or if we should not wait for it
 
                     if (waitOptionsOrDefault == WaitOptions.NoWait || partialVerification.Overview.Status == VerificationStatus.Completed)
                     {

@@ -50,7 +50,7 @@ namespace Verifalia.Api.EmailVerifications
         {
             var waitOptionsOrDefault = waitOptions ?? WaitOptions.Default;
             
-            // Sends the request to the Verifalia servers
+            // Send the request to the Verifalia servers
 
             var restClient = _restClientFactory.Build();
 
@@ -82,7 +82,7 @@ namespace Verifalia.Api.EmailVerifications
                         .DeserializeAsync<PartialVerification>(restClient)
                         .ConfigureAwait(false);
 
-                    // Returns immediately if the email verification has been completed or if we should not wait for it
+                    // Return immediately if the email verification has been completed or if we should not wait for it
 
                     if (waitOptionsOrDefault == WaitOptions.NoWait || partialVerification.Overview.Status == VerificationStatus.Completed)
                     {
@@ -148,7 +148,7 @@ namespace Verifalia.Api.EmailVerifications
         {
             var waitOptionsOrDefault = waitOptions ?? WaitOptions.Default;
             
-            // Sends the request to the Verifalia servers
+            // Send the request to the Verifalia servers
 
             var restClient = _restClientFactory.Build();
 
@@ -184,7 +184,7 @@ namespace Verifalia.Api.EmailVerifications
                         ? VerificationStatus.InProgress
                         : VerificationStatus.Completed;
 
-                    // Returns immediately if the email verification has been completed or if we should not wait for it
+                    // Return immediately if the email verification has been completed or if we should not wait for it
 
                     if (waitOptions == WaitOptions.NoWait || verificationOverview.Status == VerificationStatus.Completed)
                     {
@@ -321,7 +321,7 @@ namespace Verifalia.Api.EmailVerifications
         
         public async Task<Stream> ExportEntriesAsync(string verificationId, ExportedEntriesFormat format, VerificationEntryListingOptions? options = null, CancellationToken cancellationToken = default)
         {
-            // Determines the acceptable MIME content type
+            // Determine the acceptable MIME content type
 
             var acceptableMimeContentType = format switch
             {
@@ -331,7 +331,7 @@ namespace Verifalia.Api.EmailVerifications
                 _ => throw new ArgumentOutOfRangeException(nameof(format), format, null)
             };
 
-            // Sends the request to the Verifalia servers
+            // Send the request to the Verifalia servers
 
             var restClient = _restClientFactory.Build();
 
@@ -342,7 +342,7 @@ namespace Verifalia.Api.EmailVerifications
                     cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
             
-            // On success, returns the response body (which is formatted according to the requested export format)
+            // On success, return the response body (which is formatted according to the requested export format)
 
             if (response.StatusCode == HttpStatusCode.OK)
             {

@@ -36,7 +36,7 @@ using Verifalia.Api.Common.Converters;
 namespace Verifalia.Api.Credits.Models
 {
     /// <summary>
-    /// A total usage of Verifalia credits along a specific day.
+    /// A class representing the total usage of Verifalia credits per day.
     /// </summary>
     public class DailyUsage
     {
@@ -50,7 +50,7 @@ namespace Verifalia.Api.Credits.Models
         /// <summary>
         /// The number of free daily credits used during the day.
         /// </summary>
-        /// <remarks>Free daily credits depend on the plan of your Verifalia account; visit https://verifalia.com/client-area#/account/change-plan
+        /// <remarks>Free daily credits depend on the plan of your Verifalia account; visit https://app.verifalia.com/#/account/change-plan
         /// to change your plan.</remarks>
         [JsonProperty("freeCredits")]
         public decimal FreeCredits { get; set; }
@@ -58,7 +58,7 @@ namespace Verifalia.Api.Credits.Models
         /// <summary>
         /// The number of credit packs used during the day.
         /// </summary>
-        /// <remarks>Visit https://verifalia.com/client-area#/credits/add to add credit packs to your Verifalia account.</remarks>
+        /// <remarks>Visit https://app.verifalia.com/#/credits/add to add credit packs to your Verifalia account.</remarks>
         [JsonProperty("creditPacks")]
         public decimal CreditPacks { get; set; }
     }

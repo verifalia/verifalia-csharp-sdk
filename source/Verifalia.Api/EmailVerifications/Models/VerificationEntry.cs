@@ -35,19 +35,19 @@ using Newtonsoft.Json;
 namespace Verifalia.Api.EmailVerifications.Models
 {
     /// <summary>
-    /// Represents a single validated entry within a <see cref="Verification"/>.
+    /// Represents a single entry (email address) within a <see cref="Verification"/>.
     /// </summary>
     public class VerificationEntry
     {
         /// <summary>
         /// The index of this entry within its <see cref="Verification"/> container. This property is particularly useful
-        /// when the API returns a filtered view of the items
+        /// when the API returns a filtered view of the entries.  
         /// </summary>
         [JsonProperty("index")]
         public int Index { get; set; }
 
         /// <summary>
-        /// The input string being validated.
+        /// The input string being verified.
         /// </summary>
         [JsonProperty("inputData")]
         public string InputData { get; set; }
