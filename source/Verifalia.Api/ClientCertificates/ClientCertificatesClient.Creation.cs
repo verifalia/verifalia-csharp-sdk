@@ -46,6 +46,16 @@ namespace Verifalia.Api.ClientCertificates
     /// <inheritdoc />
     internal sealed partial class ClientCertificatesClient
     {
+        public Task<ClientCertificate> CreateAsync(string userId, FileInfo certificateFileInfo, CancellationToken cancellationToken = default)
+        {
+            if (userId == null) throw new ArgumentNullException(nameof(userId));
+            if (certificateFileInfo == null) throw new ArgumentNullException(nameof(certificateFileInfo));
+
+            return CreateAsync(userId,
+                certificateFileInfo.Open(FileMode.Open, FileAccess.Read),
+                cancellationToken);
+        }
+        
         public async Task<ClientCertificate> CreateAsync(string userId, byte[] certificateFile, CancellationToken cancellationToken = default)
         {
             if (userId == null) throw new ArgumentNullException(nameof(userId));
