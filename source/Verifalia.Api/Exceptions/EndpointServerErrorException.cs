@@ -30,6 +30,8 @@
 */
 
 using System;
+using System.Net;
+using Verifalia.Api.Exceptions.Models;
 
 namespace Verifalia.Api.Exceptions
 {
@@ -37,19 +39,10 @@ namespace Verifalia.Api.Exceptions
     /// The exception that is thrown when a Verifalia API endpoint returned a server error status code (HTTP 5xx).
     /// </summary>
     /// <inheritdoc />
-    public class EndpointServerErrorException : VerifaliaException
+    public class EndpointServerErrorException : RequestFailedException
     {
-        public EndpointServerErrorException()
-        {
-        }
-
-        public EndpointServerErrorException(string message)
-            : base(message)
-        {
-        }
-
-        public EndpointServerErrorException(string message, Exception innerException)
-            : base(message, innerException)
+        internal EndpointServerErrorException(HttpStatusCode statusCode, string rawErrorMessage, Problem? problem = null)
+            : base(statusCode, rawErrorMessage, problem)
         {
         }
     }

@@ -29,7 +29,6 @@
 * THE SOFTWARE.
 */
 
-using System;
 using Verifalia.Api.Credits;
 
 namespace Verifalia.Api.Exceptions
@@ -41,19 +40,10 @@ namespace Verifalia.Api.Exceptions
     /// <remarks>To check the available credits, use the <see cref="ICreditsClient.GetBalanceAsync"/> method of
     /// <see cref="VerifaliaClient.Credits"/>.</remarks>
     /// <inheritdoc />
-    public class InsufficientCreditException : VerifaliaException
+    public class InsufficientCreditException : RequestFailedException
     {
-        public InsufficientCreditException()
-        {
-        }
-
-        public InsufficientCreditException(string message)
-            : base(message)
-        {
-        }
-
-        public InsufficientCreditException(string message, Exception innerException)
-            : base(message, innerException)
+        internal InsufficientCreditException(RequestFailedException innerException)
+            : base(innerException.StatusCode, innerException.RawErrorMessage, innerException.Problem)
         {
         }
     }

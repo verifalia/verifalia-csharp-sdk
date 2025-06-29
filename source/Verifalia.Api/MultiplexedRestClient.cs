@@ -182,7 +182,7 @@ namespace Verifalia.Api
 
                     if ((int) response.StatusCode >= 500 && (int) response.StatusCode <= 599)
                     {
-                        errors.Add(finalUrl, new EndpointServerErrorException($"The API endpoint {baseUrl} returned a server error HTTP status code {response.StatusCode}."));
+                        errors.Add(finalUrl, new EndpointServerErrorException(response.StatusCode, $"The API endpoint {baseUrl} returned a server error HTTP status code {response.StatusCode}."));
                         continue;
                     }
 

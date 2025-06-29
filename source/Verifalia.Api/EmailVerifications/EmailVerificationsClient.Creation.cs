@@ -281,6 +281,15 @@ namespace Verifalia.Api.EmailVerifications
                         .ConfigureAwait(false);
                 }
 
+                case HttpStatusCode.PaymentRequired:
+                {
+                    var requestFailedException = await restClient
+                        .BuildRequestFailedExceptionAsync(response, cancellationToken)
+                        .ConfigureAwait(false);
+                    
+                    throw new InsufficientCreditException(requestFailedException);
+                }
+
                 default:
                 {
                     // An unexpected HTTP status code has been received at this point

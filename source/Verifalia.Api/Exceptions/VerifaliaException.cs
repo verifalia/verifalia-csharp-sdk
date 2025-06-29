@@ -39,16 +39,16 @@ namespace Verifalia.Api.Exceptions
     /// <inheritdoc />
     public class VerifaliaException : Exception
     {
-        public VerifaliaException()
+        internal VerifaliaException()
         {
         }
 
-        public VerifaliaException(string message)
+        internal VerifaliaException(string message)
             : base(message)
         {
         }
 
-        public VerifaliaException(string message, Exception innerException)
+        internal VerifaliaException(string message, Exception innerException)
             : base(message, innerException)
         {
         }

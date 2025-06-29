@@ -39,16 +39,7 @@ namespace Verifalia.Api.Exceptions
     /// <inheritdoc />
     public class ServiceUnreachableException : VerifaliaException
     {
-        public ServiceUnreachableException()
-        {
-        }
-
-        public ServiceUnreachableException(string message)
-            : base(message)
-        {
-        }
-
-        public ServiceUnreachableException(string message, Exception innerException)
+        internal ServiceUnreachableException(string message, Exception innerException)
             : base(message, innerException)
         {
         }

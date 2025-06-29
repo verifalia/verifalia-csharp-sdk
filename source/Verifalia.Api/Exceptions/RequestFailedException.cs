@@ -48,24 +48,24 @@ namespace Verifalia.Api.Exceptions
         public HttpStatusCode StatusCode { get; }
         
         /// <summary>
-        /// The raw error response body, returned as a string.
+        /// The raw error message.
         /// </summary>
-        public string ResponseBody { get; }
+        public string RawErrorMessage { get; }
         
         /// <summary>
         /// The RFC 9457 problem details object returned by the Verifalia API.
         /// </summary>
         public Problem? Problem { get; }
 
-        public RequestFailedException(HttpStatusCode statusCode, string responseBody, Problem? problem = null)
-            : base(BuildMessage(statusCode, responseBody, problem))
+        internal RequestFailedException(HttpStatusCode statusCode, string rawErrorMessage, Problem? problem = null)
+            : base(BuildMessage(statusCode, rawErrorMessage, problem))
         {
             StatusCode = statusCode;
-            ResponseBody = responseBody;
+            RawErrorMessage = rawErrorMessage;
             Problem = problem;
         }
 
-        private static string BuildMessage(HttpStatusCode statusCode, string responseBody, Problem? problem)
+        private static string BuildMessage(HttpStatusCode statusCode, string rawErrorMessage, Problem? problem)
         {
             var sb = new StringBuilder();
 
@@ -82,7 +82,7 @@ namespace Verifalia.Api.Exceptions
             }
             else
             {
-                sb.Append($"Unexpected HTTP response. HTTP status code: {(int) statusCode}. Details: {responseBody}");
+                sb.Append($"Unexpected HTTP response. HTTP status code: {(int) statusCode}. Raw error message: {rawErrorMessage}");
             }
 
             return sb.ToString();
