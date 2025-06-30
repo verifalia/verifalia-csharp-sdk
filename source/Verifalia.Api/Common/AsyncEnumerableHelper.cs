@@ -84,7 +84,7 @@ namespace Verifalia.Api.Common
 
                 // Stop processing if this is the last page
 
-                if (!segment.Meta.IsTruncated)
+                if (segment.Meta?.Cursor == null || !segment.Meta.IsTruncated)
                 {
                     break;
                 }
