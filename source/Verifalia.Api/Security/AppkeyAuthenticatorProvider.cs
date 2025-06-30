@@ -33,7 +33,6 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Flurl.Http;
-using Verifalia.Api.Exceptions;
 
 namespace Verifalia.Api.Security
 {
@@ -71,9 +70,9 @@ namespace Verifalia.Api.Security
         }
 
         /// <inheritdoc cref="IAuthenticationProvider.HandleUnauthorizedRequestAsync(IRestClient, CancellationToken)"/>
-        public Task HandleUnauthorizedRequestAsync(IRestClient restClient, CancellationToken cancellationToken)
+        public Task<bool> HandleUnauthorizedRequestAsync(IRestClient restClient, CancellationToken cancellationToken)
         {
-            throw new AuthorizationException("Cannot authenticate with Verifalia using the provided app key: please check your credentials and retry.");
+            return Task.FromResult(false);
         }
     }
 }

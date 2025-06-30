@@ -42,13 +42,21 @@ namespace Verifalia.Api.Security
         /// <summary>
         /// Authenticates the specified REST client.
         /// </summary>
+        /// <param name="restClient">The REST client to authenticate.</param>
+        /// <param name="cancellationToken">A token to cancel the authentication operation.</param>
         Task AuthenticateAsync(IRestClient restClient, CancellationToken cancellationToken);
 
         /// <summary>
-        /// Performs recovery actions for providers that support it to make the next authenticated
-        /// request successful. This is useful for providers whose authentication state has a finite time duration
-        /// (e.g. bearer authentication via JWT token).
-        /// </summary>        
-        Task HandleUnauthorizedRequestAsync(IRestClient restClient, CancellationToken cancellationToken);
+        /// Attempts to recover from an authentication failure by refreshing credentials or tokens.
+        /// This method is useful for authentication providers that use time-limited credentials,
+        /// such as JWT bearer tokens that may expire during operation.
+        /// </summary>
+        /// <param name="restClient">The REST client that encountered an unauthorized response.</param>
+        /// <param name="cancellationToken">A token to cancel the recovery operation.</param>
+        /// <returns>
+        /// <c>true</c> if the authentication was successfully refreshed and the request should be retried;
+        /// <c>false</c> if recovery failed and the unauthorized error should be returned to the caller.
+        /// </returns>
+        Task<bool> HandleUnauthorizedRequestAsync(IRestClient restClient, CancellationToken cancellationToken);
     }
 }

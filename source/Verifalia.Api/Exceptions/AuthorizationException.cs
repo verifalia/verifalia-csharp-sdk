@@ -40,15 +40,11 @@ namespace Verifalia.Api.Exceptions
     /// <inheritdoc />
     public class AuthorizationException : VerifaliaException
     {
-        internal AuthorizationException()
-        {
-        }
-
         internal AuthorizationException(string message)
             : base(message)
         {
         }
-
+        
         internal AuthorizationException(string message, Exception innerException)
             : base(message, innerException)
         {

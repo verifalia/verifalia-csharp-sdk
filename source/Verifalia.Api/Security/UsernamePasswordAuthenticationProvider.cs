@@ -78,11 +78,9 @@ namespace Verifalia.Api.Security
         }
 
         /// <inheritdoc cref="IAuthenticationProvider.HandleUnauthorizedRequestAsync(IRestClient, CancellationToken)"/>
-        public Task HandleUnauthorizedRequestAsync(IRestClient restClient, CancellationToken cancellationToken)
+        public Task<bool> HandleUnauthorizedRequestAsync(IRestClient restClient, CancellationToken cancellationToken)
         {
-            if (restClient == null) throw new ArgumentNullException(nameof(restClient));
-            
-            throw new AuthorizationException("Cannot authenticate with Verifalia using the provided username and password: please check your credentials and retry.");
+            return Task.FromResult(false);
         }
     }
 }

@@ -186,22 +186,45 @@ namespace Verifalia.Api
                         continue;
                     }
 
-                    // If the request is unauthorized, give the authentication provider a chance to remediate (on a subsequent attempt)
+                    // If we get an unauthorized response, let the authentication provider try to fix it for the next attempt
 
                     if (response.StatusCode == HttpStatusCode.Unauthorized)
                     {
-                        await _authenticator.HandleUnauthorizedRequestAsync(this, cancellationToken)
+                        var shouldRetry = await _authenticator
+                            .HandleUnauthorizedRequestAsync(this, cancellationToken)
                             .ConfigureAwait(false);
 
-                        errors.Add(finalUrl, new AuthorizationException("Can't authenticate to Verifalia using the provided credentials (will retry in the next attempt)."));
-                        continue;
+                        var requestFailedException = await BuildRequestFailedExceptionAsync(response, cancellationToken)
+                            .ConfigureAwait(false);
+                        
+                        var authorizationException = new AuthorizationException("Can't authenticate to Verifalia using the provided credentials",
+                            requestFailedException); 
+
+                        if (shouldRetry)
+                        {
+                            // This looks like a temporary issue - we'll try the request again
+                            
+                            errors.Add(finalUrl, authorizationException);
+
+                            continue;
+                        }
+                        
+                        // This appears to be a permanent authentication failure
+
+                        throw authorizationException;
                     }
 
                     // Fails on the first occurrence of an HTTP 403 status code
 
                     if (response.StatusCode == HttpStatusCode.Forbidden)
                     {
-                        throw new AuthorizationException(response.ReasonPhrase);
+                        var requestFailedException = await BuildRequestFailedExceptionAsync(response, cancellationToken)
+                            .ConfigureAwait(false);
+                        
+                        var authorizationException = new AuthorizationException(requestFailedException.Problem?.Detail ?? requestFailedException.Problem?.Title ?? response.ReasonPhrase ?? "Authorization failure",
+                            requestFailedException); 
+
+                        throw authorizationException;
                     }
 
                     // Returns the original response only if it has been completed with a non-500 HTTP status code

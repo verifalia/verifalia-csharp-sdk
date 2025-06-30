@@ -38,7 +38,6 @@ using System.Net.Http;
 using System.Security.Cryptography.X509Certificates;
 using Flurl.Http;
 using Flurl.Http.Configuration;
-using Verifalia.Api.Exceptions;
 
 namespace Verifalia.Api.Security
 {
@@ -94,11 +93,9 @@ namespace Verifalia.Api.Security
         }
 
         /// <inheritdoc cref="IAuthenticationProvider.HandleUnauthorizedRequestAsync(IRestClient, CancellationToken)"/>
-        public Task HandleUnauthorizedRequestAsync(IRestClient restClient, CancellationToken cancellationToken)
+        public Task<bool> HandleUnauthorizedRequestAsync(IRestClient restClient, CancellationToken cancellationToken)
         {
-            if (restClient == null) throw new ArgumentNullException(nameof(restClient));
-            
-            throw new AuthorizationException("Cannot authenticate with Verifalia using the provided X509 certificate: please check your credentials and retry.");
+            return Task.FromResult(false);
         }
     }
 }

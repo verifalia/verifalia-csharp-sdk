@@ -146,7 +146,11 @@ namespace Verifalia.Api.Security
                 }
                 else
                 {
-                    throw new AuthorizationException("Invalid credentials used while attempting to retrieve a bearer auth token.");
+                    var requestFailedException = await restClient
+                        .BuildRequestFailedExceptionAsync(authResponse, cancellationToken)
+                        .ConfigureAwait(false);
+                    
+                    throw new AuthorizationException("Invalid credentials used while attempting to retrieve a bearer auth token.", requestFailedException);
                 }
             }
 
@@ -210,7 +214,7 @@ namespace Verifalia.Api.Security
         }
 
         /// <inheritdoc cref="IAuthenticationProvider.HandleUnauthorizedRequestAsync(IRestClient, CancellationToken)"/>
-        public Task HandleUnauthorizedRequestAsync(IRestClient restClient, CancellationToken cancellationToken)
+        public Task<bool> HandleUnauthorizedRequestAsync(IRestClient restClient, CancellationToken cancellationToken)
         {
             if (restClient == null) throw new ArgumentNullException(nameof(restClient));
             
@@ -220,11 +224,7 @@ namespace Verifalia.Api.Security
             
             // TODO: We may want to refresh the token, instead of forcing the library to re-acquire a new one
 
-#if HAS_TASK_COMPLETED_TASK
-            return Task.CompletedTask;
-#else
-            return Task.FromResult((object) null);
-#endif
+            return Task.FromResult(true);
         }
 
         private void AddBearerAuth(IRestClient restClient)
