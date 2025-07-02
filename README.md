@@ -4,7 +4,7 @@
 
 # Verifalia API - .NET SDK and Helper Library
 
-[Verifalia][0] provides a fast and accurate API for verifying email addresses in real-time to determine their deliverability. This SDK library integrates seamlessly with Verifalia and allows you to [verify email addresses][0] and manage most account settings across the following platforms:
+[Verifalia](https://verifalia.com/) provides a fast and accurate API for verifying email addresses in real-time to determine their deliverability. This SDK library integrates seamlessly with Verifalia and allows you to [verify email addresses](https://verifalia.com/) and manage most account settings across the following platforms:
 
 - .NET 5.0 and higher, including **.NET 9.0**
 - .NET Core 1.0 and higher
