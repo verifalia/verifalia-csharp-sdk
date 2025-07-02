@@ -18,9 +18,9 @@
 
 ## ⭐️⭐️⭐️ Enjoying This Library? Please Star Our Repo! ⭐️⭐️⭐️
 
-If this SDK helps you ship features faster, we'd love your support! By starring our GitHub repository, you help us gauge how widely it's used and which features and improvements to prioritize next. Every star makes a difference — thank you for helping steer the future of this SDK!
+If this SDK helps you ship features faster, we'd love your support! By starring our [GitHub repository](https://github.com/verifalia/verifalia-csharp-sdk/), you help us gauge how widely it's used and which features and improvements to prioritize next. Every star makes a difference — thank you for helping steer the future of this SDK!
 
-To learn more about Verifalia, please visit [https://verifalia.com][0].
+To learn more about Verifalia, please visit [https://verifalia.com](https://verifalia.com/).
 
 ---
 
@@ -28,7 +28,7 @@ To learn more about Verifalia, please visit [https://verifalia.com][0].
 
 <!-- TOC -->
 * [Adding Verifalia API Support to Your .NET Solution](#adding-verifalia-api-support-to-your-net-solution)
-  * [From an IDE](#from-an-ide-)
+  * [From an IDE](#from-an-ide)
     * [Rider](#rider)
     * [Visual Studio](#visual-studio)
     * [Visual Studio Code](#visual-studio-code)
@@ -82,7 +82,7 @@ To learn more about Verifalia, please visit [https://verifalia.com][0].
 
 This SDK is available as a NuGet package, the package manager for .NET. The best and easiest way to add the SDK library to your .NET project is to use the NuGet package manager in your favorite IDE.
 
-## From an IDE 
+## From an IDE
 
 ### Rider
 
@@ -102,22 +102,22 @@ From within Visual Studio Code, you can install the **Verifalia** NuGet package 
 
 ## Manual Download and Compilation
 	
-As an alternative to using NuGet, you can [download the SDK source project from GitHub][1], extract it to a folder of your choice, and add a reference from your project to the Verifalia SDK project. The SDK project is written in C# but can be referenced and used with any other .NET language, including Visual Basic (VB.NET), C++/CLI, J#, IronPython, IronRuby, F#, and PowerShell.
+As an alternative to using NuGet, you can [download the SDK source project from GitHub](https://github.com/verifalia/verifalia-csharp-sdk/archive/master.zip), extract it to a folder of your choice, and add a reference from your project to the Verifalia SDK project. The SDK project is written in C# but can be referenced and used with any other .NET language, including Visual Basic (VB.NET), C++/CLI, J#, IronPython, IronRuby, F#, and PowerShell.
 
-Learn more at [https://verifalia.com][0].
+Learn more at [https://verifalia.com](https://verifalia.com/).
 
 # Authentication
 
-Authentication to the Verifalia API is performed using the credentials of a Verifalia user account. While you can use the same credentials you used to register your Verifalia account for API access, for security reasons, we strongly recommend [creating and using a dedicated user account][3] for API operations. This approach allows you to assign only the specific permissions needed for your application.
+Authentication to the Verifalia API is performed using the credentials of a Verifalia user account. While you can use the same credentials you used to register your Verifalia account for API access, for security reasons, we strongly recommend [creating and using a dedicated user account](https://app.verifalia.com/#/users/new) for API operations. This approach allows you to assign only the specific permissions needed for your application.
 
-If you don't have a Verifalia account, you can [register for a free one][4]. 
+If you don't have a Verifalia account, you can [register for a free one](https://verifalia.com/sign-up). 
 
 The Verifalia API supports multiple authentication methods:
 - **Basic authentication**: Ideal for server-to-server communications
 - **Bearer token authentication**: Useful for browser apps and client-to-server communications  
 - **X.509 client certificate**: Provides the highest level of security
 
-The sections below describe each authentication method in detail. For more information about authenticating to the Verifalia API, see the API reference documentation at [https://verifalia.com/developers#authentication][2].
+The sections below describe each authentication method in detail. For more information about authenticating to the Verifalia API, see the API reference documentation at [https://verifalia.com/developers#authentication](https://verifalia.com/developers/authentication).
 
 ## Basic Authentication
 
@@ -559,7 +559,7 @@ Console.WriteLine($"Free daily credits: {balance.FreeCredits} (will reset in {ba
 // Free daily credits: 128.66 (will reset in 09:08:23)
 ```
 
-To add credit packs to your Verifalia account, visit [https://app.verifalia.com/#/credits/add][5].
+To add credit packs to your Verifalia account, visit [https://app.verifalia.com/#/credits/add](https://app.verifalia.com/#/credits/add).
 
 ## Retrieving Credits Usage Statistics
 
@@ -935,10 +935,3 @@ Released on July 2025
 - Fixed cancellation token handling during email verification retrieval when issues occur
 - Improved documentation throughout the library
 - Updated code samples
-
-[0]: https://verifalia.com
-[1]: https://github.com/verifalia/verifalia-csharp-sdk/archive/master.zip
-[2]: https://verifalia.com/developers/authentication
-[3]: https://app.verifalia.com/#/users/new
-[4]: https://verifalia.com/sign-up
-[5]: https://app.verifalia.com/#/credits/add

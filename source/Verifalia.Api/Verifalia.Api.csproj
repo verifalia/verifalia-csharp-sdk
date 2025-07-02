@@ -12,7 +12,8 @@
         <Authors>Verifalia</Authors>
         <PackageTags>email validation verification real-time verifalia api sdk</PackageTags>
         <PackageIconUrl>https://verifalia.com/favicon.ico</PackageIconUrl>
-        <Description>Verifalia provides a simple HTTPS-based API for validating email addresses and checking whether they are deliverable or not. This library allows to easily integrate with Verifalia and verify email addresses in real-time.</Description>
+        <PackageIcon>package-icon.png</PackageIcon>
+        <Description>Verifalia offers a simple HTTPS-based API that validates email addresses and determines whether they can receive emails, delivering fast and accurate results. This library makes it easy to integrate with Verifalia and verify email addresses in real-time.</Description>
         <Product>Verifalia SDK</Product>
         <LangVersion>latest</LangVersion>
         <RunCodeAnalysis>false</RunCodeAnalysis>
@@ -24,7 +25,7 @@
         <Nullable>enable</Nullable>
         <WarningsAsErrors>ASYNC0001;ASYNC0004;VSTHRD200</WarningsAsErrors>
         <NoWarn>CA1510;</NoWarn>
-        <!--        <PackageReadmeFile>../README.md</PackageReadmeFile>-->
+        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
 
     <PropertyGroup Condition="!('$(TargetFramework)' == 'net45' or '$(TargetFramework)' == 'net451' or '$(TargetFramework)' == 'net452')">
@@ -81,6 +82,8 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+        <None Include="../../README.md" Pack="true" PackagePath="/"/>
+        <None Include="package-icon.png" Pack="true" PackagePath="/"/>
     </ItemGroup>
 
     <ItemGroup Condition="$(DefineConstants.Contains(';USE_FLURL_3;'))">
