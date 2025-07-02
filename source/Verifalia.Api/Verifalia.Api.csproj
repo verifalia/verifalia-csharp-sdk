@@ -34,7 +34,7 @@
     <PropertyGroup Condition="!('$(TargetFramework)' == 'net45' or '$(TargetFramework)' == 'net451' or '$(TargetFramework)' == 'net452' or '$(TargetFramework)' == 'net46' or '$(TargetFramework)' == 'net461' or '$(TargetFramework)' == 'net462' or '$(TargetFramework)' == 'net47')">
         <DefineConstants>$(DefineConstants);HAS_CLIENT_CERTIFICATES_SUPPORT;</DefineConstants>
     </PropertyGroup>
-    <PropertyGroup Condition="!('$(TargetFramework)' == 'netstandard1.3' or '$(TargetFramework)' == 'netstandard1.4' or '$(TargetFramework)' == 'netstandard1.5' or '$(TargetFramework)' == 'netstandard1.6' or '$(TargetFramework)' == 'netstandard2.0' or '$(TargetFramework)' == 'netstandard2.1'
+    <PropertyGroup Condition="!('$(TargetFramework)' == 'netstandard1.3' or '$(TargetFramework)' == 'netstandard1.4' or '$(TargetFramework)' == 'netstandard1.5' or '$(TargetFramework)' == 'netstandard1.6' or '$(TargetFramework)' == 'netstandard2.0'
         or '$(TargetFramework)' == 'net45' or '$(TargetFramework)' == 'net451' or '$(TargetFramework)' == 'net452' or '$(TargetFramework)' == 'net46' or '$(TargetFramework)' == 'net461' or '$(TargetFramework)' == 'net462' or '$(TargetFramework)' == 'net47' or '$(TargetFramework)' == 'net472' or '$(TargetFramework)' == 'net48'
         or '$(TargetFramework)' == 'netcoreapp1.0' or '$(TargetFramework)' == 'netcoreapp1.1' or '$(TargetFramework)' == 'netcoreapp2.0' or '$(TargetFramework)' == 'netcoreapp2.1' or '$(TargetFramework)' == 'netcoreapp2.2')">
         <DefineConstants>$(DefineConstants);HAS_ASYNC_ENUMERABLE_SUPPORT;</DefineConstants>
@@ -67,15 +67,20 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3"/>
-        <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="1.1.1" Condition="('$(TargetFramework)' == 'netstandard2.0')"/>
+        <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" PrivateAssets="all"/>
         <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.27.0" Condition="$(DefineConstants.Contains(';HAS_JWT_SUPPORT;'))" PrivateAssets="all"/>
         <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.14.15">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Roslyn.Analyzers" Version="1.0.3.4"/>
+        <PackageReference Include="Roslyn.Analyzers" Version="1.0.3.4">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
     </ItemGroup>
 
     <ItemGroup Condition="$(DefineConstants.Contains(';USE_FLURL_3;'))">
