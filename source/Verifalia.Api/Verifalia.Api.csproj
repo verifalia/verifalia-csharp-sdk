@@ -6,9 +6,9 @@
             net5.0;net6.0;net7.0;net8.0;net9.0
         </TargetFrameworks>
         <PackageId>Verifalia</PackageId>
-        <Version>5.0.0</Version>
+        <Version>5.0.1</Version>
         <Company>Cobisi Research</Company>
-        <Copyright>Copyright © Cobisi Research 2005-2025 - https://verifalia.com</Copyright>
+        <Copyright>Copyright © Cobisi Research 2005-2026 - https://verifalia.com</Copyright>
         <Authors>Verifalia</Authors>
         <PackageTags>email validation verification real-time verifalia api sdk</PackageTags>
         <PackageIconUrl>https://verifalia.com/favicon.ico</PackageIconUrl>

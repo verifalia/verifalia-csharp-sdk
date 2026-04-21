@@ -3,7 +3,7 @@
 * https://verifalia.com/
 * support@verifalia.com
 *
-* Copyright (c) 2005-2025 Cobisi Research
+* Copyright (c) 2005-2026 Cobisi Research
 *
 * Cobisi Research
 * Via Della Costituzione, 31
@@ -338,6 +338,7 @@ namespace Verifalia.Api.EmailVerifications
             var response = await restClient
                 .InvokeAsync(HttpMethod.Get,
                     $"email-validations/{verificationId}/entries",
+                    queryParams: queryParams,
                     headers: new Dictionary<string, object> { { "Accept", acceptableMimeContentType } },
                     cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
