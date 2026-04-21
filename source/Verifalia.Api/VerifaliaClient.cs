@@ -250,6 +250,8 @@ namespace Verifalia.Api
 #elif NETCOREAPP3_1
                 "netcoreapp3.1",
 // Note: starting .NET 5.0, TFM compilation constants mean "version X or greater", see: https://github.com/dotnet/sdk/issues/13377
+#elif NET10_0
+                "net10.0",
 #elif NET9_0
                 "net9.0",
 #elif NET8_0
