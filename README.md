@@ -6,7 +6,7 @@
 
 [Verifalia](https://verifalia.com/) provides a fast and accurate API for verifying email addresses in real-time to determine their deliverability. This SDK library integrates seamlessly with Verifalia and allows you to [verify email addresses](https://verifalia.com/) and manage most account settings across the following platforms:
 
-- .NET 5.0 and higher, including **.NET 9.0**
+- .NET 5.0 and higher, including **.NET 10.0**
 - .NET Core 1.0 and higher
 - .NET Framework 4.5 and higher
 - .NET Standard 1.3 and higher
@@ -75,6 +75,7 @@ To learn more about Verifalia, please visit [https://verifalia.com](https://veri
   * [Updating Contact Methods](#updating-contact-methods)
   * [Deleting Contact Methods](#deleting-contact-methods)
 * [Changelog / What's New](#changelog--whats-new)
+  * [v5.1](#v51)
   * [v5.0](#v50)
 <!-- TOC -->
 
@@ -217,13 +218,13 @@ As expected, each entry includes various additional details about the verified e
 | `CompletedOn`                 | The date this entry was completed, if available.                                                                                                                                                                                                        |
 | `Custom`                      | A custom, optional string that is passed back upon verification completion. To pass a custom value back and forth, use the `Custom` property of `VerificationRequestEntry`.                                                                             |
 | `DuplicateOf`                 | The zero-based index of the first occurrence of this email address in the parent `Verification`, when the `Status` for this entry is `Duplicate`. Duplicated items only expose this value and any `Custom` values. |
-| `Index`                       | The index of this entry within its `Verification` container. This property is primarily useful when the API returns a filtered view of the items.                                                                                                       |
-| `InputData`                   | The input string being validated.                                                                                                                                                                                                                            |
 | `EmailAddress`                | The email address without any comments or folding white space. Returns null if the input data is syntactically invalid.                                                                                                   |
 | `EmailAddressDomainPart`      | The domain part of the email address, without comments and folding white spaces.                                                                                                                                                                        |
 | `EmailAddressLocalPart`       | The local part of the email address, without comments and folding white spaces.                                                                                                                                                                         |
 | `HasInternationalDomainName`  | True if the email address has an international domain name.                                                                                                                                                                                                 |
 | `HasInternationalMailboxName` | True if the email address has an international mailbox name.                                                                                                                                                                                                |
+| `Index`                       | The index of this entry within its `Verification` container. This property is primarily useful when the API returns a filtered view of the items.                                                                                                       |
+| `InputData`                   | The input string being validated.                                                                                                                                                                                                                            |
 | `IsDisposableEmailAddress`    | True if the email address comes from a disposable email address (DEA) provider. <a href="https://verifalia.com/help/email-validations/what-is-a-disposable-email-address-dea">What is a disposable email address?</a>                                       |
 | `IsFreeEmailAddress`          | True if the email address comes from a free email address provider (e.g., Gmail, Yahoo, Outlook/Hotmail).                                                                                                                                             |
 | `IsRoleAccount`               | True if the local part of the email address is a well-known role account.                                                                                                                                                                                   |
@@ -919,6 +920,14 @@ await verifalia
 
 This section lists the changelog for the current major version of the library. For older versions, please see the [project releases](https://github.com/verifalia/verifalia-csharp-sdk/releases). For clarity, logs for build and revision updates are excluded.
 
+## v5.1
+
+Released on April 2026
+
+- Added support for .NET 10.0
+- Fixed an issue where `ExportEntriesAsync()` didn’t respect the specified options
+- Improved documentation across the library
+
 ## v5.0
 
 Released on July 2025
@@ -933,5 +942,5 @@ Released on July 2025
 - **Breaking change**: Renamed `*Validation*` classes to `*Verification*` throughout the library
 - **Breaking change**: Renamed `ListSegment` to `PagedResult` and related types
 - Fixed cancellation token handling during email verification retrieval when issues occur
-- Improved documentation throughout the library
+- Improved documentation across the library
 - Updated code samples
