@@ -330,7 +330,31 @@ namespace Verifalia.Api.EmailVerifications
                 ExportedEntriesFormat.ExcelXlsx => WellKnownMimeContentTypes.ExcelXlsx,
                 _ => throw new ArgumentOutOfRangeException(nameof(format), format, null)
             };
+            
+            // Send the request to the Verifalia servers
 
+            Dictionary<string, string>? queryParams = null;
+
+            if (options != null)
+            {
+                queryParams = new Dictionary<string, string>();
+
+                if (options.Limit > 0)
+                {
+                    queryParams["limit"] = options.Limit.ToString(CultureInfo.InvariantCulture);
+                }
+
+                // Predicates
+
+                if (options.StatusFilter != null)
+                {
+                    foreach (var fragment in options.StatusFilter.Serialize("status"))
+                    {
+                        queryParams[fragment.Key] = fragment.Value;
+                    }
+                }
+            }
+            
             // Send the request to the Verifalia servers
 
             var restClient = _restClientFactory.Build();
